@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Табыс Партнер</string>
+    <string name="app_name_md"><font fgcolor='#ffd030'>Табыс</font> Партнер</string>
+    <string name="main_menu_item_title">Главная</string>
+    <string name="withdraw_menu_item_title">Вывод средств</string>
+    <string name="support_menu_item_title">Поддержка</string>
+    <string name="profile_menu_item_title">Профиль</string>
+</resources>
