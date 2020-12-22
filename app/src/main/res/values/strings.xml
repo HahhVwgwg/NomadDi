@@ -5,4 +5,11 @@
     <string name="withdraw_menu_item_title">Вывод средств</string>
     <string name="support_menu_item_title">Поддержка</string>
     <string name="profile_menu_item_title">Профиль</string>
+    <string name="profile_card_view_title">Мой профиль</string>
+    <string name="profile_card_view_profile_name">Асангали \nТаир</string>
+    <string name="balance_card_view_withdraw_label">Вывести деньги</string>
+    <string name="balance_card_view_cash_amount">12,500 т</string>
+    <string name="balance_card_view_balance_title">Мой баланс</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
