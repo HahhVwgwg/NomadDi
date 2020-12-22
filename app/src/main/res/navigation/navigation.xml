@@ -7,4 +7,8 @@
         android:id="@+id/mainPageFragment"
         android:name="com.example.tabyspartner.main.MainPageFragment"
         android:label="MainPageFragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.tabyspartner.profile.ProfileFragment"
+        android:label="ProfileFragment" />
 </navigation>

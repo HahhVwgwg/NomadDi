@@ -9,7 +9,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.example.tabyspartner.databinding.ActivityMainBinding
+import com.example.tabyspartner.main.MainPageFragment
+import com.example.tabyspartner.profile.ProfileFragment
+import com.example.tabyspartner.withdraw.WithDrawFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,14 +37,17 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.main_menu_item -> {
                     //makePhoneCall()
+                    handleFrame(MainPageFragment())
                     true
                 }
                 R.id.withdraw_menu_item -> {
                    // makePhoneCall()
+                    handleFrame(WithDrawFragment())
                     true
                 }
                 R.id.profile_menu_item -> {
                     //makePhoneCall()
+                    handleFrame(ProfileFragment())
                     true
                 }
                 else -> false
@@ -68,6 +78,13 @@ class MainActivity : AppCompatActivity() {
         if(requestCode == REQUEST_CALL) {
             startCall()
         }
+    }
+
+    private fun handleFrame(fragment: Fragment): Boolean {
+        val fragmentTransaction = this.supportFragmentManager.beginTransaction()
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out)
+        fragmentTransaction.replace(R.id.navHostFragment,fragment).commit()
+        return true
     }
 
 }
