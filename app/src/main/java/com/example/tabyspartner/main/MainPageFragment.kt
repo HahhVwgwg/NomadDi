@@ -1,27 +1,23 @@
-package com.example.tabyspartner
+package com.example.tabyspartner.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.models.SlideModel
+import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.FragmentMainPageBinding
 
 class MainPageFragment : Fragment() {
 
     private lateinit var sliderView: ImageSlider
-
-
-
-    private var slideModelsList = mutableListOf(
-        SlideModel("https://images.pexels.com/photos/6190993/pexels-photo-6190993.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",""),
-        SlideModel("https://images.pexels.com/photos/3178852/pexels-photo-3178852.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",""),
-        SlideModel("https://images.pexels.com/photos/5696873/pexels-photo-5696873.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",""),
-        SlideModel("https://images.pexels.com/photos/6191948/pexels-photo-6191948.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940","")
-    )
+    private lateinit var viewModel : MainPageViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,12 +25,12 @@ class MainPageFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding: FragmentMainPageBinding = DataBindingUtil.inflate(
-            inflater,R.layout.fragment_main_page,container,false
+            inflater, R.layout.fragment_main_page,container,false
         )
-
+        Log.i("MainPageFragment","Called ViewModelProviders.of!")
+        viewModel = ViewModelProviders.of(this).get(MainPageViewModel::class.java)
         sliderView = binding.imageSlider
-        sliderView.setImageList(slideModelsList)
-
+        sliderView.setImageList(viewModel.slideModelsList)
         return binding.root
     }
 }

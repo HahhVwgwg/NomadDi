@@ -5,6 +5,6 @@
     app:startDestination="@id/mainPageFragment">
     <fragment
         android:id="@+id/mainPageFragment"
-        android:name="com.example.tabyspartner.MainPageFragment"
+        android:name="com.example.tabyspartner.main.MainPageFragment"
         android:label="MainPageFragment" />
 </navigation>
