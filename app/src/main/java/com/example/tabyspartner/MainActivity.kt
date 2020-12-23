@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
+        handleFrame(MainPageFragment())
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.support_menu_item -> {
@@ -36,17 +37,14 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.main_menu_item -> {
-                    //makePhoneCall()
                     handleFrame(MainPageFragment())
                     true
                 }
                 R.id.withdraw_menu_item -> {
-                   // makePhoneCall()
                     handleFrame(WithDrawFragment())
                     true
                 }
                 R.id.profile_menu_item -> {
-                    //makePhoneCall()
                     handleFrame(ProfileFragment())
                     true
                 }
@@ -82,7 +80,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleFrame(fragment: Fragment): Boolean {
         val fragmentTransaction = this.supportFragmentManager.beginTransaction()
-        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out)
         fragmentTransaction.replace(R.id.navHostFragment,fragment).commit()
         return true
     }
