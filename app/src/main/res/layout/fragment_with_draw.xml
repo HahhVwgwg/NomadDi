@@ -6,9 +6,118 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".withdraw.WithDrawFragment">
+        tools:context=".withdraw.WithDrawFragment"
+        android:layout_margin="16dp"
+        >
 
-        
+            <TextView
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/my_balance_title"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/with_draw_page_balance_title"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                />
+            <TextView
+                app:layout_constraintTop_toTopOf="@+id/my_balance_title"
+                app:layout_constraintStart_toEndOf="@id/my_balance_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="История"
+                android:gravity="end"
+                android:textSize="18sp"
+                android:textColor="@color/red"
+                />
+
+        <TextView
+            android:id="@+id/balance_amount_with_draw_page"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="12 150 \u20b8"
+            android:textColor="@color/green"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/my_balance_title"
+            app:layout_constraintStart_toStartOf="@+id/my_balance_title"
+            app:layout_constraintTop_toBottomOf="@+id/my_balance_title"
+            app:layout_constraintVertical_bias="0.04000002" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/balance_amount_with_draw_page"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+
+            <Button
+                android:id="@+id/choose_card_btn"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_24"
+                android:drawableTint="@color/white"
+                android:text="Выберите карту"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.187" />
+
+            <EditText
+                android:id="@+id/with_draw_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="44dp"
+                android:background="@android:color/transparent"
+                android:drawableEnd="@drawable/ic_tenge_sign"
+                android:gravity="center"
+                android:hint="@string/amount_hint"
+                android:drawablePadding="10dp"
+                android:inputType="numberDecimal"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="33sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/choose_card_btn"
+                tools:ignore="RtlCompat" />
+
+            <TextView
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Комиссия 150 \u20b8"
+                android:textColor="@color/red"
+                app:layout_constraintTop_toBottomOf="@id/with_draw_amount"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:text="Перевести 0 \u20b8"
+                android:textAllCaps="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/with_draw_amount"
+                app:layout_constraintVertical_bias="0.202" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
