@@ -21,4 +21,5 @@
     <string name="bottom_sheet_dialog_remove_card_title">Изменить</string>
     <string name="cancel_choose_bottom_sheet_dialog">ОТМЕНА</string>
     <string name="card_name_default">Kaspi Gold</string>
+    <string name="add_card_text">Добавить карту</string>
 </resources>
