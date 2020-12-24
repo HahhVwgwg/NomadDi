@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.denzcoskun.imageslider.models.SlideModel
 
+
 class MainPageViewModel : ViewModel() {
 
     var slideModelsList = mutableListOf(
