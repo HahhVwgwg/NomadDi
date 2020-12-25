@@ -22,4 +22,6 @@
     <string name="cancel_choose_bottom_sheet_dialog">ОТМЕНА</string>
     <string name="card_name_default">Kaspi Gold</string>
     <string name="add_card_text">Добавить карту</string>
+    <string name="authorization_page_edit_text_hint">Введите номер телефона</string>
+    <string name="authorization_page_continue_button_text">Продолжить</string>
 </resources>
