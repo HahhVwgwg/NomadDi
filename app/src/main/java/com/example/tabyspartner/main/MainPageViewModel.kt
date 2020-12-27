@@ -73,6 +73,7 @@ class MainPageViewModel : ViewModel() {
                 for (i in response.body()!!.driversList.indices){
                     if(response.body()!!.driversList[i].driver_profile.phones[0]=="+77082908295") {
                         _response.value = response.body()!!.driversList[i]
+                                //Log.d("Yandex",response.body()!!.driversList[i].driver_profile.first_name)
                     }
 
                 }

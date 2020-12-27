@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.denzcoskun.imageslider.ImageSlider
@@ -31,6 +32,12 @@ class MainPageFragment : Fragment() {
         binding.viewModel = viewModel
         sliderView = binding.imageSlider
         sliderView.setImageList(viewModel.slideModelsList)
+
+        viewModel.response.observe(viewLifecycleOwner, Observer {
+            binding.profileNameLabel.text = it.driver_profile.first_name+"\n"+it.driver_profile.last_name
+            binding.amountCashNameLabel.text = it.accounts[0].balance
+        })
+
         return binding.root
     }
 }

@@ -21,7 +21,7 @@ class Authorization : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        binding.button.setOnClickListener {
+        binding.generateBtn.setOnClickListener {
             startActivity(Intent(this,MainActivity::class.java))
         }
     }
