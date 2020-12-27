@@ -22,6 +22,9 @@ private const val BASE_URL = "https://fleet-api.taxi.yandex.net/v1/parks/driver-
 interface YandexApiService {
     @POST("list")
     fun getUser(@Body request: GetSomethingRequest): Call<DriverProfilesResponse>
+
+    @POST("list")
+    fun getDriverByPhone(@Body request: GetSomethingRequest): Call<DriverProfilesItem>
 }
 
 object YandexApi {

@@ -15,10 +15,10 @@ import retrofit2.Response
 class MainPageViewModel : ViewModel() {
 
     // The internal MutableLiveData String that stores the status of the most recent request
-    private val _response = MutableLiveData<String>()
+    private val _response = MutableLiveData<DriverProfilesItem>()
 
     // The external immutable LiveData for the request status String
-    val response: LiveData<String>
+    val response: LiveData<DriverProfilesItem>
         get() = _response
 
     /**
@@ -56,6 +56,7 @@ class MainPageViewModel : ViewModel() {
      * Sets the value of the status LiveData to the Yandex status.
      */
     private fun getYandexDriversProperties() {
+
         val parkId = "2e8584835dd64db99482b4b21f62a2ae"
 
         val request = GetSomethingRequest(
@@ -64,13 +65,21 @@ class MainPageViewModel : ViewModel() {
                 )
         )
 
+
         YandexApi.retrofitService.getUser(request).enqueue(object : Callback<DriverProfilesResponse>{
             override fun onResponse(call: Call<DriverProfilesResponse>, response: Response<DriverProfilesResponse>) {
-                Log.d("Yandex",response.body()!!.driversList.toString())
+                //Log.d("Yandex",response.body()!!.driversList.toString())
+
+                for (i in response.body()!!.driversList.indices){
+                    if(response.body()!!.driversList[i].driver_profile.phones[0]=="+77082908295") {
+                        _response.value = response.body()!!.driversList[i]
+                    }
+
+                }
             }
 
             override fun onFailure(call: Call<DriverProfilesResponse>, t: Throwable) {
-               Log.d("Yandex",t.message.toString())
+                Log.d("Yandex",t.message.toString())
             }
         })
 

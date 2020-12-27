@@ -31,7 +31,6 @@ class MainPageFragment : Fragment() {
         binding.viewModel = viewModel
         sliderView = binding.imageSlider
         sliderView.setImageList(viewModel.slideModelsList)
-        Log.d("Yandex",viewModel.response.value.toString())
         return binding.root
     }
 }
