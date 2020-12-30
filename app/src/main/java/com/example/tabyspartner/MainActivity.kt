@@ -13,20 +13,25 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.example.tabyspartner.authorization.Authorization
 import com.example.tabyspartner.databinding.ActivityMainBinding
 import com.example.tabyspartner.main.MainPageFragment
 import com.example.tabyspartner.profile.ProfileFragment
 import com.example.tabyspartner.withdraw.WithDrawFragment
+import kotlin.properties.Delegates
 
 
 class MainActivity : AppCompatActivity() {
 
+
+    private var isRegistered by Delegates.notNull<Boolean>()
     private lateinit var binding: ActivityMainBinding
     private val REQUEST_CALL = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        isRegistered = true
         val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
         handleFrame(MainPageFragment())
@@ -52,7 +57,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+    override fun onStart() {
+        super.onStart()
+        if(!isRegistered) {
+            val intent = Intent(this,Authorization::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+            finish()
+        }
+    }
     private fun makePhoneCall() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) !=
             PackageManager.PERMISSION_GRANTED

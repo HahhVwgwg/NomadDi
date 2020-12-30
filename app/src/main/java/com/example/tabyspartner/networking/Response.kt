@@ -32,3 +32,7 @@ data class Account(
     val last_transaction_date: String,
     val type: String
 )
+
+
+
+

@@ -9,8 +9,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.tabyspartner.R
+import com.example.tabyspartner.databinding.FragmentMainPageBinding
 import com.example.tabyspartner.databinding.FragmentProfileBinding
 import com.example.tabyspartner.databinding.FragmentWithDrawBinding
 import com.example.tabyspartner.main.MainPageViewModel
@@ -19,17 +22,30 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 class WithDrawFragment : Fragment() {
     private lateinit var binding: FragmentWithDrawBinding
     private lateinit var viewModel : WithDrawViewModel
+    private lateinit var bindingMainPageBinding: FragmentMainPageBinding
+
+    private val viewModelMainPageViewModel: MainPageViewModel by lazy {
+        ViewModelProvider(this).get(MainPageViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         binding = DataBindingUtil.inflate(
             inflater,R.layout.fragment_with_draw,container,false
         )
+        bindingMainPageBinding = DataBindingUtil.inflate(
+                inflater,R.layout.fragment_main_page,container,false
+        )
         Log.i("MainPageFragment","Called ViewModelProviders.of!")
         viewModel = ViewModelProviders.of(this).get(WithDrawViewModel::class.java)
+
+        viewModelMainPageViewModel.response.observe(viewLifecycleOwner, Observer {
+//          binding.balanceAmountWithDrawPage.text = it.driver_profile.first_name+"\n"+it.driver_profile.last_name
+            binding.balanceAmountWithDrawPage.text = it.accounts[0].balance.toDouble().toInt().toString() + " \u20b8"
+        })
         return binding.root
     }
 

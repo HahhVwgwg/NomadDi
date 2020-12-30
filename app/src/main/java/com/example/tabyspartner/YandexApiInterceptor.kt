@@ -12,5 +12,4 @@ class YandexApiInterceptor : Interceptor {
             .build()
         return chain.proceed(request)
     }
-
 }
