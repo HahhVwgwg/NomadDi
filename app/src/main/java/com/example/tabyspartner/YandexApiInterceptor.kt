@@ -8,7 +8,7 @@ class YandexApiInterceptor : Interceptor {
         val request = chain.request()
             .newBuilder()
             .addHeader("X-Client-ID","taxi/park/2e8584835dd64db99482b4b21f62a2ae")
-            .addHeader("X-Api-Key","rdYDkzjrBFfXcfKdem+g//nimmhWWPIn")
+            .addHeader("X-Api-Key","elogWzVHgKGFFcucmDUnERQsVfytM/OvtfyffQe/")
             .build()
         return chain.proceed(request)
     }

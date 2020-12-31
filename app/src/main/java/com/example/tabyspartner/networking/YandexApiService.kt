@@ -15,16 +15,17 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 
-private const val BASE_URL = "https://fleet-api.taxi.yandex.net/v1/parks/driver-profiles/"
-
-
+private const val BASE_URL = "https://fleet-api.taxi.yandex.net"
 
 interface YandexApiService {
-    @POST("list")
+    @POST("/v1/parks/driver-profiles/list")
     fun getUser(@Body request: GetSomethingRequest): Call<DriverProfilesResponse>
 
-    @POST("list")
-    fun getDriverByPhone(@Body request: GetSomethingRequest): Call<DriverProfilesItem>
+
+    @POST("/v2/parks/transactions/categories/list")
+    fun getCategories(@Body request: CategoryRequest): Call<CategoryResponse>
+
+
 }
 
 object YandexApi {

@@ -21,17 +21,12 @@ import com.example.tabyspartner.withdraw.WithDrawFragment
 import kotlin.properties.Delegates
 
 
-class MainActivity : AppCompatActivity() {
-
-
-    private var isRegistered by Delegates.notNull<Boolean>()
+class MainActivity() : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val REQUEST_CALL = 1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        isRegistered = true
         val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
         handleFrame(MainPageFragment())
@@ -59,13 +54,13 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onStart() {
         super.onStart()
-        if(!isRegistered) {
-            val intent = Intent(this,Authorization::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
-            finish()
-        }
+//        if(!isRegistered) {
+//            val intent = Intent(this,Authorization::class.java)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//            startActivity(intent)
+//            finish()
+//        }
     }
     private fun makePhoneCall() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) !=

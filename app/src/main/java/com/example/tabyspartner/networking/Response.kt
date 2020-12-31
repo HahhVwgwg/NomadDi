@@ -1,11 +1,26 @@
 package com.example.tabyspartner.networking
 
 import com.google.gson.annotations.SerializedName
+import retrofit2.http.Query
 import java.util.*
 
 data class GetSomethingRequest(val query: Query) {
     data class Query(val park: Park) {
         data class Park(val id: String)
+    }
+}
+
+data class CategoryRequest(val query: Query) {
+    data class Query(val category : Category, val park: Park) {
+        data class Category(
+                var is_affecting_driver_balance : Boolean,
+                var is_creatable : Boolean,
+                var is_editable : Boolean,
+                var is_enabled : Boolean
+        )
+        data class Park(
+                val id : String
+        )
     }
 }
 
@@ -31,6 +46,21 @@ data class Account(
     val id: String,
     val last_transaction_date: String,
     val type: String
+)
+
+
+data class CategoryResponse(
+        val categories: List<Category>
+)
+data class Category(
+        val group_id: String,
+        val group_name: String,
+        val id: String,
+        var is_affecting_driver_balance: Boolean,
+        var is_creatable: Boolean,
+        var is_editable: Boolean,
+        var is_enabled: Boolean,
+        val name: String
 )
 
 
