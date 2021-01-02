@@ -21,12 +21,13 @@ class MobizonActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val ss: String? = intent.getStringExtra("OTP")
+        val ss: String? = intent.getStringExtra("verCode")
         binding.verifyBtn.setOnClickListener {
             if(binding.otpTextView.text.toString() == ss) {
                 startActivity(Intent(this,MainActivity()::class.java))
+                finish()
             }else {
-                binding.otpFormFeedback.text = "Код неверный убедитесь что вы ввели неверно"
+                binding.otpFormFeedback.text = "Код неверный убедитесь что вы ввели правильный код"
                 binding.otpFormFeedback.visibility = View.VISIBLE
             }
         }

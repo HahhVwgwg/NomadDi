@@ -49,39 +49,24 @@ class Authorization : AppCompatActivity() {
                 binding.loginFormFeedback.text = "Пожалуйста введите корректный номер xxx-xxx-xx-xx"
                 binding.loginFormFeedback.visibility = View.VISIBLE
             } else {
-                binding.loginProgressBar.visibility = View.VISIBLE
-                binding.generateBtn.isEnabled = false
-                binding.loginFormFeedback.visibility = View.INVISIBLE
-                val randomOTP  = Otp().OTP(4)
-                val apiKey = "kzd22a59d1901e822d4a767ef3bdb90a233d879cdb67be0dff27ecde91897e276ea46d"
-                viewModel.getUser(this,"+$complete_phone_number",randomOTP)
+                viewModel.getUser("+$complete_phone_number")
                 viewModel.response.observe(binding.lifecycleOwner as Authorization, Observer {
-                  if(it.driver_profile.first_name!=null) {
-                      val homeIntent = Intent(this,MobizonActivity::class.java)
-                      homeIntent.putExtra("OTP",randomOTP)
-                      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                      startActivity(homeIntent)
-                      finish()
-                  }else {
-                      binding.loginFormFeedback.text = "Такого пользователя нет в списке водителей"
-                      binding.loginProgressBar.visibility = View.INVISIBLE
-                      binding.loginFormFeedback.visibility = View.VISIBLE
-                      binding.generateBtn.isEnabled = true
-                  }
+                    //println(it.driver_profile.phones[0])
+                    if(it.driver_profile.phones[0]=="+${complete_phone_number}") {
+                        viewModel.getMessageStatus(this,"+$complete_phone_number")
+                        viewModel.responseOtp.observe(binding.lifecycleOwner as Authorization, Observer {
+                            val intent = Intent(this,MobizonActivity::class.java)
+                            intent.putExtra("verCode",it)
+                            startActivity(intent)
+                            finish()
+                        })
+                    }
+                    else {
+                        binding.loginFormFeedback.text = "Такого пользователя нет в списке водителей"
+                        binding.loginProgressBar.visibility = View.INVISIBLE
+                        binding.loginFormFeedback.visibility = View.VISIBLE
+                    }
                 })
-
-//                MobizonApi.retrofitService.sendMessage(recipient = complete_phone_number,text = "Ваш код подтверждения: "+randomOTP.OTP(4),apiKey = apiKey).enqueue(object : Callback<MobizonResponse> {
-//                    override fun onResponse(call: Call<MobizonResponse>, response: Response<MobizonResponse>) {
-//                        if(response.body()?.data?.status == 1) {
-//                            val intent = Intent(this@Authorization,MobizonActivity::class.java)
-//                            startActivity(intent)
-//                        }
-//                    }
-//                    override fun onFailure(call: Call<MobizonResponse>, t: Throwable) {
-//                        Log.d("Mobizon",t.message.toString())
-//                    }
-//                })
             }
         }
 
