@@ -13,60 +13,89 @@ import retrofit2.Response
 
 class WithDrawViewModel : ViewModel() {
 
-    private val _response = MutableLiveData<CategoryResponse>()
+    private val _response = MutableLiveData<BukhtaFeeResponse>()
 
     // The external immutable LiveData for the request status String
-    val response: LiveData<CategoryResponse>
+    val response: LiveData<BukhtaFeeResponse>
         get() = _response
 
+    private val _responseD = MutableLiveData<DriverProfilesItem>()
+
+    // The external immutable LiveData for the request status String
+    val responseD: LiveData<DriverProfilesItem>
+        get() = _responseD
+
     var cardItemsLis = mutableListOf(
-        CreditCard("Каспи Голд","4405 1833 7933 1608")
+        CreditCard("Каспи Голд", "4405 1833 7933 1608")
     )
 
     init {
-        Log.i("WithDrawViewModel","WithDrawViewModel called")
+        Log.i("WithDrawViewModel", "WithDrawViewModel called")
 //        getYandexTransactionCategories()
     }
 
     override fun onCleared() {
         super.onCleared()
-        Log.i("WithDrawViewModel","WithDrawViewModel destroyed")
+        Log.i("WithDrawViewModel", "WithDrawViewModel destroyed")
+    }
+
+    fun getFee(amount: String, card_number: String) {
+        val request = FeeRequest(
+            contract_source_id = 24,
+            external_ref_id = "1231",
+            card_number = card_number,
+            amount = amount
+        )
+
+        BukhtaApi.retrofitService.calculateFee(request)
+            .enqueue(object : Callback<BukhtaFeeResponse> {
+                override fun onResponse(
+                    call: Call<BukhtaFeeResponse>,
+                    response: Response<BukhtaFeeResponse>
+                ) {
+                    Log.d("Bukhta", response.toString())
+                }
+
+                override fun onFailure(call: Call<BukhtaFeeResponse>, t: Throwable) {
+                    Log.d("Bukhta", t.message.toString())
+                }
+
+            })
     }
 
 
-    fun getYandexTransactionCategories() {
+    fun getYandexDriversProperties(phone: String) {
 
         val parkId = "2e8584835dd64db99482b4b21f62a2ae"
-        val request = CategoryRequest(
-                query = CategoryRequest.Query(
-                        category = CategoryRequest.Query.Category(
-                                true,
-                                true,
-                                true,
-                                true
-                        ),
-                        park = CategoryRequest.Query.Park(parkId)
-                )
+
+        val request = GetSomethingRequest(
+            query = GetSomethingRequest.Query(
+                park = GetSomethingRequest.Query.Park(parkId)
+            )
         )
 
 
-        YandexApi.retrofitService.getCategories(request).enqueue(object : Callback<CategoryResponse> {
-            override fun onResponse(call: Call<CategoryResponse>, response: Response<CategoryResponse>) {
-                Log.d("Yandex",response.body().toString())
+        YandexApi.retrofitService.getUser(request)
+            .enqueue(object : Callback<DriverProfilesResponse> {
+                override fun onResponse(
+                    call: Call<DriverProfilesResponse>,
+                    response: Response<DriverProfilesResponse>
+                ) {
+                    //Log.d("Yandex",response.body()!!.driversList.toString())
 
-//                for (i in response.body()!!.categories.indices){
-//                    response.body()!!.categories[i].is_affecting_driver_balance = true
-//                    response.body()!!.categories[i].is_creatable = true
-//                    response.body()!!.categories[i].is_editable = true
-//                    response.body()!!.categories[i].is_enabled = true
-//                }
+                    for (i in response.body()!!.driversList.indices) {
+                        if (response.body()!!.driversList[i].driver_profile.phones[0] == phone) {
+                            _responseD.value = response.body()!!.driversList[i]
+                            //Log.d("Yandex",response.body()!!.driversList[i].driver_profile.first_name)
+                        }
 
-            }
+                    }
+                }
 
-            override fun onFailure(call: Call<CategoryResponse>, t: Throwable) {
-                Log.d("Yandex",t.message.toString())
-            }
-        })
+                override fun onFailure(call: Call<DriverProfilesResponse>, t: Throwable) {
+                    Log.d("Yandex", t.message.toString())
+                }
+            })
 
     }
 

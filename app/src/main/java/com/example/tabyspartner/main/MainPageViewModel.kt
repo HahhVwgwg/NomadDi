@@ -24,10 +24,6 @@ class MainPageViewModel : ViewModel() {
     /**
      * Call getYandexDriversProperties() on init so we can display status immediately.
      */
-    init {
-        getYandexDriversProperties()
-    }
-
     var slideModelsList = mutableListOf(
         SlideModel(
             "https://images.pexels.com/photos/6190993/pexels-photo-6190993.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
@@ -55,7 +51,7 @@ class MainPageViewModel : ViewModel() {
     /**
      * Sets the value of the status LiveData to the Yandex status.
      */
-    private fun getYandexDriversProperties() {
+    fun getYandexDriversProperties(phone:String) {
 
         val parkId = "2e8584835dd64db99482b4b21f62a2ae"
 
@@ -71,7 +67,7 @@ class MainPageViewModel : ViewModel() {
                 //Log.d("Yandex",response.body()!!.driversList.toString())
 
                 for (i in response.body()!!.driversList.indices){
-                    if(response.body()!!.driversList[i].driver_profile.phones[0]=="+77082908295") {
+                    if(response.body()!!.driversList[i].driver_profile.phones[0]==phone) {
                         _response.value = response.body()!!.driversList[i]
                                 //Log.d("Yandex",response.body()!!.driversList[i].driver_profile.first_name)
                     }

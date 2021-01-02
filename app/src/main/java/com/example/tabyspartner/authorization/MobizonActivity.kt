@@ -1,14 +1,14 @@
 package com.example.tabyspartner.authorization
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.tabyspartner.MainActivity
 import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.ActivityMobizonBinding
+import com.example.tabyspartner.main.MainPageFragment
 
 class MobizonActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMobizonBinding
@@ -21,14 +21,16 @@ class MobizonActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val ss: String? = intent.getStringExtra("verCode")
+        val otp: String? = intent.getStringExtra("verCode")
+        val phone: String? = intent.getStringExtra("phoneNumber")
         binding.verifyBtn.setOnClickListener {
-            if(binding.otpTextView.text.toString() == ss) {
-                startActivity(Intent(this,MainActivity()::class.java))
+            binding.otpProgressBar.visibility = View.VISIBLE
+            if(binding.otpTextView.text.toString() == otp) {
+                startActivity(Intent(this, MainActivity()::class.java))
                 finish()
             }else {
                 binding.otpFormFeedback.text = "Код неверный убедитесь что вы ввели правильный код"
-                binding.otpFormFeedback.visibility = View.VISIBLE
+
             }
         }
     }

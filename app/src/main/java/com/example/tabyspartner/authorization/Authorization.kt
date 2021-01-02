@@ -1,6 +1,8 @@
 package com.example.tabyspartner.authorization
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,6 +18,7 @@ import com.example.tabyspartner.main.MainPageViewModel
 import com.example.tabyspartner.networking.MobizonApi
 import com.example.tabyspartner.networking.MobizonResponse
 import com.example.tabyspartner.otp.Otp
+import com.example.tabyspartner.prefs.PreferencesManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,59 +32,73 @@ class Authorization : AppCompatActivity() {
         ViewModelProvider(this).get(AuthorizationViewModel::class.java)
     }
 
-
-    private var isRegistered by Delegates.notNull<Boolean>()
+    lateinit var sharedPreferences: SharedPreferences
+    var isRegistered = false
+    var phoneNumber = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_authorization)
         binding.lifecycleOwner = this
-        isRegistered = false
-        binding.generateBtn.setOnClickListener {
-            val phone_number =  binding.phoneNumberText.text.toString()
-            val complete_phone_number =
-                    binding.countryCodeText.text.subSequence(1,binding.countryCodeText.text.length).toString()+
-                            "" + binding.phoneNumberText.text.toString()
-            if(phone_number.trim().isEmpty()) {
-                binding.loginFormFeedback.text = "Пожалуйста введите номер телефона"
-                binding.loginFormFeedback.visibility = View.VISIBLE
-            }else if(phone_number.trim().length != 10){
-                binding.loginFormFeedback.text = "Пожалуйста введите корректный номер xxx-xxx-xx-xx"
-                binding.loginFormFeedback.visibility = View.VISIBLE
-            } else {
-                viewModel.getUser("+$complete_phone_number")
-                viewModel.response.observe(binding.lifecycleOwner as Authorization, Observer {
-                    //println(it.driver_profile.phones[0])
-                    if(it.driver_profile.phones[0]=="+${complete_phone_number}") {
-                        viewModel.getMessageStatus(this,"+$complete_phone_number")
-                        viewModel.responseOtp.observe(binding.lifecycleOwner as Authorization, Observer {
-                            val intent = Intent(this,MobizonActivity::class.java)
-                            intent.putExtra("verCode",it)
-                            startActivity(intent)
-                            finish()
-                        })
-                    }
-                    else {
-                        binding.loginFormFeedback.text = "Такого пользователя нет в списке водителей"
-                        binding.loginProgressBar.visibility = View.INVISIBLE
-                        binding.loginFormFeedback.visibility = View.VISIBLE
-                    }
-                })
+
+        sharedPreferences = getSharedPreferences("app_prefs",Context.MODE_PRIVATE)
+
+        isRegistered = sharedPreferences.getBoolean("USER_REGISTERED",false)
+        phoneNumber = sharedPreferences.getString("USER_PHONE_NUMBER","")!!
+
+
+        if(isRegistered) {
+            val intent = Intent(this,MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }else {
+            binding.generateBtn.setOnClickListener {
+                val phone_number =  binding.phoneNumberText.text.toString()
+                val complete_phone_number =
+                        binding.countryCodeText.text.subSequence(1,binding.countryCodeText.text.length).toString()+
+                                "" + binding.phoneNumberText.text.toString()
+                if(phone_number.trim().isEmpty()) {
+                    binding.loginFormFeedback.text = "Пожалуйста введите номер телефона"
+                    binding.loginFormFeedback.visibility = View.VISIBLE
+                }else if(phone_number.trim().length != 10){
+                    binding.loginFormFeedback.text = "Пожалуйста введите корректный номер xxx-xxx-xx-xx"
+                    binding.loginFormFeedback.visibility = View.VISIBLE
+                } else {
+                    binding.loginProgressBar.visibility = View.VISIBLE
+                    binding.generateBtn.isEnabled = false
+                    //binding.loginFormFeedback.visibility = View.VISIBLE
+                    viewModel.getUser("+$complete_phone_number")
+                    viewModel.response.observe(binding.lifecycleOwner as Authorization, Observer {
+                        //println(it.driver_profile.phones[0])
+                        if(it.driver_profile.phones[0]=="+${complete_phone_number}") {
+                            sharedPreferences.edit()
+                                    .putString("USER_PHONE_NUMBER","+${complete_phone_number}")
+                                    .putBoolean("USER_REGISTERED",true)
+                                    .apply()
+                            viewModel.getMessageStatus(this,"+$complete_phone_number")
+                            viewModel.responseOtp.observe(binding.lifecycleOwner as Authorization, Observer {
+                                val intent = Intent(this,MobizonActivity::class.java)
+                                intent.putExtra("phoneNumber", "+$complete_phone_number")
+                                intent.putExtra("verCode",it)
+                                startActivity(intent)
+                                finish()
+                            })
+                        }
+                        else {
+                            binding.loginFormFeedback.text = "Такого пользователя нет в списке водителей"
+                            binding.loginFormFeedback.visibility = View.VISIBLE
+                        }
+                    })
+                }
             }
         }
-
         binding.root
     }
 
+
+
     override fun onStart() {
         super.onStart()
-//        if(isRegistered) {
-//            val homeIntent = Intent(this,MainActivity::class.java)
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-//            startActivity(homeIntent)
-//            finish()
-//        }
     }
 
 

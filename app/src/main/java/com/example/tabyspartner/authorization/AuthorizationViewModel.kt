@@ -17,23 +17,20 @@ import retrofit2.Response
 
 
 class AuthorizationViewModel : ViewModel() {
-        private val _responseDriver = MutableLiveData<DriverProfilesItem>()
+    private val _responseDriver = MutableLiveData<DriverProfilesItem>()
     val response: LiveData<DriverProfilesItem>
         get() = _responseDriver
-    // The internal MutableLiveData String that stores the status of the most recent request
-    private val _response = MutableLiveData<MobizonResponse>()
 
-    // The external immutable LiveData for the request status String
+
+    private val _response = MutableLiveData<MobizonResponse>()
     val response_mobizon: LiveData<MobizonResponse>
         get() = _response
+
 
     private val _responseOtp = MutableLiveData<String>()
     val responseOtp: LiveData<String>
         get() = _responseOtp
 
-//    init {
-//        getMessageStatus()
-//    }
 
     override fun onCleared() {
         super.onCleared()
@@ -75,6 +72,7 @@ class AuthorizationViewModel : ViewModel() {
             override fun onResponse(call: Call<DriverProfilesResponse>, response: Response<DriverProfilesResponse>) {
                 for (i in response.body()!!.driversList.indices){
                     if(response.body()!!.driversList[i].driver_profile.phones[0]==phone) {
+                        //Log.d("Yandex",response.body()!!.driversList[i].toString())
                         _responseDriver.value = response.body()!!.driversList[i]
                     }
                 }
