@@ -18,6 +18,7 @@ import com.example.tabyspartner.main.MainPageViewModel
 import com.example.tabyspartner.networking.MobizonApi
 import com.example.tabyspartner.networking.MobizonResponse
 import com.example.tabyspartner.otp.Otp
+import com.example.tabyspartner.pin.VerificationActivity
 import com.example.tabyspartner.prefs.PreferencesManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -48,7 +49,7 @@ class Authorization : AppCompatActivity() {
 
 
         if(isRegistered) {
-            val intent = Intent(this,MainActivity::class.java)
+            val intent = Intent(this,VerificationActivity::class.java)
             startActivity(intent)
             finish()
         }else {

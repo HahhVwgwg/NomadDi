@@ -33,7 +33,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
 
                     app:layout_constraintEnd_toEndOf="@id/imageSlider"
                     app:layout_constraintStart_toStartOf="@id/imageSlider"
@@ -53,12 +53,13 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:orientation="vertical"
+                                    android:background="@drawable/group_1"
                                     >
                                         <TextView
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:text="@string/profile_card_view_title"
-                                            android:textColor="@color/black"
+                                            android:textColor="#E27C39"
                                             android:textStyle="bold"
                                             android:layout_marginTop="10dp"
                                             android:layout_marginStart="10dp"
@@ -70,7 +71,7 @@
                                             tools:text="@string/profile_card_view_profile_name"
                                             android:textStyle="bold"
                                             android:textSize="18sp"
-                                            android:textColor="#00FF00"
+                                            android:textColor="@color/black"
                                             android:layout_marginStart="10dp"
                                             android:layout_marginTop="10dp"
                                             />
@@ -94,15 +95,6 @@
                                                     app:layout_constraintTop_toTopOf="parent"
                                                     app:layout_constraintVertical_bias="0.62" />
 
-                                                <ImageView
-                                                    android:layout_width="50dp"
-                                                    android:layout_height="50dp"
-                                                    android:layout_marginEnd="8dp"
-                                                    android:layout_weight="1"
-                                                    android:src="@drawable/ic_baseline_account_circle_24"
-                                                    app:layout_constraintBottom_toBottomOf="@+id/more_profile_btn"
-                                                    app:layout_constraintEnd_toEndOf="parent"
-                                                    app:layout_constraintTop_toTopOf="@+id/more_profile_btn" />
                                         </androidx.constraintlayout.widget.ConstraintLayout>
                                 </LinearLayout>
                         </androidx.cardview.widget.CardView>
@@ -114,18 +106,21 @@
                             android:elevation="4dp"
                             android:layout_height="150dp"
                             android:layout_margin="10dp"
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+
+                            >
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
+                                    android:background="@drawable/group_2"
                                     android:orientation="vertical"
                                     >
                                         <TextView
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:text="@string/balance_card_view_balance_title"
-                                            android:textColor="@color/black"
+                                            android:textColor="#2A2A72"
                                             android:textStyle="bold"
                                             android:layout_marginTop="10dp"
                                             android:layout_marginStart="10dp"
@@ -137,7 +132,7 @@
                                             tools:text="@string/balance_card_view_cash_amount"
                                             android:textStyle="bold"
                                             android:textSize="18sp"
-                                            android:textColor="#00FF00"
+                                            android:textColor="#000000"
                                             android:layout_marginStart="10dp"
                                             android:layout_marginTop="10dp"
                                             />
@@ -161,15 +156,6 @@
                                                     app:layout_constraintTop_toTopOf="parent"
                                                     app:layout_constraintVertical_bias="0.75" />
 
-                                                <ImageView
-                                                    android:layout_width="50dp"
-                                                    android:layout_height="50dp"
-                                                    android:layout_marginEnd="8dp"
-                                                    android:layout_weight="1"
-                                                    android:src="@drawable/ic_baseline_attach_money_24"
-                                                    app:layout_constraintBottom_toBottomOf="@+id/withdraw_btn"
-                                                    app:layout_constraintEnd_toEndOf="parent"
-                                                    app:layout_constraintTop_toTopOf="@+id/withdraw_btn" />
                                         </androidx.constraintlayout.widget.ConstraintLayout>
                                 </LinearLayout>
 

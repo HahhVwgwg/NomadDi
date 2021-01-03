@@ -64,6 +64,31 @@ class WithDrawViewModel : ViewModel() {
     }
 
 
+    fun withdrawCash(amount: String, card_number: String) {
+        val request = FeeRequest(
+            contract_source_id = 24,
+            external_ref_id = "7369",
+            card_number = card_number,
+            amount = amount
+        )
+
+        BukhtaApi.retrofitService.withdrawCash(request)
+            .enqueue(object : Callback<BukhtaWithDrawResponse> {
+                override fun onResponse(
+                    call: Call<BukhtaWithDrawResponse>,
+                    response: Response<BukhtaWithDrawResponse>
+                ) {
+                    Log.d("BukhtaWithDraw", response.body().toString())
+                }
+
+                override fun onFailure(call: Call<BukhtaWithDrawResponse>, t: Throwable) {
+                    Log.d("BukhtaWithDraw", t.message.toString())
+                }
+
+            })
+    }
+
+
     fun getYandexDriversProperties(phone: String) {
 
         val parkId = "2e8584835dd64db99482b4b21f62a2ae"

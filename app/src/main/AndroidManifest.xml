@@ -13,8 +13,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TabysPartner">
-        <activity android:name=".authorization.MobizonActivity"></activity>
-        <activity android:name=".authorization.Authorization">
+        <activity android:name=".pin.VerificationActivity"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".authorization.MobizonActivity"
+            android:screenOrientation="portrait"
+            >
+
+        </activity>
+        <activity android:name=".authorization.Authorization"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,9 +32,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

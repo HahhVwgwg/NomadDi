@@ -1,29 +1,24 @@
 package com.example.tabyspartner
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
-import com.example.tabyspartner.authorization.Authorization
 import com.example.tabyspartner.databinding.ActivityMainBinding
 import com.example.tabyspartner.main.MainPageFragment
 import com.example.tabyspartner.profile.ProfileFragment
 import com.example.tabyspartner.withdraw.WithDrawFragment
-import kotlin.properties.Delegates
+import java.lang.Thread.sleep
 
 
 class MainActivity() : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
     lateinit var sharedPreferences: SharedPreferences
     private val REQUEST_CALL = 1
@@ -59,12 +54,15 @@ class MainActivity() : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
     }
+
     private fun makePhoneCall() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) !=
             PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CALL_PHONE),
-                REQUEST_CALL);
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.CALL_PHONE),
+                REQUEST_CALL
+            );
         }else {
             startCall()
         }
@@ -86,7 +84,7 @@ class MainActivity() : AppCompatActivity() {
 
     private fun handleFrame(fragment: Fragment): Boolean {
         val fragmentTransaction = this.supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.navHostFragment,fragment).commit()
+        fragmentTransaction.replace(R.id.navHostFragment, fragment).commit()
         return true
     }
 

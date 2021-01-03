@@ -102,7 +102,9 @@ class WithDrawFragment : Fragment() {
 
 
         binding.withdrawBtnWithdrawPage.setOnClickListener {
-            viewModel.getFee(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString())
+
+           // Log.d("BukhtaCheckValid",binding.withDrawAmount.text.toString()+" "+binding.chooseCardBtn.text.toString())
+            //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString())
         }
     }
 }
