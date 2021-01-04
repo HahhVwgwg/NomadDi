@@ -6,8 +6,3 @@ data class CreditCard(
     var creditCardNumber: String = ""
 )
 
-class ToDoModel {
-    var id = 0
-    var status = 0
-    var task: String? = null
-}

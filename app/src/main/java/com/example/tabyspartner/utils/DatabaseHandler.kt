@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.tabyspartner.model.CreditCard
 import java.util.*
@@ -13,11 +14,8 @@ import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.P)
 class DatabaseHandler(
-    context: Context?,
-    name: String?,
-    version: Int,
-    openParams: SQLiteDatabase.OpenParams
-) : SQLiteOpenHelper(context, name, version, openParams) {
+    var context: Context?,
+) : SQLiteOpenHelper(context,"CreditCardListDatabase.db",null,1) {
 
     private val VERSION = 1
     private val NAME = "CreditCardListDatabase"
@@ -25,36 +23,41 @@ class DatabaseHandler(
     private val ID = "id"
     private val CREDIT_CARD_NAME = "credit_card_name"//CREDIT_CARD_NAME CREDIT_CARD_NUMBER
     private val CREDIT_CARD_NUMBER = "credit_card_number"
-    private val CREATE_CREDIT_CARD_TABLE =
-        "CREATE TABLE " + CREDIT_CARD_TABLE + "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
-                CREDIT_CARD_NAME + "TEXT, " + CREDIT_CARD_NUMBER + "TEXT)"
+//    private val CREATE_CREDIT_CARD_TABLE =
+//        "CREATE TABLE " + CREDIT_CARD_TABLE + "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
+//                CREDIT_CARD_NAME + "TEXT, " + CREDIT_CARD_NUMBER + "TEXT)"
 
 
-    private var db: SQLiteDatabase? = null
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(CREATE_CREDIT_CARD_TABLE)
+       val query =
+        "CREATE TABLE " + CREDIT_CARD_TABLE + "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                CREDIT_CARD_NAME + " TEXT, " + CREDIT_CARD_NUMBER + " TEXT);"
+        db.execSQL(query)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS $CREATE_CREDIT_CARD_TABLE")
+        db.execSQL("DROP TABLE IF EXISTS "+CREDIT_CARD_TABLE)
         // Create tables again
         onCreate(db)
     }
 
-    fun openDatabase() {
-        db = this.writableDatabase
-    }
-
     fun insertTask(creditCard: CreditCard) {
+        val db = this.writableDatabase
         val cv = ContentValues()
         cv.put(CREDIT_CARD_NAME, creditCard.creditCardName)
         cv.put(CREDIT_CARD_NUMBER, creditCard.creditCardNumber)
-        db?.insert(CREDIT_CARD_TABLE, null, cv)
+        val result = db?.insert(CREDIT_CARD_TABLE, null, cv)
+        if(result?.toInt() == -1) {
+            Toast.makeText(context,"Fail",Toast.LENGTH_SHORT).show()
+        }else {
+            Toast.makeText(context,"Success",Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun getAllCreditCards(): List<CreditCard>? {
+        val db = this.readableDatabase
         val creditCardList: MutableList<CreditCard> = ArrayList<CreditCard>()
         var cur: Cursor? = null
         db?.beginTransaction()
@@ -80,20 +83,26 @@ class DatabaseHandler(
     }
     //CREDIT_CARD_NAME CREDIT_CARD_NUMBER
     fun updateCreditCardName(id: Int, cardName: String?) {
+        val db = this.writableDatabase
         val cv = ContentValues()
         cv.put(CREDIT_CARD_NAME, cardName)
         db?.update(CREDIT_CARD_TABLE, cv, "$ID= ?", arrayOf(id.toString()))
     }
 
     fun updateCreditCardNumber(id: Int, cardNumber: String?) {
+        val db = this.writableDatabase
         val cv = ContentValues()
         cv.put(CREDIT_CARD_NUMBER, cardNumber)
         db?.update(CREDIT_CARD_TABLE, cv, "$ID= ?", arrayOf(id.toString()))
     }
 
-    fun deleteTask(id: Int) {
+    fun deleteCard(id: Int) {
+        val db = this.writableDatabase
         db?.delete(CREDIT_CARD_TABLE, "$ID= ?", arrayOf(id.toString()))
     }
 
-
+    fun deleteAllData() {
+        val db = this.writableDatabase
+        db.execSQL("delete from "+ CREDIT_CARD_TABLE);
+    }
 }

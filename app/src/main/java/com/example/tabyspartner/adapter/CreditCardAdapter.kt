@@ -27,10 +27,11 @@ class CreditCardAdapter (
         holder.bindItem(items[position])
     }
     override fun getItemCount(): Int {
-        return if(items.size > limit){
-            limit;
-        } else {
-            items.size;
-        }
+//        return if(items.size > limit){
+//            limit;
+//        } else {
+//            items.size;
+//        }
+        return items.size
     }
 }
