@@ -25,7 +25,10 @@
     <string name="authorization_page_edit_text_hint">Введите номер телефона</string>
     <string name="authorization_page_continue_button_text">Продолжить</string>
     <string name="alert_password_recover_title">Восстановление</string>
-    <string name="alert_password_recover_message">Вы уверены что хотите сделать восстановление пинкода</string>
+    <string name="alert_password_recover_message">Вы уверены что хотите сделать восстановление пинкода?</string>
     <string name="accept">Да</string>
     <string name="decline">Отмена</string>
+    <string name="change_pincode_title">Изменение пинкода</string>
+    <string name="change_pincode_message">Вы уверены что хотите изменить пинкод?</string>
+
 </resources>

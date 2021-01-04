@@ -24,10 +24,6 @@ class WithDrawViewModel : ViewModel() {
     val responseD: LiveData<DriverProfilesItem>
         get() = _responseD
 
-    var cardItemsLis = mutableListOf(
-        CreditCard("Каспи Голд", "4405 1833 7933 1608")
-    )
-
     init {
         Log.i("WithDrawViewModel", "WithDrawViewModel called")
 //        getYandexTransactionCategories()

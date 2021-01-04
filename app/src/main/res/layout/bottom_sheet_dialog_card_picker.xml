@@ -25,6 +25,23 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/credit_card_list"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:nestedScrollingEnabled="true"
+
+            />
+
+    </LinearLayout>
+
 <!--    <EditText-->
 <!--        android:id="@+id/card_number_text"-->
 <!--        android:layout_width="match_parent"-->
@@ -69,7 +86,7 @@
                     android:layout_marginStart="24dp"
                     android:text="@string/add_card_text"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/add_card_logo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/add_card_logo"

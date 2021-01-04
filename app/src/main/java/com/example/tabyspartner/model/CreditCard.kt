@@ -1,6 +1,13 @@
 package com.example.tabyspartner.model
 
 data class CreditCard(
-         val creditCardName: String,
-         val creditCardNumber: String
+    var id: Int = 0,
+    var creditCardName: String = "",
+    var creditCardNumber: String = ""
 )
+
+class ToDoModel {
+    var id = 0
+    var status = 0
+    var task: String? = null
+}

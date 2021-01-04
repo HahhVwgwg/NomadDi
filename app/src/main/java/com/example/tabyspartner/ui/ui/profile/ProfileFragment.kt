@@ -11,7 +11,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.FragmentProfileBinding
+import com.example.tabyspartner.ui.ui.authorization.Authorization
 import com.example.tabyspartner.ui.ui.pin.VerificationActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
@@ -36,9 +38,22 @@ class ProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         binding.changePinCodeBtn.setOnClickListener {
-            sharedPreferences.edit().remove("USER_PIN_CODE_CREATED").apply()
-            sharedPreferences.edit().remove("USER_PIN_CODE").apply()
-            context?.startActivity(Intent(requireContext(), VerificationActivity::class.java))
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(resources.getString(R.string.change_pincode_title))
+                .setMessage(resources.getString(R.string.change_pincode_message))
+                .setNegativeButton(resources.getString(R.string.decline)) { dialog, which ->
+                    // Respond to negative button press
+                    dialog.dismiss()
+                }
+                .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
+                    // Respond to positive button press
+                    sharedPreferences.edit().remove("USER_PIN_CODE_CREATED").apply()
+                    sharedPreferences.edit().remove("USER_PIN_CODE").apply()
+                    context?.startActivity(Intent(requireContext(), VerificationActivity::class.java))
+                }
+                .show()
+
+
         }
     }
 
