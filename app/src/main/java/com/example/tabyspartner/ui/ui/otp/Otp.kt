@@ -1,4 +1,4 @@
-package com.example.tabyspartner.otp
+package com.example.tabyspartner.ui.ui.otp
 
 import java.util.*
 

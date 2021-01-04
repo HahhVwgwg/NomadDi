@@ -1,10 +1,9 @@
-package com.example.tabyspartner.withdraw
+package com.example.tabyspartner.ui.ui.withdraw
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.denzcoskun.imageslider.models.SlideModel
 import com.example.tabyspartner.model.CreditCard
 import com.example.tabyspartner.networking.*
 import retrofit2.Call

@@ -12,9 +12,9 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.tabyspartner.databinding.ActivityMainBinding
-import com.example.tabyspartner.main.MainPageFragment
-import com.example.tabyspartner.profile.ProfileFragment
-import com.example.tabyspartner.withdraw.WithDrawFragment
+import com.example.tabyspartner.ui.ui.main.MainPageFragment
+import com.example.tabyspartner.ui.ui.profile.ProfileFragment
+import com.example.tabyspartner.ui.ui.withdraw.WithDrawFragment
 
 
 class MainActivity() : AppCompatActivity() {
@@ -29,7 +29,7 @@ class MainActivity() : AppCompatActivity() {
         val toolbarTitle = findViewById<TextView>(R.id.toolbar_title)
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle("")
-        toolbarTitle.setText("Табыс Партнер")
+        toolbarTitle.setText("Главная")
 
         handleFrame(MainPageFragment())
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
@@ -39,14 +39,17 @@ class MainActivity() : AppCompatActivity() {
                     true
                 }
                 R.id.main_menu_item -> {
+                    toolbarTitle.setText("Главная")
                     handleFrame(MainPageFragment())
                     true
                 }
                 R.id.withdraw_menu_item -> {
+                    toolbarTitle.setText("Вывод средств")
                     handleFrame(WithDrawFragment())
                     true
                 }
                 R.id.profile_menu_item -> {
+                    toolbarTitle.setText("Профиль")
                     handleFrame(ProfileFragment())
                     true
                 }

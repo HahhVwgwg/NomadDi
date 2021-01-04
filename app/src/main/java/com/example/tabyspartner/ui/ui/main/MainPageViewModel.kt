@@ -1,4 +1,4 @@
-package com.example.tabyspartner.main
+package com.example.tabyspartner.ui.ui.main
 
 import android.util.Log
 import androidx.lifecycle.LiveData

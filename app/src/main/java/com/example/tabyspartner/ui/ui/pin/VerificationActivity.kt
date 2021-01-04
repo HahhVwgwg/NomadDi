@@ -1,4 +1,4 @@
-package com.example.tabyspartner.pin
+package com.example.tabyspartner.ui.ui.pin
 
 import android.content.Context
 import android.content.Intent
@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.tabyspartner.MainActivity
 import com.example.tabyspartner.R
-import com.example.tabyspartner.authorization.Authorization
+import com.example.tabyspartner.ui.ui.authorization.Authorization
 import com.example.tabyspartner.databinding.ActivityVerificationBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -51,7 +51,7 @@ class VerificationActivity : AppCompatActivity() {
                     .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
                         // Respond to positive button press
                         sharedPreferences.edit().clear().apply()
-                        startActivity(Intent(this,Authorization::class.java))
+                        startActivity(Intent(this, Authorization::class.java))
                         finish()
                     }
                     .show()

@@ -5,23 +5,23 @@
         <data>
                 <variable
                     name="viewModel"
-                    type="com.example.tabyspartner.main.MainPageViewModel" />
+                    type="com.example.tabyspartner.ui.ui.main.MainPageViewModel" />
         </data>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".main.MainPageFragment">
+            tools:context=".ui.ui.main.MainPageFragment">
 
 
-<!--                <androidx.viewpager2.widget.ViewPager2-->
-<!--                    android:id="@+id/on_boarding_view_pager"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="200dp"-->
-<!--                    />-->
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/on_boarding_view_pager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    />
 
 <!--                <com.denzcoskun.imageslider.ImageSlider-->
 <!--                    android:id="@+id/imageSlider"-->
@@ -46,7 +46,7 @@
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/on_boarding_view_pager">
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/profile_info_btn"

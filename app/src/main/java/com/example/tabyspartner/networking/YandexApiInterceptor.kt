@@ -1,4 +1,4 @@
-package com.example.tabyspartner
+package com.example.tabyspartner.networking
 
 import okhttp3.Interceptor
 import okhttp3.Response

@@ -1,4 +1,4 @@
-package com.example.tabyspartner.authorization
+package com.example.tabyspartner.ui.ui.authorization
 
 import android.content.Context
 import android.content.Intent
@@ -14,11 +14,11 @@ import com.example.tabyspartner.MainActivity
 import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.ActivityAuthorizationBinding
 import com.example.tabyspartner.main.AuthorizationViewModel
-import com.example.tabyspartner.main.MainPageViewModel
+import com.example.tabyspartner.ui.ui.main.MainPageViewModel
 import com.example.tabyspartner.networking.MobizonApi
 import com.example.tabyspartner.networking.MobizonResponse
-import com.example.tabyspartner.otp.Otp
-import com.example.tabyspartner.pin.VerificationActivity
+import com.example.tabyspartner.ui.ui.otp.Otp
+import com.example.tabyspartner.ui.ui.pin.VerificationActivity
 import com.example.tabyspartner.prefs.PreferencesManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -49,7 +49,7 @@ class Authorization : AppCompatActivity() {
 
 
         if(isRegistered) {
-            val intent = Intent(this,VerificationActivity::class.java)
+            val intent = Intent(this, VerificationActivity::class.java)
             startActivity(intent)
             finish()
         }else {
@@ -78,7 +78,7 @@ class Authorization : AppCompatActivity() {
                                     .apply()
                             viewModel.getMessageStatus(this,"+$complete_phone_number")
                             viewModel.responseOtp.observe(binding.lifecycleOwner as Authorization, Observer {
-                                val intent = Intent(this,MobizonActivity::class.java)
+                                val intent = Intent(this, MobizonActivity::class.java)
                                 intent.putExtra("phoneNumber", "+$complete_phone_number")
                                 intent.putExtra("verCode",it)
                                 startActivity(intent)

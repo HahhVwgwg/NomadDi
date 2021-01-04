@@ -8,9 +8,9 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.tabyspartner.authorization.MobizonActivity
+import com.example.tabyspartner.ui.ui.authorization.MobizonActivity
 import com.example.tabyspartner.networking.*
-import com.example.tabyspartner.otp.Otp
+import com.example.tabyspartner.ui.ui.otp.Otp
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

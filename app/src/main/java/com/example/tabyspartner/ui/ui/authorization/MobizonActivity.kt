@@ -1,4 +1,4 @@
-package com.example.tabyspartner.authorization
+package com.example.tabyspartner.ui.ui.authorization
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,8 +8,8 @@ import androidx.databinding.DataBindingUtil
 import com.example.tabyspartner.MainActivity
 import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.ActivityMobizonBinding
-import com.example.tabyspartner.main.MainPageFragment
-import com.example.tabyspartner.pin.VerificationActivity
+import com.example.tabyspartner.ui.ui.main.MainPageFragment
+import com.example.tabyspartner.ui.ui.pin.VerificationActivity
 
 class MobizonActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMobizonBinding

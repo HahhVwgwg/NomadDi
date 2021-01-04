@@ -1,4 +1,4 @@
-package com.example.tabyspartner.profile
+package com.example.tabyspartner.ui.ui.profile
 
 import android.content.Context
 import android.content.Intent
@@ -10,10 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.example.tabyspartner.R
-import com.example.tabyspartner.databinding.ActivityAuthorizationBinding
-import com.example.tabyspartner.databinding.FragmentMainPageBinding
 import com.example.tabyspartner.databinding.FragmentProfileBinding
-import com.example.tabyspartner.pin.VerificationActivity
+import com.example.tabyspartner.ui.ui.pin.VerificationActivity
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
@@ -40,7 +38,7 @@ class ProfileFragment : Fragment() {
         binding.changePinCodeBtn.setOnClickListener {
             sharedPreferences.edit().remove("USER_PIN_CODE_CREATED").apply()
             sharedPreferences.edit().remove("USER_PIN_CODE").apply()
-            context?.startActivity(Intent(requireContext(),VerificationActivity::class.java))
+            context?.startActivity(Intent(requireContext(), VerificationActivity::class.java))
         }
     }
 

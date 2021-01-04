@@ -1,7 +1,6 @@
-package com.example.tabyspartner.withdraw
+package com.example.tabyspartner.ui.ui.withdraw
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -11,9 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.LinearLayout
-import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -22,7 +19,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.FragmentMainPageBinding
 import com.example.tabyspartner.databinding.FragmentWithDrawBinding
-import com.example.tabyspartner.main.MainPageViewModel
+import com.example.tabyspartner.ui.ui.main.MainPageViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 

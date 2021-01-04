@@ -7,7 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".withdraw.CardFormActivity">
+        tools:context=".ui.ui.withdraw.CardFormActivity">
 
         <EditText
             android:id="@+id/card_name_edit_text"

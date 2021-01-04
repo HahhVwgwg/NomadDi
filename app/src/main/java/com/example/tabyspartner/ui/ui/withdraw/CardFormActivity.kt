@@ -1,4 +1,4 @@
-package com.example.tabyspartner.withdraw
+package com.example.tabyspartner.ui.ui.withdraw
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
