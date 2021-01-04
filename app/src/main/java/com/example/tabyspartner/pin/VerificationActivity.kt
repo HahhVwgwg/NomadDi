@@ -10,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.tabyspartner.MainActivity
 import com.example.tabyspartner.R
+import com.example.tabyspartner.authorization.Authorization
 import com.example.tabyspartner.databinding.ActivityVerificationBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class VerificationActivity : AppCompatActivity() {
@@ -37,6 +39,23 @@ class VerificationActivity : AppCompatActivity() {
             binding.tvInputTip.text = "Введите ваш код доступа"
             binding.pinCodeVerifyText.visibility = View.GONE
             binding.pinCodeText.hint = "Введите код"
+            binding.forgetPassword.visibility = View.VISIBLE
+            binding.forgetPassword.setOnClickListener {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(resources.getString(R.string.alert_password_recover_title))
+                    .setMessage(resources.getString(R.string.alert_password_recover_message))
+                    .setNegativeButton(resources.getString(R.string.decline)) { dialog, which ->
+                        // Respond to negative button press
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
+                        // Respond to positive button press
+                        sharedPreferences.edit().clear().apply()
+                        startActivity(Intent(this,Authorization::class.java))
+                        finish()
+                    }
+                    .show()
+            }
             binding.verifyPinCodeBtn.setOnClickListener {
                 if(binding.pinCodeText.text.trim().isEmpty()) {
                     binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
@@ -46,6 +65,7 @@ class VerificationActivity : AppCompatActivity() {
                     binding.verifyCodeFeedBack.visibility = View.VISIBLE
                 } else if (binding.pinCodeText.text.trim().toString() == pinCode){
                     startActivity(Intent(this,MainActivity::class.java))
+                    finish()
                 }
             }
         }else {
@@ -67,6 +87,7 @@ class VerificationActivity : AppCompatActivity() {
                         .apply()
                     Toast.makeText(this,"Пинкод создан",Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this,MainActivity::class.java))
+                    finish()
                 }
             }
         }
