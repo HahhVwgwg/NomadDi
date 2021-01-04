@@ -9,6 +9,7 @@ import com.example.tabyspartner.MainActivity
 import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.ActivityMobizonBinding
 import com.example.tabyspartner.main.MainPageFragment
+import com.example.tabyspartner.pin.VerificationActivity
 
 class MobizonActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMobizonBinding
@@ -26,7 +27,7 @@ class MobizonActivity : AppCompatActivity() {
         binding.verifyBtn.setOnClickListener {
             binding.otpProgressBar.visibility = View.VISIBLE
             if(binding.otpTextView.text.toString() == otp) {
-                startActivity(Intent(this, MainActivity()::class.java))
+                startActivity(Intent(this, VerificationActivity()::class.java))
                 finish()
             }else {
                 binding.otpFormFeedback.text = "Код неверный убедитесь что вы ввели правильный код"

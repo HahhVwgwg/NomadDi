@@ -7,17 +7,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.denzcoskun.imageslider.ImageSlider
 import com.example.tabyspartner.databinding.FragmentMainPageBinding
 import com.example.tabyspartner.prefs.PreferencesManager
 
 class MainPageFragment : Fragment() {
 
-    private lateinit var sliderView: ImageSlider
+   // private lateinit var sliderView: ImageSlider
 
+
+    private lateinit var binding: FragmentMainPageBinding
     private val viewModel: MainPageViewModel by lazy {
         ViewModelProvider(this).get(MainPageViewModel::class.java)
     }
@@ -30,11 +34,13 @@ class MainPageFragment : Fragment() {
 
 
         // Inflate the layout for this fragment
-        val binding = FragmentMainPageBinding.inflate(inflater)
+        binding = FragmentMainPageBinding.inflate(inflater)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        sliderView = binding.imageSlider
-        sliderView.setImageList(viewModel.slideModelsList)
+       // sliderView = binding.imageSlider
+       // sliderView.setImageList(viewModel.slideModelsList)
+
+
         sharedPreferences = context?.getSharedPreferences("app_prefs",Context.MODE_PRIVATE)!!
         val userPhoneNumber = sharedPreferences.getString("USER_PHONE_NUMBER", "")
         viewModel.getYandexDriversProperties(userPhoneNumber!!)

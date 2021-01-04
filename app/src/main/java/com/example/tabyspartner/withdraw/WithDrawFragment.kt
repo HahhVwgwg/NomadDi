@@ -1,6 +1,7 @@
 package com.example.tabyspartner.withdraw
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -27,6 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 class WithDrawFragment : Fragment() {
 
     private lateinit var binding: FragmentWithDrawBinding
+    private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var viewModel : WithDrawViewModel
     private lateinit var bindingMainPageBinding: FragmentMainPageBinding
     lateinit var sharedPreferences : SharedPreferences
@@ -62,6 +65,7 @@ class WithDrawFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         binding.withDrawAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -79,30 +83,40 @@ class WithDrawFragment : Fragment() {
             }
 
         });
-        binding.chooseCardBtn.setOnClickListener {
-            val bottomSheetDialog = BottomSheetDialog(
-                requireContext(),
-                R.style.BottomSheetDialogTheme
+
+        bottomSheetDialog = BottomSheetDialog(
+            requireContext(),
+            R.style.BottomSheetDialogTheme
+        )
+        var bottomSheetView = LayoutInflater.from(requireContext())
+            .inflate(
+                R.layout.bottom_sheet_dialog_card_picker,
+                requireActivity().findViewById(R.id.bottomSheetContainer)
             )
-            val bottomSheetView = LayoutInflater.from(requireContext())
-                .inflate(
-                    R.layout.bottom_sheet_dialog_card_picker,
-                    requireActivity().findViewById(R.id.bottomSheetContainer)
-                )
-            var cardNumber = ""
-            bottomSheetView.findViewById<Button>(R.id.button_dialog_sheet).setOnClickListener{
-                //binding.chooseCardBtn.text = "**** **** **** ${cardNumber.substring(cardNumber.length-4)}"
-                cardNumber =  bottomSheetView.findViewById<EditText>(R.id.card_number_text).text.toString()
-                binding.chooseCardBtn.text = cardNumber
-                bottomSheetDialog.dismiss()
-            }
+        var cardNumber = ""
+
+
+
+        bottomSheetView.findViewById<Button>(R.id.button_dialog_sheet).setOnClickListener{
+            //binding.chooseCardBtn.text = "**** **** **** ${cardNumber.substring(cardNumber.length-4)}"
+            //cardNumber =  bottomSheetView.findViewById<EditText>(R.id.card_number_text).text.toString() //откомментировать
+            //binding.chooseCardBtn.text = cardNumber  //откомментировать
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetView.findViewById<LinearLayout>(R.id.add_card_btn).setOnClickListener {
+            println("Hello From add card btn")
+            //startActivity(Intent(requireContext(),CardFormActivity::class.java))
+        }
+
+
+        binding.chooseCardBtn.setOnClickListener {
             bottomSheetDialog.setContentView(bottomSheetView)
             bottomSheetDialog.show()
         }
 
 
         binding.withdrawBtnWithdrawPage.setOnClickListener {
-
            // Log.d("BukhtaCheckValid",binding.withDrawAmount.text.toString()+" "+binding.chooseCardBtn.text.toString())
             //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString())
         }

@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -14,7 +15,6 @@ import com.example.tabyspartner.databinding.ActivityMainBinding
 import com.example.tabyspartner.main.MainPageFragment
 import com.example.tabyspartner.profile.ProfileFragment
 import com.example.tabyspartner.withdraw.WithDrawFragment
-import java.lang.Thread.sleep
 
 
 class MainActivity() : AppCompatActivity() {
@@ -25,8 +25,11 @@ class MainActivity() : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        val toolbar = binding.toolbar
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        val toolbarTitle = findViewById<TextView>(R.id.toolbar_title)
         setSupportActionBar(toolbar)
+        supportActionBar?.setTitle("")
+        toolbarTitle.setText("Табыс Партнер")
 
         handleFrame(MainPageFragment())
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
