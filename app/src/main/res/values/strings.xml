@@ -30,5 +30,9 @@
     <string name="decline">Отмена</string>
     <string name="change_pincode_title">Изменение пинкода</string>
     <string name="change_pincode_message">Вы уверены что хотите изменить пинкод?</string>
+    <string name="logOut_title">Вы уверены что хотите выйти?</string>
+    <string name="logOut_message">Выйти из приложения</string>
+    <string name="delete_card_title">Вы точно хотите удалить карту?</string>
+    <string name="delete_card_message">Если вы удалите карту вам придется занова добавить карту</string>
 
 </resources>

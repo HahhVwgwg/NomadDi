@@ -96,9 +96,10 @@ class DatabaseHandler(
         db?.update(CREDIT_CARD_TABLE, cv, "$ID= ?", arrayOf(id.toString()))
     }
 
-    fun deleteCard(id: Int) {
+    fun deleteCardItem(id: Int) {
         val db = this.writableDatabase
         db?.delete(CREDIT_CARD_TABLE, "$ID= ?", arrayOf(id.toString()))
+
     }
 
     fun deleteAllData() {

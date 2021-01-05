@@ -55,6 +55,21 @@ class ProfileFragment : Fragment() {
 
 
         }
+
+        binding.logOutBtn.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(resources.getString(R.string.logOut_title))
+                .setMessage(resources.getString(R.string.logOut_message))
+                .setNegativeButton(resources.getString(R.string.decline)) { dialog, which ->
+                    // Respond to negative button press
+                    dialog.dismiss()
+                }
+                .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
+                    // Respond to positive button press
+                    requireActivity().finishAffinity()
+                }
+                .show()
+        }
     }
 
 }

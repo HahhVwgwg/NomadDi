@@ -31,11 +31,12 @@
                 />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/cardItemText"
             android:layout_marginStart="8dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/card_item_logo"
-            app:layout_constraintEnd_toEndOf="parent"
+
             app:layout_constraintTop_toTopOf="@id/card_item_logo"
             app:layout_constraintBottom_toBottomOf="@id/card_item_logo"
             android:orientation="vertical"
@@ -55,6 +56,27 @@
                 tools:text="**** **** **** 4141"
                 />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/deleteCard_logo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cardItemText"
+            app:layout_constraintBottom_toBottomOf="@id/cardItemText"
+            app:layout_constraintStart_toEndOf="@id/cardItemText"
+            android:orientation="vertical"
+            android:layout_marginRight="16dp"
+            >
+            <ImageButton
+                android:id="@+id/deleteCardBtn"
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_delete_24"
+                />
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

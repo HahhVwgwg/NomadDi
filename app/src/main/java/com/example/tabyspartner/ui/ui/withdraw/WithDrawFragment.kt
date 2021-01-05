@@ -1,6 +1,5 @@
 package com.example.tabyspartner.ui.ui.withdraw
 
-import android.R.attr
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -15,9 +14,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,17 +31,21 @@ import com.example.tabyspartner.databinding.FragmentWithDrawBinding
 import com.example.tabyspartner.model.CreditCard
 import com.example.tabyspartner.utils.DatabaseHandler
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class WithDrawFragment : Fragment() {
+
     private lateinit var binding: FragmentWithDrawBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var bottomSheetView : View
     private lateinit var viewModel : WithDrawViewModel
     private lateinit var bindingMainPageBinding: FragmentMainPageBinding
+    private lateinit var recyclerView: RecyclerView
     lateinit var sharedPreferences : SharedPreferences
     private lateinit var myDb : DatabaseHandler
-    private  var creditCardListFromDB :  List<CreditCard> = listOf()
+    private var cardAdapter: CreditCardAdapter? = null
+    private  var creditCardListFromDB :  MutableList<CreditCard> = mutableListOf()
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,12 +69,19 @@ class WithDrawFragment : Fragment() {
                 requireActivity().findViewById(R.id.bottomSheetContainer)
             )
         myDb = DatabaseHandler(requireContext())
-        myDb.deleteAllData()
-        creditCardListFromDB = myDb.getAllCreditCards()!!
+        creditCardListFromDB = (myDb.getAllCreditCards() as MutableList<CreditCard>?)!!
         bottomSheetView.findViewById<RecyclerView>(R.id.credit_card_list).adapter = CreditCardAdapter(
             creditCardListFromDB,
             onItemClick = {
-            })
+                Toast.makeText(requireContext(),it.creditCardNumber.toString(),Toast.LENGTH_SHORT).show()
+                binding.chooseCardBtn.text = it.creditCardNumber
+                bottomSheetDialog.dismiss()
+            },
+            myDb,
+            this.context
+        )
+
+
         bottomSheetView.findViewById<RecyclerView>(R.id.credit_card_list).layoutManager = LinearLayoutManager(
             requireContext()
         )
@@ -78,19 +91,26 @@ class WithDrawFragment : Fragment() {
             binding.balanceAmountWithDrawPage.text =
                 it.accounts[0].balance.toDouble().toInt().toString() + "\u20b8"
         })
+
         return binding.root
     }
+
+
+
+
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onResume() {
         super.onResume()
-        creditCardListFromDB = myDb.getAllCreditCards()!!
+        creditCardListFromDB = (myDb.getAllCreditCards() as MutableList<CreditCard>?)!!
         binding.withDrawAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
+
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.withdrawBtnWithdrawPage.text =
                     "Перевести ${binding.withDrawAmount.text} \u20b8"
             }
+
             override fun afterTextChanged(p0: Editable?) {
             }
         });
@@ -119,18 +139,28 @@ class WithDrawFragment : Fragment() {
            // Log.d("BukhtaCheckValid",binding.withDrawAmount.text.toString()+" "+binding.chooseCardBtn.text.toString())
             //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString())
         }
+
+
+
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode==Activity.RESULT_OK) {
+
             myDb = DatabaseHandler(requireContext())
-            creditCardListFromDB = myDb.getAllCreditCards()!!
+            creditCardListFromDB = (myDb.getAllCreditCards() as MutableList<CreditCard>?)!!
             bottomSheetView.findViewById<RecyclerView>(R.id.credit_card_list).adapter = CreditCardAdapter(
                 creditCardListFromDB,
                 onItemClick = {
-                })
+                    Toast.makeText(requireContext(),it.creditCardNumber.toString(),Toast.LENGTH_SHORT).show()
+                    binding.chooseCardBtn.text = it.creditCardNumber
+                    bottomSheetDialog.dismiss()
+                },
+                myDb,
+                this.context
+            )
             bottomSheetView.findViewById<RecyclerView>(R.id.credit_card_list).layoutManager = LinearLayoutManager(
                 requireContext()
             )
