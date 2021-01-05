@@ -30,6 +30,7 @@ import com.example.tabyspartner.databinding.FragmentMainPageBinding
 import com.example.tabyspartner.databinding.FragmentWithDrawBinding
 import com.example.tabyspartner.model.CreditCard
 import com.example.tabyspartner.utils.DatabaseHandler
+import com.example.tabyspartner.utils.DatabaseHandlerHistory
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -137,11 +138,10 @@ class WithDrawFragment : Fragment() {
         }
         binding.withdrawBtnWithdrawPage.setOnClickListener {
            // Log.d("BukhtaCheckValid",binding.withDrawAmount.text.toString()+" "+binding.chooseCardBtn.text.toString())
-            //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString())
+//            val db = DatabaseHandlerHistory(context)
+//            db.deleteAllData()
+            //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext())
         }
-
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
