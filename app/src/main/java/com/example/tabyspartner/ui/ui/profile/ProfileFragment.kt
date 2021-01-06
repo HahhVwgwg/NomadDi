@@ -18,8 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     lateinit var sharedPreferences: SharedPreferences
-    var pinCode = ""
-    var isPinCodeCreated = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,9 +27,9 @@ class ProfileFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_profile,container,false)
 
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
-        isPinCodeCreated = sharedPreferences.getBoolean("USER_PIN_CODE_CREATED",false)
-        pinCode = sharedPreferences.getString("USER_PIN_CODE","")!!
 
+        binding.profileFragName.text = sharedPreferences.getString("USER_SHORT_NAME","")
+        binding.profileFragMobile.text = sharedPreferences.getString("USER_PHONE_NUMBER","")
         return binding.root
     }
 
@@ -52,8 +51,6 @@ class ProfileFragment : Fragment() {
                     context?.startActivity(Intent(requireContext(), VerificationActivity::class.java))
                 }
                 .show()
-
-
         }
 
         binding.logOutBtn.setOnClickListener {

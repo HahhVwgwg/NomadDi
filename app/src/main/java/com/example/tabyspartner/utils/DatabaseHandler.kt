@@ -50,9 +50,9 @@ class DatabaseHandler(
         cv.put(CREDIT_CARD_NUMBER, creditCard.creditCardNumber)
         val result = db?.insert(CREDIT_CARD_TABLE, null, cv)
         if(result?.toInt() == -1) {
-            Toast.makeText(context,"Fail",Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,"Ошибка!",Toast.LENGTH_SHORT).show()
         }else {
-            Toast.makeText(context,"Success",Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,"Карта успешно добавлена",Toast.LENGTH_SHORT).show()
         }
     }
 

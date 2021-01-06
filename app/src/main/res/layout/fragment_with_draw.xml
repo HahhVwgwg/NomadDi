@@ -18,29 +18,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/with_draw_page_balance_title"
-                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textSize="22sp"
                 android:textColor="@color/black"
                 />
-            <TextView
-                app:layout_constraintTop_toTopOf="@+id/my_balance_title"
-                app:layout_constraintStart_toEndOf="@id/my_balance_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="История"
-                android:gravity="end"
-                android:textSize="18sp"
-                android:textColor="@color/red"
-                />
+<!--            <TextView-->
+<!--                app:layout_constraintTop_toTopOf="@+id/my_balance_title"-->
+<!--                app:layout_constraintStart_toEndOf="@id/my_balance_title"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="История"-->
+<!--                android:gravity="end"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textColor="@color/red"-->
+<!--                />-->
 
         <TextView
             android:id="@+id/balance_amount_with_draw_page"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="12 150 \u20b8"
-            android:textColor="@color/green"
+            tools:text="12 500 \u20b8"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="30sp"
+            android:fontFamily="@font/ubuntubold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/my_balance_title"
             app:layout_constraintStart_toStartOf="@+id/my_balance_title"
@@ -93,12 +95,13 @@
                 tools:ignore="RtlCompat" />
 
             <TextView
+                android:id="@+id/amountFee"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Комиссия 150 \u20b8"
+                tools:text="Комиссия 150 \u20b8"
                 android:textColor="@color/red"
                 app:layout_constraintTop_toBottomOf="@id/with_draw_amount"
                 />

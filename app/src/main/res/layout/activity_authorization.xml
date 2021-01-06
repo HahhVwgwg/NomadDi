@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -12,6 +14,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainLayoutAuthorization"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.ui.authorization.Authorization"
@@ -46,7 +49,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
-            android:text="Пожалуйста, введите свой \n номер телефона для подтверждения"
+            android:text="Пожалуйста, введите свой \n номер телефона для авторизации"
             android:textAlignment="center"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,6 +86,7 @@
             android:inputType="phone"
             android:padding="16dp"
             android:textSize="16sp"
+            android:maxLength="10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/country_code_text"
             app:layout_constraintTop_toBottomOf="@+id/login_desc" />

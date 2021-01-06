@@ -1,7 +1,9 @@
 package com.example.tabyspartner.ui.ui.withdraw
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
@@ -16,6 +18,8 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat.recreate
+import androidx.core.text.isDigitsOnly
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -74,7 +78,6 @@ class WithDrawFragment : Fragment() {
         bottomSheetView.findViewById<RecyclerView>(R.id.credit_card_list).adapter = CreditCardAdapter(
             creditCardListFromDB,
             onItemClick = {
-                Toast.makeText(requireContext(),it.creditCardNumber.toString(),Toast.LENGTH_SHORT).show()
                 binding.chooseCardBtn.text = it.creditCardNumber
                 bottomSheetDialog.dismiss()
             },
@@ -90,7 +93,7 @@ class WithDrawFragment : Fragment() {
         viewModel.responseD.observe(viewLifecycleOwner, Observer {
             //Log.d("responseDriver", it.toString())
             binding.balanceAmountWithDrawPage.text =
-                it.accounts[0].balance.toDouble().toInt().toString() + "\u20b8"
+                it.accounts[0].balance.toDouble().toInt().toString() + " \u20b8"
         })
 
         return binding.root
@@ -108,8 +111,19 @@ class WithDrawFragment : Fragment() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                binding.withdrawBtnWithdrawPage.text =
-                    "Перевести ${binding.withDrawAmount.text} \u20b8"
+                if(binding.withDrawAmount.text.toString().length > 4) {
+                    val calculateFee = (binding.withDrawAmount.text.toString().toDouble() * (0.015)).toInt().toString()
+                    binding.amountFee.text =
+                        "Комиссия ${calculateFee} ₸"
+                    binding.withdrawBtnWithdrawPage.text =
+                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - calculateFee.toInt()} \u20b8"
+                }else {
+                    binding.amountFee.text =
+                        "Комиссия 150 ₸"
+                    binding.withdrawBtnWithdrawPage.text =
+                        "Перевести ${binding.withDrawAmount.text} \u20b8"
+                }
+
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -140,7 +154,42 @@ class WithDrawFragment : Fragment() {
            // Log.d("BukhtaCheckValid",binding.withDrawAmount.text.toString()+" "+binding.chooseCardBtn.text.toString())
 //            val db = DatabaseHandlerHistory(context)
 //            db.deleteAllData()
-            //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext())
+            if(binding.withDrawAmount.text.toString().toInt() < 251){
+                val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                // set message of alert dialog
+                dialogBuilder.setMessage("Для вывода средств баланс должен быть не менее 251 \u20b8")
+                    // if the dialog is cancelable
+                    .setCancelable(false)
+                    // positive button text and action
+                    .setPositiveButton("Повторить", DialogInterface.OnClickListener { dialog, id ->
+                       dialog.dismiss()
+                    })
+                // create dialog box
+                val alert = dialogBuilder.create()
+                // set title for alert dialog box
+                alert.setTitle("Вывод средств невозможен")
+                // show alert dialog
+                alert.show()
+            }else if(!binding.chooseCardBtn.text.toString().isDigitsOnly()) {
+                val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                // set message of alert dialog
+
+                dialogBuilder.setMessage("Пожалуйста, выберите вашу карту")
+                    // if the dialog is cancelable
+                    .setCancelable(false)
+                    // positive button text and action
+                    .setPositiveButton("Повторить", DialogInterface.OnClickListener { dialog, id ->
+                        dialog.dismiss()
+                    })
+                // create dialog box
+                val alert = dialogBuilder.create()
+                // set title for alert dialog box
+                alert.setTitle("Вы не выбрали карту перевода!")
+                // show alert dialog
+                alert.show()
+            }else {
+                //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext())
+            }
         }
     }
 

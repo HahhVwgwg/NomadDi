@@ -8,6 +8,60 @@
         android:layout_height="match_parent"
         tools:context=".ui.ui.withdraw.WithDrawFragment">
 
+        <LinearLayout
+            android:id="@+id/profile_info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/log_out_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_marginTop="?actionBarSize"
+                android:id="@+id/profile_frag_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Азамат Ж."
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:fontFamily="@font/ubuntubold"
+                android:textSize="26sp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:id="@+id/profile_frag_mobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="+7 701 023 45 45"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:fontFamily="@font/ubuntubold"
+                android:textSize="14sp"
+            />
+
+
+            <Button
+                android:id="@+id/change_pin_code_btn"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/change_pin_code_btn_text"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:layout_marginTop="20dp"
+                />
+        </LinearLayout>
+
 <!--        <Button-->
 <!--            android:id="@+id/change_password_btn"-->
 <!--            android:layout_width="match_parent"-->
@@ -26,22 +80,6 @@
 <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <Button
-            android:id="@+id/change_pin_code_btn"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/change_pin_code_btn_text"
-            android:textAlignment="textStart"
-            android:textAllCaps="false"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/log_out_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
             android:id="@+id/log_out_btn"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -50,6 +88,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:text="Выйти"
+            android:backgroundTint="#ff605c"
             android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

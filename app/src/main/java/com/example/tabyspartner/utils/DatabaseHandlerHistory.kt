@@ -61,19 +61,6 @@ class DatabaseHandlerHistory(
             Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
         }
     }
-//    fun insertTask(creditCard: CreditCard) {
-//        val db = this.writableDatabase
-//        val cv = ContentValues()
-//        cv.put(CREDIT_CARD_NAME, creditCard.creditCardName)
-//        cv.put(CREDIT_CARD_NUMBER, creditCard.creditCardNumber)
-//        val result = db?.insert(CREDIT_CARD_TABLE, null, cv)
-//        if(result?.toInt() == -1) {
-//            Toast.makeText(context,"Fail",Toast.LENGTH_SHORT).show()
-//        }else {
-//            Toast.makeText(context,"Success",Toast.LENGTH_SHORT).show()
-//        }
-//    }
-
 
     fun getAllHistory(): List<History>? {
         val db = this.readableDatabase

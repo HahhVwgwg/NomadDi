@@ -13,7 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TabysPartner">
-        <activity android:name=".ui.ui.history.HistoryActivity"></activity>
+        <activity android:name=".ui.ui.history.HistoryActivity"
+            android:screenOrientation="portrait"
+            >
+
+        </activity>
         <activity android:name=".ui.ui.withdraw.CardFormActivity" />
         <activity
             android:name=".ui.ui.pin.VerificationActivity"

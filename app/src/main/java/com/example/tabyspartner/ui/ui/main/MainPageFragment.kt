@@ -14,9 +14,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.denzcoskun.imageslider.ImageSlider
+import com.example.tabyspartner.R
 import com.example.tabyspartner.adapter.OnBoardingAdapter
 import com.example.tabyspartner.databinding.FragmentMainPageBinding
 import com.example.tabyspartner.prefs.PreferencesManager
+import com.example.tabyspartner.ui.ui.profile.ProfileFragment
+import com.example.tabyspartner.ui.ui.withdraw.WithDrawFragment
 
 class MainPageFragment : Fragment() {
 
@@ -36,7 +39,7 @@ class MainPageFragment : Fragment() {
         ViewModelProvider(this).get(MainPageViewModel::class.java)
     }
     lateinit var sharedPreferences : SharedPreferences
-
+    var name_short = ""
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -54,14 +57,34 @@ class MainPageFragment : Fragment() {
         binding.onBoardingViewPager.registerOnPageChangeCallback(onBoardingPageChangeCallback)
 
         sharedPreferences = context?.getSharedPreferences("app_prefs",Context.MODE_PRIVATE)!!
+        name_short = sharedPreferences.getString("USER_SHORT_NAME", "")!!
         val userPhoneNumber = sharedPreferences.getString("USER_PHONE_NUMBER", "")
         viewModel.getYandexDriversProperties(userPhoneNumber!!)
         viewModel.response.observe(viewLifecycleOwner, Observer {
             //Log.d("responseDriver", it.toString())
             binding.profileNameLabel.text = it.driver_profile.first_name + "\n" + it.driver_profile.last_name
             binding.amountCashNameLabel.text = it.accounts[0].balance
+            sharedPreferences.edit()
+                .putString("USER_SHORT_NAME", "${it.driver_profile.first_name + " " + it.driver_profile.last_name[0]+"."}")
+                .apply()
         })
         return binding.root
+    }
+
+    private fun handleFrame(fragment: Fragment): Boolean {
+        val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.navHostFragment, fragment).commit()
+        return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.profileInfoBtn.setOnClickListener {
+            handleFrame(ProfileFragment())
+        }
+        binding.balanceInfoBtn.setOnClickListener {
+            handleFrame(WithDrawFragment())
+        }
     }
 
     override fun onDestroy() {

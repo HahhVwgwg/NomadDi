@@ -43,7 +43,7 @@ class AuthorizationViewModel : ViewModel() {
     fun getMessageStatus(context: Context,phone:String) {
         val randomOTP  = Otp().OTP(4)
         val apiKey = "kzd22a59d1901e822d4a767ef3bdb90a233d879cdb67be0dff27ecde91897e276ea46d"
-        MobizonApi.retrofitService.sendMessage(recipient = phone,text = "Ваш код подтверждения: "+randomOTP,apiKey = apiKey).enqueue(object : Callback<MobizonResponse>{
+        MobizonApi.retrofitService.sendMessage(recipient = phone,text = "Табыс Партнер: Ваш код авторизации: "+randomOTP,apiKey = apiKey).enqueue(object : Callback<MobizonResponse>{
             override fun onResponse(call: Call<MobizonResponse>, response: Response<MobizonResponse>) {
                if(response.isSuccessful) {
                    _response.value = response.body()

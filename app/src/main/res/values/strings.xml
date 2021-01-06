@@ -12,7 +12,7 @@
     <string name="balance_card_view_balance_title">Мой баланс</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="phone_number">+77006537978</string>
+    <string name="phone_number">+77074440011</string>
     <string name="change_password_btn_text">Изменить пароль</string>
     <string name="change_pin_code_btn_text">Изменить код быстрого доступа</string>
     <string name="with_draw_page_balance_title">Мой баланс</string>
@@ -27,12 +27,16 @@
     <string name="alert_password_recover_title">Восстановление</string>
     <string name="alert_password_recover_message">Вы уверены что хотите сделать восстановление пинкода?</string>
     <string name="accept">Да</string>
+    <string name="accept2">ОК</string>
+    <string name="errorAcceptanceCreditCard">Пожалуйста проверьте правильность ввода номера кредитной карты, поле принимает только цифры (0-9)</string>
     <string name="decline">Отмена</string>
+    <string name="error_length">Номер карты должен состоять из 16 цифр</string>
     <string name="change_pincode_title">Изменение пинкода</string>
     <string name="change_pincode_message">Вы уверены что хотите изменить пинкод?</string>
     <string name="logOut_title">Вы уверены что хотите выйти?</string>
     <string name="logOut_message">Выйти из приложения</string>
     <string name="delete_card_title">Вы точно хотите удалить карту?</string>
     <string name="delete_card_message">Если вы удалите карту вам придется занова добавить карту</string>
+    <string name="error_empty">Заполните поля!</string>
 
 </resources>

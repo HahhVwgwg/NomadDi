@@ -61,7 +61,7 @@ class VerificationActivity : AppCompatActivity() {
                     binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
                     binding.verifyCodeFeedBack.visibility = View.VISIBLE
                 }else if(binding.pinCodeText.text.trim().toString() != pinCode) {
-                    binding.verifyCodeFeedBack.text = "Попробуйте еще раз"
+                    binding.verifyCodeFeedBack.text = "Неверный пинкод. Попробуйте еще раз."
                     binding.verifyCodeFeedBack.visibility = View.VISIBLE
                 } else if (binding.pinCodeText.text.trim().toString() == pinCode){
                     startActivity(Intent(this,MainActivity::class.java))
