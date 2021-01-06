@@ -1,9 +1,11 @@
 package com.example.tabyspartner.ui.ui.authorization
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +16,7 @@ import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.ActivityAuthorizationBinding
 import com.example.tabyspartner.main.AuthorizationViewModel
 import com.example.tabyspartner.ui.ui.pin.VerificationActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class Authorization : AppCompatActivity() {
@@ -53,6 +56,7 @@ class Authorization : AppCompatActivity() {
                             binding.countryCodeText.text.length
                         ).toString()+
                                 "" + binding.phoneNumberText.text.toString()
+
                 if(phone_number.trim().isEmpty()) {
                     binding.loginFormFeedback.text = "Пожалуйста введите номер телефона"
                     binding.loginFormFeedback.visibility = View.VISIBLE
@@ -60,13 +64,15 @@ class Authorization : AppCompatActivity() {
                     binding.loginFormFeedback.text = "Пожалуйста введите корректный номер xxx-xxx-xx-xx"
                     binding.loginFormFeedback.visibility = View.VISIBLE
                 } else {
-                    binding.loginProgressBar.visibility = View.VISIBLE
-                    binding.generateBtn.isEnabled = false
+                    //binding.loginProgressBar.visibility = View.VISIBLE
+                    //binding.generateBtn.isEnabled = false
                     //binding.loginFormFeedback.visibility = View.VISIBLE
                     viewModel.getUser("+$complete_phone_number")
                     viewModel.response.observe(binding.lifecycleOwner as Authorization, Observer {
-                        //println(it.driver_profile.phones[0])
+                        //Log.d("Check",it.toString())
                         if ("+${complete_phone_number}" == it.driver_profile.phones[0]) {
+                            //Log.d("Check",it.toString())
+                            //Log.d("Check","+${complete_phone_number}"+" "+it.driver_profile.phones[0])
                             sharedPreferences.edit()
                                 .putString("USER_PHONE_NUMBER", "+${complete_phone_number}")
                                 .putBoolean("USER_REGISTERED", true)
@@ -82,10 +88,21 @@ class Authorization : AppCompatActivity() {
                                     finish()
                                 })
                         } else {
+                            Log.d("Check","+${complete_phone_number}"+" "+it.driver_profile.phones[0])
+//                            runOnUiThread {
+//                                MaterialAlertDialogBuilder(this)
+//                                    .setTitle(resources.getString(R.string.error))
+//                                    .setMessage(resources.getString(R.string.error_message))
+//                                    .setPositiveButton(resources.getString(R.string.accept2)) { dialog, which ->
+//                                        // Respond to positive button press finishAffinity()
+//                                        dialog.dismiss()
+//                                    }
+//                                    .show()
+//                            }
                             binding.generateBtn.isEnabled = true
+                            binding.loginFormFeedback.visibility = View.VISIBLE
                             binding.loginFormFeedback.text =
                                 " Данный номер не зарегистрирован в нашей базе. Попробуйте еще раз."
-                            binding.loginFormFeedback.visibility = View.VISIBLE
                         }
                     })
                 }

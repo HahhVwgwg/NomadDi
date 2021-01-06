@@ -80,9 +80,11 @@ class WithDrawFragment : Fragment() {
             onItemClick = {
                 binding.chooseCardBtn.text = it.creditCardNumber
                 bottomSheetDialog.dismiss()
+
             },
             myDb,
-            this.context
+            this.context,
+            this,
         )
 
 
@@ -170,7 +172,25 @@ class WithDrawFragment : Fragment() {
                 alert.setTitle("Вывод средств невозможен")
                 // show alert dialog
                 alert.show()
-            }else if(!binding.chooseCardBtn.text.toString().isDigitsOnly()) {
+            }else if(binding.withDrawAmount.text.toString().toInt() < binding.balanceAmountWithDrawPage.text.toString().substring(0,
+                    binding.balanceAmountWithDrawPage.text.toString().length-2
+                    ).toInt()) {
+                val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                dialogBuilder.setMessage("Недостаточно средств!")
+                    // if the dialog is cancelable
+                    .setCancelable(false)
+                    // positive button text and action
+                    .setPositiveButton("Повторить", DialogInterface.OnClickListener { dialog, id ->
+                        dialog.dismiss()
+                    })
+                // create dialog box
+                val alert = dialogBuilder.create()
+                // set title for alert dialog box
+                alert.setTitle("Вы не выбрали карту перевода!")
+                // show alert dialog
+                alert.show()
+            }
+            else if(!binding.chooseCardBtn.text.toString().isDigitsOnly()) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 // set message of alert dialog
 
@@ -208,7 +228,8 @@ class WithDrawFragment : Fragment() {
                     bottomSheetDialog.dismiss()
                 },
                 myDb,
-                this.context
+                this.context,
+                this
             )
             bottomSheetView.findViewById<RecyclerView>(R.id.credit_card_list).layoutManager = LinearLayoutManager(
                 requireContext()
