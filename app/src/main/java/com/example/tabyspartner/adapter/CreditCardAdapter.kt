@@ -21,13 +21,11 @@ import kotlinx.android.synthetic.main.card_item.view.*
 
 
 class CreditCardAdapter(
-
     private val items: MutableList<CreditCard> = mutableListOf(),
     private val onItemClick: (CreditCard) -> Unit,
-//    private val onDelete: (CreditCard) -> Unit
+    private val onDelete: (CreditCard) -> Unit,
     private val databaseHandler: DatabaseHandler,
     private val context: Context?,
-
 ) : RecyclerView.Adapter<CreditCardAdapter.CreditCardViewHolder>() {
     private val limit = 3
 
@@ -38,17 +36,7 @@ class CreditCardAdapter(
             view.card_item_name.text = item.creditCardName
             view.card_item_number.text = item.creditCardNumber
             view.deleteCardBtn.setOnClickListener {
-                MaterialAlertDialogBuilder(context!!)
-                    .setTitle(context.resources.getString(R.string.delete_card_title))
-                    .setMessage(context.resources.getString(R.string.delete_card_message))
-                    .setNegativeButton(context.resources.getString(R.string.decline)) { dialog, which ->
-                        dialog.dismiss()
-                    }
-                    .setPositiveButton(context.resources.getString(R.string.accept)) { dialog, which ->
-                        databaseHandler.deleteCardItem(item.id)
-//                        fragment.requireActivity().fr
-                    }
-                    .show()
+                onDelete(item)
             }
             view.setOnClickListener {
                 onItemClick(item)
@@ -88,11 +76,6 @@ class CreditCardAdapter(
     }
 
     override fun getItemCount(): Int {
-//        return if(items.size > limit){
-//            limit;
-//        } else {
-//            items.size;
-//        }
         return items.size
     }
 }

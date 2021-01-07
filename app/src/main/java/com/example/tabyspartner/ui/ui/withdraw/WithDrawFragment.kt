@@ -32,6 +32,7 @@ import com.example.tabyspartner.R
 import com.example.tabyspartner.adapter.CreditCardAdapter
 import com.example.tabyspartner.databinding.FragmentMainPageBinding
 import com.example.tabyspartner.databinding.FragmentWithDrawBinding
+import com.example.tabyspartner.modal.ModalBottomSheet
 import com.example.tabyspartner.model.CreditCard
 import com.example.tabyspartner.utils.DatabaseHandler
 import com.example.tabyspartner.utils.DatabaseHandlerHistory
@@ -42,15 +43,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class WithDrawFragment : Fragment() {
 
     private lateinit var binding: FragmentWithDrawBinding
-    private lateinit var bottomSheetDialog: BottomSheetDialog
-    private lateinit var bottomSheetView : View
+
     private lateinit var viewModel : WithDrawViewModel
     private lateinit var bindingMainPageBinding: FragmentMainPageBinding
-    private lateinit var recyclerView: RecyclerView
     lateinit var sharedPreferences : SharedPreferences
-    private lateinit var myDb : DatabaseHandler
-    private var cardAdapter: CreditCardAdapter? = null
-    private  var creditCardListFromDB :  MutableList<CreditCard> = mutableListOf()
+    //private lateinit var myDb : DatabaseHandler
+    //private  var creditCardListFromDB :  MutableList<CreditCard> = mutableListOf()
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,28 +66,10 @@ class WithDrawFragment : Fragment() {
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
         val userPhoneNumber = sharedPreferences.getString("USER_PHONE_NUMBER", "")
 
-        bottomSheetView = LayoutInflater.from(requireContext())
-            .inflate(
-                R.layout.bottom_sheet_dialog_card_picker,
-                requireActivity().findViewById(R.id.bottomSheetContainer)
-            )
-        myDb = DatabaseHandler(requireContext())
-        creditCardListFromDB = (myDb.getAllCreditCards() as MutableList<CreditCard>?)!!
-        bottomSheetView.findViewById<RecyclerView>(R.id.credit_card_list).adapter = CreditCardAdapter(
-            creditCardListFromDB,
-            onItemClick = {
-                binding.chooseCardBtn.text = it.creditCardNumber
-                bottomSheetDialog.dismiss()
 
-            },
-            myDb,
-            this.context
-        )
+        //myDb = DatabaseHandler(requireContext())
+        //creditCardListFromDB = (myDb.getAllCreditCards() as MutableList<CreditCard>?)!!
 
-
-        bottomSheetView.findViewById<RecyclerView>(R.id.credit_card_list).layoutManager = LinearLayoutManager(
-            requireContext()
-        )
         viewModel.getYandexDriversProperties(userPhoneNumber!!)
         viewModel.responseD.observe(viewLifecycleOwner, Observer {
             //Log.d("responseDriver", it.toString())
@@ -106,7 +86,7 @@ class WithDrawFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onResume() {
         super.onResume()
-        creditCardListFromDB = (myDb.getAllCreditCards() as MutableList<CreditCard>?)!!
+        //creditCardListFromDB = (myDb.getAllCreditCards() as MutableList<CreditCard>?)!!
         binding.withDrawAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -151,26 +131,10 @@ class WithDrawFragment : Fragment() {
 
             }
         });
-        bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialogTheme)
-        var cardNumber = ""
-        bottomSheetView.findViewById<Button>(R.id.button_dialog_sheet).setOnClickListener{
-            //binding.chooseCardBtn.text = "**** **** **** ${cardNumber.substring(cardNumber.length-4)}"
-            //cardNumber =  bottomSheetView.findViewById<EditText>(R.id.card_number_text).text.toString() //откомментировать
-            //binding.chooseCardBtn.text = cardNumber  //откомментировать
-            bottomSheetDialog.dismiss()
-
-        }
-        bottomSheetView.findViewById<LinearLayout>(R.id.add_card_btn).setOnClickListener {
-            //println("Hello From add card btn")
-            startActivityForResult(Intent(requireContext(), CardFormActivity::class.java), 1)
-        }
 
         binding.chooseCardBtn.setOnClickListener {
-            if (bottomSheetView.getParent() != null) {
-                (bottomSheetView.getParent() as ViewGroup).removeView(bottomSheetView) // <- fix
-            }
-            bottomSheetDialog.setContentView(bottomSheetView)
-            bottomSheetDialog.show()
+            val modalbottomSheetFragment = ModalBottomSheet()
+            modalbottomSheetFragment.show(requireFragmentManager(), modalbottomSheetFragment.tag)
         }
         binding.withdrawBtnWithdrawPage.setOnClickListener {
            // Log.d("BukhtaCheckValid",binding.withDrawAmount.text.toString()+" "+binding.chooseCardBtn.text.toString())
@@ -230,29 +194,6 @@ class WithDrawFragment : Fragment() {
             }else {
                 viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext())
             }
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.P)
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode==Activity.RESULT_OK) {
-
-            myDb = DatabaseHandler(requireContext())
-            creditCardListFromDB = (myDb.getAllCreditCards() as MutableList<CreditCard>?)!!
-            bottomSheetView.findViewById<RecyclerView>(R.id.credit_card_list).adapter = CreditCardAdapter(
-                creditCardListFromDB,
-                onItemClick = {
-                    Toast.makeText(requireContext(),it.creditCardNumber.toString(),Toast.LENGTH_SHORT).show()
-                    binding.chooseCardBtn.text = it.creditCardNumber
-                    bottomSheetDialog.dismiss()
-                },
-                myDb,
-                this.context,
-            )
-            bottomSheetView.findViewById<RecyclerView>(R.id.credit_card_list).layoutManager = LinearLayoutManager(
-                requireContext()
-            )
         }
     }
 }

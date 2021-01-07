@@ -38,10 +38,6 @@ class ProfileFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        binding.persistentBtn.setOnClickListener {
-            val modalbottomSheetFragment = ModalBottomSheet()
-            modalbottomSheetFragment.show(requireFragmentManager(), modalbottomSheetFragment.tag)
-        }
         binding.changePinCodeBtn.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(resources.getString(R.string.change_pincode_title))
