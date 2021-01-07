@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +23,7 @@ class VerificationActivity : AppCompatActivity() {
     lateinit var sharedPreferences: SharedPreferences
     var pinCode = ""
     var isPinCodeCreated = false
-    private lateinit var binding: ActivityVerificationBinding
+    private lateinit var binding: com.example.tabyspartner.databinding.ActivityVerificationBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         checkConnectivity()
         super.onCreate(savedInstanceState)
@@ -61,6 +62,8 @@ class VerificationActivity : AppCompatActivity() {
                     .show()
             }
             binding.verifyPinCodeBtn.setOnClickListener {
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
                 if(binding.pinCodeText.text.trim().isEmpty()) {
                     binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
                     binding.verifyCodeFeedBack.visibility = View.VISIBLE
@@ -74,6 +77,8 @@ class VerificationActivity : AppCompatActivity() {
             }
         }else {
             binding.verifyPinCodeBtn.setOnClickListener {
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
                 if(binding.pinCodeText.text.trim().isEmpty() || binding.pinCodeVerifyText.text.trim().isEmpty()) {
                     binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
                     binding.verifyCodeFeedBack.visibility = View.VISIBLE
@@ -106,23 +111,22 @@ class VerificationActivity : AppCompatActivity() {
             val dialogBuilder = AlertDialog.Builder(this)
             val intent = Intent(this, MainActivity::class.java)
             // set message of alert dialog
-            dialogBuilder.setMessage("Make sure that WI-FI or mobile data is turned on, then try again")
+            dialogBuilder.setMessage("Убедитесь, что включен WI-FI или мобильный Интернет, и попробуйте еще раз.")
                 // if the dialog is cancelable
                 .setCancelable(false)
                 // positive button text and action
-                .setPositiveButton("Retry", DialogInterface.OnClickListener { dialog, id ->
+                .setPositiveButton("Повторить", DialogInterface.OnClickListener { dialog, id ->
                     recreate()
                 })
                 // negative button text and action
-                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, id ->
+                .setNegativeButton("Отменить", DialogInterface.OnClickListener { dialog, id ->
                     finish()
                 })
 
             // create dialog box
             val alert = dialogBuilder.create()
             // set title for alert dialog box
-            alert.setTitle("No Internet Connection")
-            alert.setIcon(R.mipmap.ic_launcher)
+            alert.setTitle("Подключение к Интернету отсутствует")
             // show alert dialog
             alert.show()
         }

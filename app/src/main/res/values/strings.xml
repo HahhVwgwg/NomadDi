@@ -40,5 +40,6 @@
     <string name="delete_card_title">Вы точно хотите удалить карту?</string>
     <string name="delete_card_message">Если вы удалите карту вам придется занова добавить карту</string>
     <string name="error_empty">Заполните поля!</string>
+    <string name="operation_ok">Операция прошла успешна! Ждите пополнения</string>
 
 </resources>

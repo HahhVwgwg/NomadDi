@@ -1,22 +1,31 @@
 package com.example.tabyspartner.main
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.tabyspartner.R
+import com.example.tabyspartner.databinding.ActivityAuthorizationBinding
 import com.example.tabyspartner.ui.ui.authorization.MobizonActivity
 import com.example.tabyspartner.networking.*
+import com.example.tabyspartner.ui.ui.authorization.Authorization
 import com.example.tabyspartner.ui.ui.otp.Otp
+import kotlinx.android.synthetic.main.activity_authorization.*
+import kotlinx.android.synthetic.main.activity_authorization.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
 class AuthorizationViewModel : ViewModel() {
+
     private val _responseDriver = MutableLiveData<DriverProfilesItem>()
     val response: LiveData<DriverProfilesItem>
         get() = _responseDriver
@@ -61,20 +70,28 @@ class AuthorizationViewModel : ViewModel() {
 
     }
 
-    fun getUser(phone:String) {
+    fun getUser(phone:String,activity : Authorization) {
         val parkId = "2e8584835dd64db99482b4b21f62a2ae"
         val request = GetSomethingRequest(
                 query = GetSomethingRequest.Query(
                         park = GetSomethingRequest.Query.Park(parkId)
                 )
         )
+        var isFound = false
         YandexApi.retrofitService.getUser(request).enqueue(object : Callback<DriverProfilesResponse>{
+
             override fun onResponse(call: Call<DriverProfilesResponse>, response: Response<DriverProfilesResponse>) {
                 for (i in response.body()!!.driversList.indices){
                     if(response.body()!!.driversList[i].driver_profile.phones[0]==phone) {
                         //Log.d("Yandex",response.body()!!.driversList[i].toString())
+                            isFound = true
                         _responseDriver.value = response.body()!!.driversList[i]
                     }
+                }
+                if(!isFound) {
+                    activity.login_form_feedback.visibility = View.VISIBLE
+                    activity.login_form_feedback.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                    activity.login_form_feedback.text = "Данный номер не зарегистрирован в нашей базе. Попробуйте еще раз."
                 }
             }
             override fun onFailure(call: Call<DriverProfilesResponse>, t: Throwable) {

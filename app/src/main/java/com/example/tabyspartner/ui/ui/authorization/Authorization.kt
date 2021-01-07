@@ -71,7 +71,7 @@ class Authorization : AppCompatActivity() {
                     //binding.loginProgressBar.visibility = View.VISIBLE
                     //binding.generateBtn.isEnabled = false
                     //binding.loginFormFeedback.visibility = View.VISIBLE
-                    viewModel.getUser("+$complete_phone_number")
+                    viewModel.getUser("+$complete_phone_number",this)
                     viewModel.response.observe(binding.lifecycleOwner as Authorization, Observer {
                         //Log.d("Check",it.toString())
                         if ("+${complete_phone_number}" == it.driver_profile.phones[0]) {

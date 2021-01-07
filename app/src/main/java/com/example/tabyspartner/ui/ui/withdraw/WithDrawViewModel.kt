@@ -1,19 +1,25 @@
 package com.example.tabyspartner.ui.ui.withdraw
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.tabyspartner.R
 import com.example.tabyspartner.model.CreditCard
 import com.example.tabyspartner.model.History
 import com.example.tabyspartner.networking.*
 import com.example.tabyspartner.ui.ui.otp.Otp
+import com.example.tabyspartner.ui.ui.pin.VerificationActivity
 import com.example.tabyspartner.utils.DatabaseHandler
 import com.example.tabyspartner.utils.DatabaseHandlerHistory
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.android.synthetic.main.fragment_with_draw.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,7 +73,7 @@ class WithDrawViewModel : ViewModel() {
     }
 
 
-    fun withdrawCash(amount: String, card_number: String, context: Context) {
+    fun withdrawCash(amount: String, card_number: String, context: Context,fragment : Fragment) {
         val externalRefId = Otp().OTP(6)
         val request = FeeRequest(
             contract_source_id = 24,
@@ -84,17 +90,16 @@ class WithDrawViewModel : ViewModel() {
                     response: Response<BukhtaWithDrawResponse>
                 ) {
                     Log.d("BukhtaWithDraw", response.body().toString())
-                    Toast.makeText(context,"Операция прошла успешна!",Toast.LENGTH_SHORT).show()
-//                    val db = DatabaseHandlerHistory(context)
-//                    db.insertHistory(History(
-//                        history_card_number = response.body()?.card_number.toString(),
-//                        history_amount_sent = response.body()?.amount_sent.toString(),
-//                        history_amount_total = response.body()?.amount_total.toString(),
-//                        history_amount_fee = response.body()?.amount_fee.toString(),
-//                        history_check_id = response.body()?.id!!,
-//                        history_date = response.body()?.posted_at.toString(),
-//                        history_recipient = response.body()?.card_number.toString()
-//                    ))
+                    //fragment.requireActivity().withdraw_btn_withdrawPage.isEnabled = false
+                    MaterialAlertDialogBuilder(context)
+                        .setIcon(R.drawable.ic_check_bold_24dp)
+                        .setMessage(context.resources.getString(R.string.operation_ok))
+                        .setPositiveButton(context.resources.getString(R.string.accept)) { dialog, which ->
+                            // Respond to positive button press
+                            fragment.requireActivity().withdraw_btn_withdrawPage.isEnabled = true
+                            dialog.dismiss()
+                        }
+                        .show()
                 }
 
                 override fun onFailure(call: Call<BukhtaWithDrawResponse>, t: Throwable) {
