@@ -1,11 +1,14 @@
 package com.example.tabyspartner.ui.ui.pin
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.tabyspartner.MainActivity
@@ -21,6 +24,7 @@ class VerificationActivity : AppCompatActivity() {
     var isPinCodeCreated = false
     private lateinit var binding: ActivityVerificationBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+        checkConnectivity()
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_verification)
         binding.lifecycleOwner = this
@@ -92,5 +96,35 @@ class VerificationActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun checkConnectivity() {
+        val manager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = manager.activeNetworkInfo
+
+        if (null == activeNetwork) {
+            val dialogBuilder = AlertDialog.Builder(this)
+            val intent = Intent(this, MainActivity::class.java)
+            // set message of alert dialog
+            dialogBuilder.setMessage("Make sure that WI-FI or mobile data is turned on, then try again")
+                // if the dialog is cancelable
+                .setCancelable(false)
+                // positive button text and action
+                .setPositiveButton("Retry", DialogInterface.OnClickListener { dialog, id ->
+                    recreate()
+                })
+                // negative button text and action
+                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, id ->
+                    finish()
+                })
+
+            // create dialog box
+            val alert = dialogBuilder.create()
+            // set title for alert dialog box
+            alert.setTitle("No Internet Connection")
+            alert.setIcon(R.mipmap.ic_launcher)
+            // show alert dialog
+            alert.show()
+        }
     }
 }

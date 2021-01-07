@@ -3,6 +3,7 @@ package com.example.tabyspartner.ui.ui.withdraw
 import android.content.Context
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -83,16 +84,17 @@ class WithDrawViewModel : ViewModel() {
                     response: Response<BukhtaWithDrawResponse>
                 ) {
                     Log.d("BukhtaWithDraw", response.body().toString())
-                    val db = DatabaseHandlerHistory(context)
-                    db.insertHistory(History(
-                        history_card_number = response.body()?.card_number.toString(),
-                        history_amount_sent = response.body()?.amount_sent.toString(),
-                        history_amount_total = response.body()?.amount_total.toString(),
-                        history_amount_fee = response.body()?.amount_fee.toString(),
-                        history_check_id = response.body()?.id!!,
-                        history_date = response.body()?.posted_at.toString(),
-                        history_recipient = response.body()?.card_number.toString()
-                    ))
+                    Toast.makeText(context,"Операция прошла успешна!",Toast.LENGTH_SHORT).show()
+//                    val db = DatabaseHandlerHistory(context)
+//                    db.insertHistory(History(
+//                        history_card_number = response.body()?.card_number.toString(),
+//                        history_amount_sent = response.body()?.amount_sent.toString(),
+//                        history_amount_total = response.body()?.amount_total.toString(),
+//                        history_amount_fee = response.body()?.amount_fee.toString(),
+//                        history_check_id = response.body()?.id!!,
+//                        history_date = response.body()?.posted_at.toString(),
+//                        history_recipient = response.body()?.card_number.toString()
+//                    ))
                 }
 
                 override fun onFailure(call: Call<BukhtaWithDrawResponse>, t: Throwable) {

@@ -1,12 +1,16 @@
 package com.example.tabyspartner
 
 import android.Manifest
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -30,10 +34,10 @@ class MainActivity() : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle("")
         toolbarTitle.setText("Главная")
-
+        checkConnectivity()
         handleFrame(MainPageFragment())
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
-            when(item.itemId) {
+            when (item.itemId) {
                 R.id.support_menu_item -> {
                     makePhoneCall()
                     true
@@ -57,6 +61,7 @@ class MainActivity() : AppCompatActivity() {
             }
         }
     }
+
     override fun onStart() {
         super.onStart()
     }
@@ -69,21 +74,23 @@ class MainActivity() : AppCompatActivity() {
                 this, arrayOf(Manifest.permission.CALL_PHONE),
                 REQUEST_CALL
             );
-        }else {
+        } else {
             startCall()
         }
     }
+
     private fun startCall() {
         val callIntent = Intent(Intent.ACTION_DIAL)
         callIntent.data = Uri.parse("tel:" + getString(R.string.phone_number))
         startActivity(callIntent)
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if(requestCode == REQUEST_CALL) {
+        if (requestCode == REQUEST_CALL) {
             startCall()
         }
     }
@@ -92,6 +99,36 @@ class MainActivity() : AppCompatActivity() {
         val fragmentTransaction = this.supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.navHostFragment, fragment).commit()
         return true
+    }
+
+    private fun checkConnectivity() {
+        val manager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = manager.activeNetworkInfo
+
+        if (null == activeNetwork) {
+            val dialogBuilder = AlertDialog.Builder(this)
+            val intent = Intent(this, MainActivity::class.java)
+            // set message of alert dialog
+            dialogBuilder.setMessage("Make sure that WI-FI or mobile data is turned on, then try again")
+                // if the dialog is cancelable
+                .setCancelable(false)
+                // positive button text and action
+                .setPositiveButton("Retry", DialogInterface.OnClickListener { dialog, id ->
+                    recreate()
+                })
+                // negative button text and action
+                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, id ->
+                    finish()
+                })
+
+            // create dialog box
+            val alert = dialogBuilder.create()
+            // set title for alert dialog box
+            alert.setTitle("No Internet Connection")
+            alert.setIcon(R.mipmap.ic_launcher)
+            // show alert dialog
+            alert.show()
+        }
     }
 
 }

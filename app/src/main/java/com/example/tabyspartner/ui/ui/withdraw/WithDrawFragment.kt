@@ -113,22 +113,43 @@ class WithDrawFragment : Fragment() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(binding.withDrawAmount.text.toString().length > 4) {
+                if(binding.withDrawAmount.text.toString() == "") {
+                    binding.amountFee.text =
+                        "Комиссия 150 ₸"
+                    binding.withdrawBtnWithdrawPage.text =
+                        "Перевести 0 \u20b8"
+                }else if(binding.withDrawAmount.text.toString().toInt() < 251) {
+                    binding.amountFee.text =
+                        "Комиссия 150 ₸"
+                    binding.withdrawBtnWithdrawPage.text =
+                        "Перевод невозможен \u20b8"
+                }
+                else if(binding.withDrawAmount.text.toString().length > 4) {
                     val calculateFee = (binding.withDrawAmount.text.toString().toDouble() * (0.015)).toInt().toString()
                     binding.amountFee.text =
                         "Комиссия ${calculateFee} ₸"
                     binding.withdrawBtnWithdrawPage.text =
                         "Перевести ${binding.withDrawAmount.text.toString().toInt() - calculateFee.toInt()} \u20b8"
-                }else {
+                }
+                else if(binding.withDrawAmount.text.toString().toInt() > 251) {
+                    val calculateFee = (binding.withDrawAmount.text.toString().toDouble() * (0.015)).toInt().toString()
                     binding.amountFee.text =
                         "Комиссия 150 ₸"
                     binding.withdrawBtnWithdrawPage.text =
-                        "Перевести ${binding.withDrawAmount.text} \u20b8"
+                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - 150} \u20b8"
+                }
+
+                else {
+                    binding.amountFee.text =
+                        "Комиссия 150 ₸"
+                    binding.withdrawBtnWithdrawPage.text =
+                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - 150} \u20b8"
                 }
 
             }
 
             override fun afterTextChanged(p0: Editable?) {
+
             }
         });
         bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialogTheme)
@@ -156,15 +177,14 @@ class WithDrawFragment : Fragment() {
            // Log.d("BukhtaCheckValid",binding.withDrawAmount.text.toString()+" "+binding.chooseCardBtn.text.toString())
 //            val db = DatabaseHandlerHistory(context)
 //            db.deleteAllData()
-            if(binding.withDrawAmount.text.toString().toInt() < 251){
+            if(binding.withDrawAmount.text.toString().toInt() < 251) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 // set message of alert dialog
                 dialogBuilder.setMessage("Для вывода средств баланс должен быть не менее 251 \u20b8")
                     // if the dialog is cancelable
                     .setCancelable(false)
-                    // positive button text and action
                     .setPositiveButton("Повторить", DialogInterface.OnClickListener { dialog, id ->
-                       dialog.dismiss()
+                        dialog.dismiss()
                     })
                 // create dialog box
                 val alert = dialogBuilder.create()
@@ -172,24 +192,25 @@ class WithDrawFragment : Fragment() {
                 alert.setTitle("Вывод средств невозможен")
                 // show alert dialog
                 alert.show()
-            }else if(binding.withDrawAmount.text.toString().toInt() < binding.balanceAmountWithDrawPage.text.toString().substring(0,
-                    binding.balanceAmountWithDrawPage.text.toString().length-2
-                    ).toInt()) {
-                val dialogBuilder = AlertDialog.Builder(this.requireContext())
-                dialogBuilder.setMessage("Недостаточно средств!")
-                    // if the dialog is cancelable
-                    .setCancelable(false)
-                    // positive button text and action
-                    .setPositiveButton("Повторить", DialogInterface.OnClickListener { dialog, id ->
-                        dialog.dismiss()
-                    })
-                // create dialog box
-                val alert = dialogBuilder.create()
-                // set title for alert dialog box
-                alert.setTitle("Вы не выбрали карту перевода!")
-                // show alert dialog
-                alert.show()
             }
+//            }else if(binding.withDrawAmount.text.toString().toInt() < binding.balanceAmountWithDrawPage.text.toString().substring(0,
+//                    binding.balanceAmountWithDrawPage.text.toString().length-2
+//                    ).toInt()) {
+//                val dialogBuilder = AlertDialog.Builder(this.requireContext())
+//                dialogBuilder.setMessage("Недостаточно средств!")
+//                    // if the dialog is cancelable
+//                    .setCancelable(false)
+//                    // positive button text and action
+//                    .setPositiveButton("Повторить", DialogInterface.OnClickListener { dialog, id ->
+//                        dialog.dismiss()
+//                    })
+//                // create dialog box
+//                val alert = dialogBuilder.create()
+//                // set title for alert dialog box
+//                alert.setTitle("Вы не выбрали карту перевода!")
+//                // show alert dialog
+//                alert.show()
+//            }
             else if(!binding.chooseCardBtn.text.toString().isDigitsOnly()) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 // set message of alert dialog
@@ -208,7 +229,7 @@ class WithDrawFragment : Fragment() {
                 // show alert dialog
                 alert.show()
             }else {
-                //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext())
+                viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext())
             }
         }
     }
