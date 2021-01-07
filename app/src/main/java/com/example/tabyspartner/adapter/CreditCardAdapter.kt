@@ -27,7 +27,7 @@ class CreditCardAdapter(
 //    private val onDelete: (CreditCard) -> Unit
     private val databaseHandler: DatabaseHandler,
     private val context: Context?,
-    private val fragment: WithDrawFragment
+
 ) : RecyclerView.Adapter<CreditCardAdapter.CreditCardViewHolder>() {
     private val limit = 3
 

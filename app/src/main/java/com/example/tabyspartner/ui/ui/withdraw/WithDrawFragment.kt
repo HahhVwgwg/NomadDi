@@ -83,8 +83,7 @@ class WithDrawFragment : Fragment() {
 
             },
             myDb,
-            this.context,
-            this,
+            this.context
         )
 
 
@@ -250,7 +249,6 @@ class WithDrawFragment : Fragment() {
                 },
                 myDb,
                 this.context,
-                this
             )
             bottomSheetView.findViewById<RecyclerView>(R.id.credit_card_list).layoutManager = LinearLayoutManager(
                 requireContext()

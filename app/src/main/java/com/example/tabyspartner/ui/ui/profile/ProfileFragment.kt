@@ -11,30 +11,37 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.FragmentProfileBinding
+import com.example.tabyspartner.modal.ModalBottomSheet
 import com.example.tabyspartner.ui.ui.pin.VerificationActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     lateinit var sharedPreferences: SharedPreferences
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_profile,container,false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
 
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
 
-        binding.profileFragName.text = sharedPreferences.getString("USER_SHORT_NAME","")
-        binding.profileFragMobile.text = sharedPreferences.getString("USER_PHONE_NUMBER","")
+        binding.profileFragName.text = sharedPreferences.getString("USER_SHORT_NAME", "")
+        binding.profileFragMobile.text = sharedPreferences.getString("USER_PHONE_NUMBER", "")
         return binding.root
     }
 
 
     override fun onResume() {
         super.onResume()
+        binding.persistentBtn.setOnClickListener {
+            val modalbottomSheetFragment = ModalBottomSheet()
+            modalbottomSheetFragment.show(requireFragmentManager(), modalbottomSheetFragment.tag)
+        }
         binding.changePinCodeBtn.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(resources.getString(R.string.change_pincode_title))
@@ -47,7 +54,12 @@ class ProfileFragment : Fragment() {
                     // Respond to positive button press
                     sharedPreferences.edit().remove("USER_PIN_CODE_CREATED").apply()
                     sharedPreferences.edit().remove("USER_PIN_CODE").apply()
-                    context?.startActivity(Intent(requireContext(), VerificationActivity::class.java))
+                    context?.startActivity(
+                        Intent(
+                            requireContext(),
+                            VerificationActivity::class.java
+                        )
+                    )
                 }
                 .show()
         }
