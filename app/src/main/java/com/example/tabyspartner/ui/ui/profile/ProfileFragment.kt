@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.FragmentProfileBinding
 import com.example.tabyspartner.modal.ModalBottomSheet
+import com.example.tabyspartner.ui.ui.authorization.Authorization
 import com.example.tabyspartner.ui.ui.pin.VerificationActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -70,7 +71,14 @@ class ProfileFragment : Fragment() {
                 }
                 .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
                     // Respond to positive button press
-                    requireActivity().finishAffinity()
+                    sharedPreferences.edit().clear().apply()
+                    context?.startActivity(
+                        Intent(
+                            requireContext(),
+                            Authorization::class.java
+                        )
+                    )
+                    requireActivity().finish()
                 }
                 .show()
         }

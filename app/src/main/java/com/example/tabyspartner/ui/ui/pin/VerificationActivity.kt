@@ -15,7 +15,6 @@ import androidx.databinding.DataBindingUtil
 import com.example.tabyspartner.MainActivity
 import com.example.tabyspartner.R
 import com.example.tabyspartner.ui.ui.authorization.Authorization
-import com.example.tabyspartner.databinding.ActivityVerificationBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
@@ -79,6 +78,8 @@ class VerificationActivity : AppCompatActivity() {
             binding.verifyPinCodeBtn.setOnClickListener {
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
+                val firstInput = binding.pinCodeText.text.trim()
+                val secondInput = binding.pinCodeVerifyText.text.trim()
                 if(binding.pinCodeText.text.trim().isEmpty() || binding.pinCodeVerifyText.text.trim().isEmpty()) {
                     binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
                     binding.verifyCodeFeedBack.visibility = View.VISIBLE
