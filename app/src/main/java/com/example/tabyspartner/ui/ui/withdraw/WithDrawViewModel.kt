@@ -2,6 +2,7 @@ package com.example.tabyspartner.ui.ui.withdraw
 
 import android.content.Context
 import android.os.Build
+import android.os.Handler
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.tabyspartner.R
 import com.example.tabyspartner.networking.*
+import com.example.tabyspartner.ui.ui.main.MainPageFragment
 import com.example.tabyspartner.ui.ui.otp.Otp
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_with_draw.*
@@ -31,10 +33,13 @@ class WithDrawViewModel : ViewModel() {
     val responseD: LiveData<DriverProfilesItem>
         get() = _responseD
 
-    init {
-        Log.i("WithDrawViewModel", "WithDrawViewModel called")
-//        getYandexTransactionCategories()
-    }
+
+    private val _responseWithDrawYandex = MutableLiveData<WithdrawResponse>()
+
+    // The external immutable LiveData for the request status String
+    val responseWithDrawYandex: LiveData<WithdrawResponse>
+        get() = _responseWithDrawYandex
+
 
     override fun onCleared() {
         super.onCleared()
@@ -66,7 +71,7 @@ class WithDrawViewModel : ViewModel() {
     }
 
 
-    fun withdrawCash(amount: String, card_number: String, context: Context,fragment : Fragment) {
+    fun withdrawCash(amount: String, card_number: String, context: Context, fragment: Fragment) {
         val externalRefId = Otp().OTP(6)
         val request = FeeRequest(
             contract_source_id = 24,
@@ -89,8 +94,18 @@ class WithDrawViewModel : ViewModel() {
                         .setMessage(context.resources.getString(R.string.operation_ok))
                         .setPositiveButton(context.resources.getString(R.string.accept)) { dialog, which ->
                             // Respond to positive button press
-                            fragment.requireActivity().withdraw_btn_withdrawPage.isEnabled = true
+                            //
                             dialog.dismiss()
+                            fragment.requireActivity().withdraw_btn_withdrawPage.isEnabled = true
+//                            Handler().postDelayed({
+//                                fragment.fragmentManager
+//                                    ?.beginTransaction()
+//                                    ?.detach(fragment)
+//                                    ?.attach(fragment)
+//                                    ?.commit();
+//                            }, 80000)
+                            fragment.fragmentManager?.beginTransaction()
+                                ?.replace(R.id.navHostFragment, MainPageFragment())?.commit()
                         }
                         .show()
                 }
@@ -134,6 +149,34 @@ class WithDrawViewModel : ViewModel() {
                 override fun onFailure(call: Call<DriverProfilesResponse>, t: Throwable) {
                     Log.d("Yandex", t.message.toString())
                 }
+            })
+
+    }
+
+
+    fun withDrawCashFromYandexViewModelFun(driverId: String, amount: String) {
+        val parkId = "2e8584835dd64db99482b4b21f62a2ae"
+        val request = WithdrawBodyRequest(
+            amount = amount,
+            category_id = "partner_service_manual",
+            description = "Списание",
+            driver_profile_id = driverId,
+            park_id = parkId
+        )
+
+        YandexApi.retrofitService.withDrawCashFromYandex(request)
+            .enqueue(object : Callback<WithdrawResponse> {
+                override fun onResponse(
+                    call: Call<WithdrawResponse>,
+                    response: Response<WithdrawResponse>
+                ) {
+                    _responseWithDrawYandex.value = response.body()
+                }
+
+                override fun onFailure(call: Call<WithdrawResponse>, t: Throwable) {
+                    Log.d("Error", t.message.toString())
+                }
+
             })
 
     }

@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.text.isDigitsOnly
 import androidx.databinding.DataBindingUtil
@@ -70,6 +71,13 @@ class WithDrawFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onResume() {
         super.onResume()
+
+        viewModel.getYandexDriversProperties(sharedPreferences.getString("USER_PHONE_NUMBER", "")!!)
+        viewModel.responseD.observe(viewLifecycleOwner, Observer {
+            binding.balanceAmountWithDrawPage.text =
+                it.accounts[0].balance.toDouble().toInt().toString() + " \u20b8"
+        })
+
         model.selected.observe(viewLifecycleOwner, Observer<String> { item ->
             binding.chooseCardBtn.setText(item)
         })
@@ -129,7 +137,7 @@ class WithDrawFragment : Fragment() {
                 alert.setTitle("Вы не выбрали карту перевода!")
                 alert.show()
             } else if (binding.withDrawAmount.text.toString() == "" || binding.withDrawAmount.text.toString()
-                    .toInt() <= 150
+                    .toInt() <= 155
             ) {
                 if (withDrawAmount.toInt() - binding.withDrawAmount.text.toString().toInt() < 100) {
                     val dialogBuilder = AlertDialog.Builder(this.requireContext())
@@ -145,7 +153,7 @@ class WithDrawFragment : Fragment() {
                     alert.show()
                 } else {
                     val dialogBuilder = AlertDialog.Builder(this.requireContext())
-                    dialogBuilder.setMessage("Минимальная сумма перевода 151 \u20b8")
+                    dialogBuilder.setMessage("Минимальная сумма перевода 156 \u20b8")
                         .setCancelable(false)
                         .setPositiveButton(
                             "Повторить",
@@ -178,7 +186,7 @@ class WithDrawFragment : Fragment() {
                 alert.setTitle("Вывод средств невозможен")
                 alert.show()
             }
-            else if (binding.withDrawAmount.text.toString().toInt() > 150) {
+            else if (binding.withDrawAmount.text.toString().toInt() > 155) {
                 if (withDrawAmount.toString().toInt() - binding.withDrawAmount.text.toString()
                         .toInt() < 100
                 ) {
@@ -216,7 +224,20 @@ class WithDrawFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext(),this)
-            binding.withdrawBtnWithdrawPage.isEnabled = true
+            //binding.withdrawBtnWithdrawPage.isEnabled = true
+            viewModel.responseD.observe(viewLifecycleOwner, Observer {
+                val cash = binding.withDrawAmount.text.toString()
+                val driverId = it.driver_profile.id
+                viewModel.withDrawCashFromYandexViewModelFun(amount = "-${cash}",driverId = driverId)
+                viewModel.responseWithDrawYandex.observe(viewLifecycleOwner, Observer {
+                    if(it.driver_profile_id == driverId) {
+                        viewModel.withdrawCash(cash,binding.chooseCardBtn.text.toString(),this.requireContext(),this)
+                    }else {
+                        Toast.makeText(requireContext(),"Операция провалена",Toast.LENGTH_SHORT).show()
+                    }
+                })
+            })
+
         }
     }
 }

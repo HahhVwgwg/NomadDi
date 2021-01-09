@@ -1,5 +1,6 @@
 package com.example.tabyspartner.networking
 
+import com.example.tabyspartner.tokengenerator.RandomString
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -9,6 +10,7 @@ class YandexApiInterceptor : Interceptor {
             .newBuilder()
             .addHeader("X-Client-ID","taxi/park/2e8584835dd64db99482b4b21f62a2ae")
             .addHeader("X-Api-Key","elogWzVHgKGFFcucmDUnERQsVfytM/OvtfyffQe/")
+            .addHeader("X-Idempotency-Token",RandomString().nextString())
             .build()
         return chain.proceed(request)
     }

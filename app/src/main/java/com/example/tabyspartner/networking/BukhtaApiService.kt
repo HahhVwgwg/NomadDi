@@ -14,8 +14,6 @@ import retrofit2.http.Query
 
 private const val BASE_URL = "https://api.interpaysys.com/v1/svc/card_withdrawal/"
 
-
-
 interface BukhtaApiService {
     //    @FormUrlEncoded
     @POST("requests/calculate_fee")

@@ -11,7 +11,6 @@ data class GetSomethingRequest(val query: Query) {
 }
 
 
-
 class DriverProfilesResponse (
         @SerializedName("driver_profiles") val driversList: List<DriverProfilesItem>
         )
@@ -35,6 +34,31 @@ data class Account(
     val type: String
 )
 
+///////////
+data class WithdrawResponse(
+    val amount: String,
+    val category_id: String,
+    val created_by: CreatedBy,
+    val currency_code: String,
+    val description: String,
+    val driver_profile_id: String,
+    val event_at: String,
+    val park_id: String
+)
+
+data class CreatedBy(
+    val client_id: String,
+    val identity: String,
+    val key_id: String
+)
+
+data class WithdrawBodyRequest(
+    val amount: String,
+    val category_id: String,
+    val description: String,
+    val driver_profile_id: String,
+    val park_id: String
+)
 
 
 
