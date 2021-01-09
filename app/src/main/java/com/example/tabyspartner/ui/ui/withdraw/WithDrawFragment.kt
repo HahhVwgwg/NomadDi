@@ -1,8 +1,10 @@
 package com.example.tabyspartner.ui.ui.withdraw
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
@@ -22,6 +24,8 @@ import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.FragmentMainPageBinding
 import com.example.tabyspartner.databinding.FragmentWithDrawBinding
 import com.example.tabyspartner.modal.ModalBottomSheet
+import com.example.tabyspartner.ui.ui.pin.VerificationActivity
+import com.example.tabyspartner.ui.ui.pin.VerificationActivity2
 import kotlinx.android.synthetic.main.fragment_with_draw.*
 
 
@@ -139,9 +143,19 @@ class WithDrawFragment : Fragment() {
                 alert.setTitle("Вы не выбрали карту перевода!")
                 alert.show()
             }else {
-                viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext(),this)
+                startActivityForResult(Intent(requireContext(), VerificationActivity2::class.java), 1)
+                //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext(),this)
                binding.withdrawBtnWithdrawPage.isEnabled = false
             }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext(),this)
+            binding.withdrawBtnWithdrawPage.isEnabled = true
         }
     }
 }
