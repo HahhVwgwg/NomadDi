@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
+
         >
         <RelativeLayout
             android:id="@+id/logoRel"
@@ -51,6 +52,7 @@
             android:layout_gravity="center_horizontal"
             android:text="Создайте код быстрого доступа из 4 цифр"
             android:layout_marginTop="16dp"
+            android:textAlignment="center"
             android:letterSpacing="0.02"
             android:textColor="#000"
             android:textSize="16sp" />

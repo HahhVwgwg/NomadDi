@@ -1,5 +1,6 @@
 package com.example.tabyspartner.ui.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -37,6 +38,7 @@ class MainPageFragment : Fragment() {
     }
     lateinit var sharedPreferences: SharedPreferences
     var name_short = ""
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,24 +53,23 @@ class MainPageFragment : Fragment() {
         viewPager2 = binding.onBoardingViewPager
         val sliderItems = mutableListOf(
             SliderItem(R.drawable.banner3),
-            SliderItem(R.drawable.banner_tabys),
             SliderItem(R.drawable.banner2)
         ) as ArrayList
         viewPager2.adapter = SliderAdapter(sliderItems, viewPager2)
         viewPager2.clipToPadding = false
         viewPager2.clipChildren = false
-        viewPager2.offscreenPageLimit = 3
+        viewPager2.offscreenPageLimit = 2
         viewPager2.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
         val compositePageTransformer = CompositePageTransformer()
-        compositePageTransformer.addTransformer(MarginPageTransformer(40))
+        compositePageTransformer.addTransformer(MarginPageTransformer(50))
         viewPager2.setPageTransformer(compositePageTransformer)
-//        viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() { //откоммент
-//            override fun onPageSelected(position: Int) {
-//                super.onPageSelected(position)
-//                sliderHandler.removeCallbacks(sliderRunnable)
-//                sliderHandler.postDelayed(sliderRunnable,3000)
-//            }
-//        })
+        viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() { // релиз откоммент
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                sliderHandler.removeCallbacks(sliderRunnable)
+                sliderHandler.postDelayed(sliderRunnable,2000)
+            }
+        })
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
         name_short = sharedPreferences.getString("USER_SHORT_NAME", "")!!
         val userPhoneNumber = sharedPreferences.getString("USER_PHONE_NUMBER", "")
@@ -81,7 +82,7 @@ class MainPageFragment : Fragment() {
             sharedPreferences.edit()
                 .putString(
                     "USER_SHORT_NAME",
-                    "${it.driver_profile.first_name + " " + it.driver_profile.last_name[0] + "."}"
+                    it.driver_profile.first_name + " " + it.driver_profile.last_name[0] + "."
                 )
                 .apply()
         })
@@ -111,12 +112,12 @@ class MainPageFragment : Fragment() {
     }
 
 
-//    var sliderRunnable = Runnable {
-//         viewPager2.setCurrentItem(viewPager2.currentItem + 1) // откоммент релиз
-//    }
+    var sliderRunnable = Runnable {
+         viewPager2.setCurrentItem(viewPager2.currentItem + 1) // откоммент релиз
+    }
 
     override fun onPause() {
         super.onPause()
-        // sliderHandler.removeCallbacks(sliderRunnable) //откоммент релиз
+         sliderHandler.removeCallbacks(sliderRunnable) //откоммент релиз
     }
 }

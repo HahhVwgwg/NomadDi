@@ -1,5 +1,6 @@
 package com.example.tabyspartner.ui.ui.withdraw
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -31,11 +32,12 @@ import kotlinx.android.synthetic.main.fragment_with_draw.*
 
 class WithDrawFragment : Fragment() {
     private lateinit var binding: FragmentWithDrawBinding
-    private lateinit var viewModel : WithDrawViewModel
+    private lateinit var viewModel: WithDrawViewModel
     private lateinit var bindingMainPageBinding: FragmentMainPageBinding
-    lateinit var sharedPreferences : SharedPreferences
+    lateinit var sharedPreferences: SharedPreferences
     private lateinit var model: ModalBottomSheet.SharedViewModel
     val modalbottomSheetFragment = ModalBottomSheet()
+
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,29 +77,26 @@ class WithDrawFragment : Fragment() {
         binding.withDrawAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
+
+            @SuppressLint("SetTextI18n")
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(binding.withDrawAmount.text.toString() == "") {
+                if (binding.withDrawAmount.text.toString() == "" || binding.withDrawAmount.text.toString()
+                        .toInt() < 150
+                ) {
                     binding.amountFee.text =
                         "Комиссия 150 ₸"
                     binding.withdrawBtnWithdrawPage.text =
                         "Перевести 0 \u20b8"
-                }else if(binding.withDrawAmount.text.toString().toInt() < 251) {
-                    binding.amountFee.text =
-                        "Комиссия 150 ₸"
-                    binding.withdrawBtnWithdrawPage.text =
-                        "Перевод невозможен \u20b8"
-                } else if(binding.withDrawAmount.text.toString().length > 4) {
-                    val calculateFee = (binding.withDrawAmount.text.toString().toDouble() * (0.015)).toInt().toString()
+                } else if (binding.withDrawAmount.text.toString().length > 4) {
+                    val calculateFee =
+                        (binding.withDrawAmount.text.toString().toDouble() * (0.015)).toInt()
+                            .toString()
                     binding.amountFee.text =
                         "Комиссия ${calculateFee} ₸"
                     binding.withdrawBtnWithdrawPage.text =
-                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - calculateFee.toInt()} \u20b8"
-                } else if(binding.withDrawAmount.text.toString().toInt() > 251) {
-                    val calculateFee = (binding.withDrawAmount.text.toString().toDouble() * (0.015)).toInt().toString()
-                    binding.amountFee.text =
-                        "Комиссия 150 ₸"
-                    binding.withdrawBtnWithdrawPage.text =
-                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - 150} \u20b8"
+                        "Перевести ${
+                            binding.withDrawAmount.text.toString().toInt() - calculateFee.toInt()
+                        } \u20b8"
                 } else {
                     binding.amountFee.text =
                         "Комиссия 150 ₸"
@@ -105,34 +104,21 @@ class WithDrawFragment : Fragment() {
                         "Перевести ${binding.withDrawAmount.text.toString().toInt() - 150} \u20b8"
                 }
             }
+
             override fun afterTextChanged(p0: Editable?) {
             }
         });
+
         binding.chooseCardBtn.setOnClickListener {
             modalbottomSheetFragment.show(requireFragmentManager(), modalbottomSheetFragment.tag)
         }
+
         binding.withdrawBtnWithdrawPage.setOnClickListener {
-            if(binding.withDrawAmount.text.toString() == "") {
-                val dialogBuilder = AlertDialog.Builder(this.requireContext())
-                dialogBuilder.setMessage("Невозможно вывести 0 \u20b8")
-                    .setCancelable(false)
-                    .setPositiveButton("Повторить", DialogInterface.OnClickListener { dialog, id ->
-                        dialog.dismiss()
-                    })
-                val alert = dialogBuilder.create()
-                alert.setTitle("Ошибка")
-                alert.show()
-            }else if(binding.withDrawAmount.text.toString().toInt() < 251) {
-                val dialogBuilder = AlertDialog.Builder(this.requireContext())
-                dialogBuilder.setMessage("Для вывода средств баланс должен быть не менее 251 \u20b8")
-                    .setCancelable(false)
-                    .setPositiveButton("Повторить", DialogInterface.OnClickListener { dialog, id ->
-                        dialog.dismiss()
-                    })
-                val alert = dialogBuilder.create()
-                alert.setTitle("Вывод средств невозможен")
-                alert.show()
-            } else if(!binding.chooseCardBtn.text.toString().isDigitsOnly()) {
+            val withDrawAmount = binding.balanceAmountWithDrawPage.text.substring(
+                0,
+                binding.balanceAmountWithDrawPage.text.length - 2
+            )
+            if (!binding.chooseCardBtn.text.toString().isDigitsOnly()) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("Пожалуйста, выберите вашу карту")
                     .setCancelable(false)
@@ -142,10 +128,85 @@ class WithDrawFragment : Fragment() {
                 val alert = dialogBuilder.create()
                 alert.setTitle("Вы не выбрали карту перевода!")
                 alert.show()
-            }else {
-                startActivityForResult(Intent(requireContext(), VerificationActivity2::class.java), 1)
-                //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext(),this)
-               binding.withdrawBtnWithdrawPage.isEnabled = false
+            } else if (binding.withDrawAmount.text.toString() == "" || binding.withDrawAmount.text.toString()
+                    .toInt() <= 150
+            ) {
+                if (withDrawAmount.toInt() - binding.withDrawAmount.text.toString().toInt() < 100) {
+                    val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                    dialogBuilder.setMessage("В вашем балансе должно оставатся 100 ₸, чтобы вы могли принимать наличные заказы на такси.")
+                        .setCancelable(false)
+                        .setPositiveButton(
+                            "Повторить",
+                            DialogInterface.OnClickListener { dialog, id ->
+                                dialog.dismiss()
+                            })
+                    val alert = dialogBuilder.create()
+                    alert.setTitle("Вывод средств невозможен")
+                    alert.show()
+                } else {
+                    val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                    dialogBuilder.setMessage("Минимальная сумма перевода 151 \u20b8")
+                        .setCancelable(false)
+                        .setPositiveButton(
+                            "Повторить",
+                            DialogInterface.OnClickListener { dialog, id ->
+                                dialog.dismiss()
+                            })
+                    val alert = dialogBuilder.create()
+                    alert.setTitle("Вывод средств невозможен")
+                    alert.show()
+                }
+            }else if (binding.withDrawAmount.text.toString().toInt() == withDrawAmount.toInt()) {
+                val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                dialogBuilder.setMessage("В вашем балансе должно оставатся 100 \u20b8, чтобы вы могли принимать наличные заказы на такси.")
+                    .setCancelable(false)
+                    .setPositiveButton("Повторить", DialogInterface.OnClickListener { dialog, id ->
+                        dialog.dismiss()
+                    })
+                val alert = dialogBuilder.create()
+                alert.setTitle("Вывод средств невозможен")
+                alert.show()
+            }
+            else if (binding.withDrawAmount.text.toString().toInt() > withDrawAmount.toInt()) {
+                val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                dialogBuilder.setMessage("Не достаточно средств")
+                    .setCancelable(false)
+                    .setPositiveButton("Повторить", DialogInterface.OnClickListener { dialog, id ->
+                        dialog.dismiss()
+                    })
+                val alert = dialogBuilder.create()
+                alert.setTitle("Вывод средств невозможен")
+                alert.show()
+            }
+            else if (binding.withDrawAmount.text.toString().toInt() > 150) {
+                if (withDrawAmount.toString().toInt() - binding.withDrawAmount.text.toString()
+                        .toInt() < 100
+                ) {
+                    val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                    dialogBuilder.setMessage("В вашем балансе должно оставатся 100 ₸, чтобы вы могли принимать наличные заказы на такси.")
+                        .setCancelable(false)
+                        .setPositiveButton(
+                            "Повторить",
+                            DialogInterface.OnClickListener { dialog, id ->
+                                dialog.dismiss()
+                            })
+                    val alert = dialogBuilder.create()
+                    alert.setTitle("Вывод средств невозможен")
+                    alert.show()
+                }else {
+                    startActivityForResult(
+                        Intent(requireContext(), VerificationActivity2::class.java),
+                        1
+                    )
+                    binding.withdrawBtnWithdrawPage.isEnabled = false
+                }
+            }
+            else {
+                startActivityForResult(
+                    Intent(requireContext(), VerificationActivity2::class.java),
+                    1
+                )
+                binding.withdrawBtnWithdrawPage.isEnabled = false
             }
         }
     }
@@ -154,7 +215,7 @@ class WithDrawFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext(),this)
+            //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext(),this)
             binding.withdrawBtnWithdrawPage.isEnabled = true
         }
     }
