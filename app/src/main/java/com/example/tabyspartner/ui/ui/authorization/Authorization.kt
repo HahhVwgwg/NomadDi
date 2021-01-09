@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.tabyspartner.MainActivity
 import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.ActivityAuthorizationBinding
 import com.example.tabyspartner.main.AuthorizationViewModel
@@ -93,16 +94,6 @@ class Authorization : AppCompatActivity() {
                                 })
                         } else {
                             Log.d("Check","+${complete_phone_number}"+" "+it.driver_profile.phones[0])
-//                            runOnUiThread {
-//                                MaterialAlertDialogBuilder(this)
-//                                    .setTitle(resources.getString(R.string.error))
-//                                    .setMessage(resources.getString(R.string.error_message))
-//                                    .setPositiveButton(resources.getString(R.string.accept2)) { dialog, which ->
-//                                        // Respond to positive button press finishAffinity()
-//                                        dialog.dismiss()
-//                                    }
-//                                    .show()
-//                            }
                             binding.generateBtn.isEnabled = true
                             binding.loginFormFeedback.visibility = View.VISIBLE
                             binding.loginFormFeedback.text =
@@ -120,26 +111,25 @@ class Authorization : AppCompatActivity() {
         val activeNetwork = manager.activeNetworkInfo
 
         if (null == activeNetwork) {
-            val dialogBuilder = AlertDialog.Builder(this)
-            val intent = Intent(this, Authorization::class.java)
+            val dialogBuilder = androidx.appcompat.app.AlertDialog.Builder(this)
+            val intent = Intent(this, MainActivity::class.java)
             // set message of alert dialog
-            dialogBuilder.setMessage("Make sure that WI-FI or mobile data is turned on, then try again")
+            dialogBuilder.setMessage(R.string.internet_message)
                 // if the dialog is cancelable
                 .setCancelable(false)
                 // positive button text and action
-                .setPositiveButton("Retry", DialogInterface.OnClickListener { dialog, id ->
+                .setPositiveButton(R.string.retry, DialogInterface.OnClickListener { dialog, id ->
                     recreate()
                 })
                 // negative button text and action
-                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, id ->
+                .setNegativeButton(R.string.otmenit, DialogInterface.OnClickListener { dialog, id ->
                     finish()
                 })
 
             // create dialog box
             val alert = dialogBuilder.create()
             // set title for alert dialog box
-            alert.setTitle("No Internet Connection")
-            alert.setIcon(R.mipmap.ic_launcher)
+            alert.setTitle(R.string.internet_title)
             // show alert dialog
             alert.show()
         }

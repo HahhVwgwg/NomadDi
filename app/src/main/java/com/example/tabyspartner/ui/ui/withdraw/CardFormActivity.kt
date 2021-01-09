@@ -111,23 +111,22 @@ class CardFormActivity : AppCompatActivity() {
             val dialogBuilder = AlertDialog.Builder(this)
             val intent = Intent(this, MainActivity::class.java)
             // set message of alert dialog
-            dialogBuilder.setMessage("Make sure that WI-FI or mobile data is turned on, then try again")
+            dialogBuilder.setMessage(R.string.internet_message)
                 // if the dialog is cancelable
                 .setCancelable(false)
                 // positive button text and action
-                .setPositiveButton("Retry", DialogInterface.OnClickListener { dialog, id ->
+                .setPositiveButton(R.string.retry, DialogInterface.OnClickListener { dialog, id ->
                     recreate()
                 })
                 // negative button text and action
-                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, id ->
+                .setNegativeButton(R.string.otmenit, DialogInterface.OnClickListener { dialog, id ->
                     finish()
                 })
 
             // create dialog box
             val alert = dialogBuilder.create()
             // set title for alert dialog box
-            alert.setTitle("No Internet Connection")
-            alert.setIcon(R.mipmap.ic_launcher)
+            alert.setTitle(R.string.internet_title)
             // show alert dialog
             alert.show()
         }

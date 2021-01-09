@@ -112,22 +112,22 @@ class VerificationActivity : AppCompatActivity() {
             val dialogBuilder = AlertDialog.Builder(this)
             val intent = Intent(this, MainActivity::class.java)
             // set message of alert dialog
-            dialogBuilder.setMessage("Убедитесь, что включен WI-FI или мобильный Интернет, и попробуйте еще раз.")
+            dialogBuilder.setMessage(R.string.internet_message)
                 // if the dialog is cancelable
                 .setCancelable(false)
                 // positive button text and action
-                .setPositiveButton("Повторить", DialogInterface.OnClickListener { dialog, id ->
+                .setPositiveButton(R.string.retry, DialogInterface.OnClickListener { dialog, id ->
                     recreate()
                 })
                 // negative button text and action
-                .setNegativeButton("Отменить", DialogInterface.OnClickListener { dialog, id ->
+                .setNegativeButton(R.string.otmenit, DialogInterface.OnClickListener { dialog, id ->
                     finish()
                 })
 
             // create dialog box
             val alert = dialogBuilder.create()
             // set title for alert dialog box
-            alert.setTitle("Подключение к Интернету отсутствует")
+            alert.setTitle(R.string.internet_title)
             // show alert dialog
             alert.show()
         }
