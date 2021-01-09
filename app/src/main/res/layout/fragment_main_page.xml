@@ -14,48 +14,61 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ui.ui.main.MainPageFragment">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/on_boarding_view_pager_lay"
+                <TextView
+                    android:id="@+id/newstitle"
                     android:layout_width="match_parent"
-                    app:cardCornerRadius="10dp"
-                    android:elevation="4dp"
-                    android:layout_height="220dp"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
+                    android:layout_height="wrap_content"
+                    android:text="Новости"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/ubuntubold"
+                    android:textColor="@color/black"
+                    android:textSize="22sp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/on_boarding_view_pager_lay"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/on_boarding_view_pager_lay"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/newstitle"
                     >
-                        <FrameLayout
+                        <!--                        <FrameLayout-->
+                        <!--                            android:layout_width="match_parent"-->
+                        <!--                            android:layout_height="match_parent">-->
+                        <androidx.viewpager2.widget.ViewPager2
+
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:id="@+id/on_boarding_view_pager"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-                                <androidx.viewpager2.widget.ViewPager2
-                                    android:id="@+id/on_boarding_view_pager"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    />
-                        </FrameLayout>
+                            android:layout_height="match_parent" />
+                        <!--                        </FrameLayout>-->
 
-                        <FrameLayout
-                            android:layout_width="70dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/add_banner_corner_title_bg"
+                        <!--                        <FrameLayout-->
+                        <!--                            android:layout_width="70dp"-->
+                        <!--                            android:layout_height="30dp"-->
+                        <!--                            android:background="@drawable/add_banner_corner_title_bg"-->
 
-                            >
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:text="ТОП"
-                                    android:textColor="@color/white"
-                                    android:textStyle="bold"
-                                    android:gravity="center"
-                                    />
+                        <!--                            >-->
+                        <!--                                <TextView-->
+                        <!--                                    android:layout_width="match_parent"-->
+                        <!--                                    android:layout_height="match_parent"-->
+                        <!--                                    android:text="ТОП"-->
+                        <!--                                    android:textColor="@color/white"-->
+                        <!--                                    android:textStyle="bold"-->
+                        <!--                                    android:gravity="center"-->
+                        <!--                                    />-->
 
-                        </FrameLayout>
-                </androidx.cardview.widget.CardView>
+                        <!--                        </FrameLayout>-->
+                </LinearLayout>
 
 
 <!--                <com.denzcoskun.imageslider.ImageSlider-->

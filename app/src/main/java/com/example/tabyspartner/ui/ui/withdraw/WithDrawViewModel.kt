@@ -1,23 +1,16 @@
 package com.example.tabyspartner.ui.ui.withdraw
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.tabyspartner.R
-import com.example.tabyspartner.model.CreditCard
-import com.example.tabyspartner.model.History
 import com.example.tabyspartner.networking.*
 import com.example.tabyspartner.ui.ui.otp.Otp
-import com.example.tabyspartner.ui.ui.pin.VerificationActivity
-import com.example.tabyspartner.utils.DatabaseHandler
-import com.example.tabyspartner.utils.DatabaseHandlerHistory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_with_draw.*
 import retrofit2.Call
