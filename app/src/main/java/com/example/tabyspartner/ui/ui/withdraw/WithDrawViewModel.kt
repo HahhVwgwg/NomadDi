@@ -24,25 +24,17 @@ import java.util.concurrent.TimeUnit
 
 class WithDrawViewModel : ViewModel() {
 
-    private val _response = MutableLiveData<BukhtaFeeResponse>()
-
-    // The external immutable LiveData for the request status String
-    val response: LiveData<BukhtaFeeResponse>
-        get() = _response
-
     private val _responseD = MutableLiveData<DriverProfilesItem>()
 
     // The external immutable LiveData for the request status String
     val responseD: LiveData<DriverProfilesItem>
         get() = _responseD
 
-
     private val _responseWithDrawYandex = MutableLiveData<WithdrawResponse>()
 
     // The external immutable LiveData for the request status String
     val responseWithDrawYandex: LiveData<WithdrawResponse>
         get() = _responseWithDrawYandex
-
 
     override fun onCleared() {
         super.onCleared()
@@ -56,7 +48,6 @@ class WithDrawViewModel : ViewModel() {
             card_number = card_number,
             amount = amount
         )
-
         BukhtaApi.retrofitService.calculateFee(request)
             .enqueue(object : Callback<BukhtaFeeResponse> {
                 override fun onResponse(
@@ -69,10 +60,8 @@ class WithDrawViewModel : ViewModel() {
                 override fun onFailure(call: Call<BukhtaFeeResponse>, t: Throwable) {
                     Log.d("Bukhta", t.message.toString())
                 }
-
             })
     }
-
 
     fun withdrawCash(amount: String, card_number: String, context: Context, fragment: Fragment) {
         val externalRefId = Otp().OTP(6)
@@ -90,25 +79,15 @@ class WithDrawViewModel : ViewModel() {
                     call: Call<BukhtaWithDrawResponse>,
                     response: Response<BukhtaWithDrawResponse>
                 ) {
-                    Log.d("BukhtaWithDraw", response.body().toString())
-                    if(response.isSuccessful) {
-                        Toast.makeText(context,"Операция прошла успешна",Toast.LENGTH_SHORT).show()
-                        fragment.requireActivity().withdraw_btn_withdrawPage.isEnabled = true
-//                        MaterialAlertDialogBuilder(context)
-//                            .setIcon(R.drawable.ic_check_bold_24dp)
-//                            .setMessage(context.resources.getString(R.string.operation_ok))
-//                            .setPositiveButton(context.resources.getString(R.string.accept)) { dialog, which ->
-//                                dialog.dismiss()
-//
-//                            }
-//                            .show()
+                    if (response.isSuccessful) {
+                        Toast.makeText(context, "Операция прошла успешна", Toast.LENGTH_SHORT).show()
+                    }else {
+                        Toast.makeText(context, "Операция провалена", Toast.LENGTH_SHORT).show()
                     }
                 }
-
                 override fun onFailure(call: Call<BukhtaWithDrawResponse>, t: Throwable) {
                     Log.d("BukhtaWithDraw", t.message.toString())
                 }
-
             })
     }
 
@@ -134,7 +113,6 @@ class WithDrawViewModel : ViewModel() {
                         if (response.body()!!.driversList[i].driver_profile.phones[0] == phone) {
                             _responseD.value = response.body()!!.driversList[i]
                         }
-
                     }
                 }
 
@@ -163,6 +141,7 @@ class WithDrawViewModel : ViewModel() {
                     response: Response<WithdrawResponse>
                 ) {
                     _responseWithDrawYandex.value = response.body()
+                    Log.d("asdasdasdasd", response.body().toString())
                 }
 
                 override fun onFailure(call: Call<WithdrawResponse>, t: Throwable) {

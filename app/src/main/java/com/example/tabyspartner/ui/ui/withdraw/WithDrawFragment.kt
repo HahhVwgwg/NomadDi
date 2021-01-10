@@ -26,9 +26,15 @@ import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.FragmentMainPageBinding
 import com.example.tabyspartner.databinding.FragmentWithDrawBinding
 import com.example.tabyspartner.modal.ModalBottomSheet
+import com.example.tabyspartner.networking.WithdrawBodyRequest
+import com.example.tabyspartner.networking.WithdrawResponse
+import com.example.tabyspartner.networking.YandexApi
 import com.example.tabyspartner.ui.ui.pin.VerificationActivity
 import com.example.tabyspartner.ui.ui.pin.VerificationActivity2
 import kotlinx.android.synthetic.main.fragment_with_draw.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class WithDrawFragment : Fragment() {
@@ -38,6 +44,7 @@ class WithDrawFragment : Fragment() {
     lateinit var sharedPreferences: SharedPreferences
     private lateinit var model: ModalBottomSheet.SharedViewModel
     val modalbottomSheetFragment = ModalBottomSheet()
+    private lateinit var driver_id : String
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreateView(
@@ -59,6 +66,7 @@ class WithDrawFragment : Fragment() {
         viewModel.responseD.observe(viewLifecycleOwner, Observer {
             binding.balanceAmountWithDrawPage.text =
                 it.accounts[0].balance.toDouble().toInt().toString() + " \u20b8"
+            driver_id = it.driver_profile.id
         })
 
         model = activity?.run {
@@ -73,15 +81,9 @@ class WithDrawFragment : Fragment() {
         super.onResume()
 
         viewModel.getYandexDriversProperties(sharedPreferences.getString("USER_PHONE_NUMBER", "")!!)
-        viewModel.responseD.observe(viewLifecycleOwner, Observer {
-            binding.balanceAmountWithDrawPage.text =
-                it.accounts[0].balance.toDouble().toInt().toString() + " \u20b8"
-        })
-
         model.selected.observe(viewLifecycleOwner, Observer<String> { item ->
             binding.chooseCardBtn.setText(item)
         })
-
         binding.withDrawAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -136,7 +138,7 @@ class WithDrawFragment : Fragment() {
                 val alert = dialogBuilder.create()
                 alert.setTitle("Вы не выбрали карту перевода!")
                 alert.show()
-            }else if (binding.withDrawAmount.text.toString() == "") {
+            } else if (binding.withDrawAmount.text.toString() == "") {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("Минимальная сумма перевода 200 \u20b8")
                     .setCancelable(false)
@@ -148,8 +150,7 @@ class WithDrawFragment : Fragment() {
                 val alert = dialogBuilder.create()
                 alert.setTitle("Вывод средств невозможен")
                 alert.show()
-            }
-            else if (binding.withDrawAmount.text.toString()
+            } else if (binding.withDrawAmount.text.toString()
                     .toInt() <= 199
             ) {
                 if (withDrawAmount.toInt() - binding.withDrawAmount.text.toString().toInt() < 100) {
@@ -177,7 +178,7 @@ class WithDrawFragment : Fragment() {
                     alert.setTitle("Вывод средств невозможен")
                     alert.show()
                 }
-            }else if (binding.withDrawAmount.text.toString().toInt() == withDrawAmount.toInt()) {
+            } else if (binding.withDrawAmount.text.toString().toInt() == withDrawAmount.toInt()) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("На вашем балансе должно оставаться не менее 100 тг, чтобы вы могли получать \"наличные\" заказы.")
                     .setCancelable(false)
@@ -187,8 +188,7 @@ class WithDrawFragment : Fragment() {
                 val alert = dialogBuilder.create()
                 alert.setTitle("Вывод средств невозможен")
                 alert.show()
-            }
-            else if (binding.withDrawAmount.text.toString().toInt() > withDrawAmount.toInt()) {
+            } else if (binding.withDrawAmount.text.toString().toInt() > withDrawAmount.toInt()) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("Не достаточно средств")
                     .setCancelable(false)
@@ -198,8 +198,7 @@ class WithDrawFragment : Fragment() {
                 val alert = dialogBuilder.create()
                 alert.setTitle("Вывод средств невозможен")
                 alert.show()
-            }
-            else if (binding.withDrawAmount.text.toString().toInt() > 199) {
+            } else if (binding.withDrawAmount.text.toString().toInt() > 199) {
                 if (withDrawAmount.toString().toInt() - binding.withDrawAmount.text.toString()
                         .toInt() < 100
                 ) {
@@ -214,7 +213,7 @@ class WithDrawFragment : Fragment() {
                     val alert = dialogBuilder.create()
                     alert.setTitle("Вывод средств невозможен")
                     alert.show()
-                }else {
+                } else {
                     startActivityForResult(
                         Intent(requireContext(), VerificationActivity2::class.java),
                         1
@@ -229,22 +228,15 @@ class WithDrawFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            Toast.makeText(context,"Операция прошла успешна",Toast.LENGTH_SHORT).show()
-            //viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext(),this)
-            binding.withdrawBtnWithdrawPage.isEnabled = true
-//            viewModel.responseD.observe(viewLifecycleOwner, Observer {
-//                //val cash = binding.withDrawAmount.text.toString()
-//                val cash = it.accounts[0].balance
-//                val driverId = it.driver_profile.id
-//                viewModel.withDrawCashFromYandexViewModelFun(amount = "-${cash}",driverId = driverId)
-//                viewModel.responseWithDrawYandex.observe(viewLifecycleOwner, Observer {
-//                    if(it.driver_profile_id == driverId) {
-//                        viewModel.withdrawCash(cash,binding.chooseCardBtn.text.toString(),this.requireContext(),this)
-//                    }else {
-//                        Toast.makeText(requireContext(),"Операция провалена",Toast.LENGTH_SHORT).show()
-//                    }
-//                })
-//            })
+            viewModel.withDrawCashFromYandexViewModelFun(amount = "-${binding.withDrawAmount.text.toString()}", driverId = driver_id)
+            viewModel.responseWithDrawYandex.observe(viewLifecycleOwner, Observer {
+                if(driver_id == it.driver_profile_id) {
+                    viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext(),this)
+                    binding.withdrawBtnWithdrawPage.isEnabled = true
+                }else {
+                    Toast.makeText(requireContext(),"Операция провалена",Toast.LENGTH_SHORT).show()
+                }
+            })
         }
     }
 }

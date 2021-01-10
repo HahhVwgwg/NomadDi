@@ -7,7 +7,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
@@ -47,7 +50,40 @@ class VerificationActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onResume() {
         super.onResume()
+
         if (fromProfile) {
+            var firstInput = ""
+            var secondInput = ""
+            binding.pinCodeText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    p0: CharSequence?,
+                    p1: Int,
+                    p2: Int,
+                    p3: Int
+                ) {
+                }
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    firstInput = p0.toString()
+                    //Log.d("textCheck",firstInput)
+                }
+                override fun afterTextChanged(p0: Editable?) {
+                }
+            })
+            binding.pinCodeVerifyText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    p0: CharSequence?,
+                    p1: Int,
+                    p2: Int,
+                    p3: Int
+                ) {
+                }
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    secondInput = p0.toString()
+                    //Log.d("text2Check",secondInput)
+                }
+                override fun afterTextChanged(p0: Editable?) {
+                }
+            })
             binding.textField3.visibility = View.VISIBLE
             binding.verifyPinCodeBtn.setOnClickListener {
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -56,16 +92,14 @@ class VerificationActivity : AppCompatActivity() {
                     binding.verifyCodeFeedBack.text = "Введите текущий пинкод"
                     binding.verifyCodeFeedBack.visibility = View.VISIBLE
                 }else if(binding.currentPinCodeText.text.toString() == pinCode) {
-
-                    if (binding.pinCodeText.text!!.trim()
-                            .isEmpty() || binding.pinCodeVerifyText.text!!.trim().isEmpty()
+                    if (firstInput.trim().isEmpty() || secondInput.trim().isEmpty()
                     ) {
                         binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
                         binding.verifyCodeFeedBack.visibility = View.VISIBLE
-                    } else if (binding.pinCodeText.text!!.length != 4) {
+                    } else if (firstInput.length != 4) {
                         binding.verifyCodeFeedBack.text = "Код должен состоять из 4 цифр"
                         binding.verifyCodeFeedBack.visibility = View.VISIBLE
-                    } else if (binding.pinCodeText.text!!.trim() != binding.pinCodeVerifyText.text!!.trim()) {
+                    } else if (firstInput.trim() != secondInput.trim()) {
                         binding.verifyCodeFeedBack.text = "Новый пин код не совпадает"
                         binding.verifyCodeFeedBack.visibility = View.VISIBLE
                     } else {
@@ -137,20 +171,51 @@ class VerificationActivity : AppCompatActivity() {
                     }
                 }
             } else {
+                var firstInput = ""
+                var secondInput = ""
+                binding.pinCodeText.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        p0: CharSequence?,
+                        p1: Int,
+                        p2: Int,
+                        p3: Int
+                    ) {
+                    }
+                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        firstInput = p0.toString()
+                        //Log.d("textCheck",firstInput)
+                    }
+                    override fun afterTextChanged(p0: Editable?) {
+                    }
+                })
+                binding.pinCodeVerifyText.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        p0: CharSequence?,
+                        p1: Int,
+                        p2: Int,
+                        p3: Int
+                    ) {
+                    }
+                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        secondInput = p0.toString()
+                        //Log.d("text2Check",secondInput)
+                    }
+                    override fun afterTextChanged(p0: Editable?) {
+                    }
+                })
                 binding.verifyPinCodeBtn.setOnClickListener {
                     val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
-                    val firstInput = binding.pinCodeText.text!!.trim()
-                    val secondInput = binding.pinCodeVerifyText.text!!.trim()
-                    if (binding.pinCodeText.text!!.trim()
-                            .isEmpty() || binding.pinCodeVerifyText.text!!.trim().isEmpty()
+
+                    if (firstInput.trim()
+                            .isEmpty() || secondInput.trim().isEmpty()
                     ) {
                         binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
                         binding.verifyCodeFeedBack.visibility = View.VISIBLE
-                    } else if (binding.pinCodeText.text!!.length != 4) {
+                    } else if (firstInput.length != 4) {
                         binding.verifyCodeFeedBack.text = "Код должен состоять из 4 цифр"
                         binding.verifyCodeFeedBack.visibility = View.VISIBLE
-                    } else if (binding.pinCodeText.text!!.trim() != binding.pinCodeVerifyText.text!!.trim()) {
+                    } else if (firstInput.trim() != secondInput.trim()) {
                         binding.verifyCodeFeedBack.text = "Код не совпадает"
                         binding.verifyCodeFeedBack.visibility = View.VISIBLE
                     } else {
