@@ -20,8 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     lateinit var sharedPreferences: SharedPreferences
-
-
+    var fromProfile = false;
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,6 +32,7 @@ class ProfileFragment : Fragment() {
 
         binding.profileFragName.text = sharedPreferences.getString("USER_SHORT_NAME", "")
         binding.profileFragMobile.text = sharedPreferences.getString("USER_PHONE_NUMBER", "")
+        fromProfile = sharedPreferences.getBoolean("USER_FROM_PROFILE",false)
         return binding.root
     }
 
@@ -49,8 +49,8 @@ class ProfileFragment : Fragment() {
                 }
                 .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
                     // Respond to positive button press
-                    sharedPreferences.edit().remove("USER_PIN_CODE_CREATED").apply()
-                    sharedPreferences.edit().remove("USER_PIN_CODE").apply()
+                    sharedPreferences.edit().putBoolean("USER_FROM_PROFILE",true).apply()
+//                    sharedPreferences.edit().remove("USER_PIN_CODE").apply()
                     context?.startActivity(
                         Intent(
                             requireContext(),

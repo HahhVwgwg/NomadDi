@@ -53,7 +53,7 @@ class MainPageFragment : Fragment() {
         viewPager2 = binding.onBoardingViewPager
         val sliderItems = mutableListOf(
             SliderItem(R.drawable.banner3),
-            SliderItem(R.drawable.banner2)
+            SliderItem(R.drawable.bannernew)
         ) as ArrayList
         viewPager2.adapter = SliderAdapter(sliderItems, viewPager2)
         viewPager2.clipToPadding = false

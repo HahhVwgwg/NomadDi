@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Handler
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -18,6 +19,8 @@ import kotlinx.android.synthetic.main.fragment_with_draw.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 class WithDrawViewModel : ViewModel() {
 
@@ -88,26 +91,18 @@ class WithDrawViewModel : ViewModel() {
                     response: Response<BukhtaWithDrawResponse>
                 ) {
                     Log.d("BukhtaWithDraw", response.body().toString())
-                    //fragment.requireActivity().withdraw_btn_withdrawPage.isEnabled = false
-                    MaterialAlertDialogBuilder(context)
-                        .setIcon(R.drawable.ic_check_bold_24dp)
-                        .setMessage(context.resources.getString(R.string.operation_ok))
-                        .setPositiveButton(context.resources.getString(R.string.accept)) { dialog, which ->
-                            // Respond to positive button press
-                            //
-                            dialog.dismiss()
-                            fragment.requireActivity().withdraw_btn_withdrawPage.isEnabled = true
-//                            Handler().postDelayed({
-//                                fragment.fragmentManager
-//                                    ?.beginTransaction()
-//                                    ?.detach(fragment)
-//                                    ?.attach(fragment)
-//                                    ?.commit();
-//                            }, 80000)
-                            fragment.fragmentManager?.beginTransaction()
-                                ?.replace(R.id.navHostFragment, MainPageFragment())?.commit()
-                        }
-                        .show()
+                    if(response.isSuccessful) {
+                        Toast.makeText(context,"Операция прошла успешна",Toast.LENGTH_SHORT).show()
+                        fragment.requireActivity().withdraw_btn_withdrawPage.isEnabled = true
+//                        MaterialAlertDialogBuilder(context)
+//                            .setIcon(R.drawable.ic_check_bold_24dp)
+//                            .setMessage(context.resources.getString(R.string.operation_ok))
+//                            .setPositiveButton(context.resources.getString(R.string.accept)) { dialog, which ->
+//                                dialog.dismiss()
+//
+//                            }
+//                            .show()
+                    }
                 }
 
                 override fun onFailure(call: Call<BukhtaWithDrawResponse>, t: Throwable) {
@@ -135,12 +130,9 @@ class WithDrawViewModel : ViewModel() {
                     call: Call<DriverProfilesResponse>,
                     response: Response<DriverProfilesResponse>
                 ) {
-                    //Log.d("Yandex",response.body()!!.driversList.toString())
-
                     for (i in response.body()!!.driversList.indices) {
                         if (response.body()!!.driversList[i].driver_profile.phones[0] == phone) {
                             _responseD.value = response.body()!!.driversList[i]
-                            //Log.d("Yandex",response.body()!!.driversList[i].driver_profile.first_name)
                         }
 
                     }

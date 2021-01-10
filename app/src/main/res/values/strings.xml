@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Табыс Партнер</string>
+    <string name="app_name">Tabys Go</string>
     <string name="app_name_md"><font fgcolor='#ffd030'>Табыс</font> Партнер</string>
     <string name="main_menu_item_title">Главная</string>
     <string name="withdraw_menu_item_title">Вывод средств</string>
@@ -38,7 +38,7 @@
     <string name="error">Ошибка</string>
     <string name="error_message">Данный номер не зарегистрирован в нашей базе. Попробуйте еще раз.</string>
     <string name="delete_card_title">Вы точно хотите удалить карту?</string>
-    <string name="delete_card_message">Если вы удалите карту вам придется занова добавить карту</string>
+    <string name="delete_card_message">Если вы удалите карту, вам придётся добавить новую</string>
     <string name="error_empty">Заполните поля!</string>
     <string name="operation_ok">Операция прошла успешна! Ждите пополнения</string>
     <string name="internet_message">Убедитесь, что включен WI-FI или мобильный Интернет, и попробуйте еще раз.</string>

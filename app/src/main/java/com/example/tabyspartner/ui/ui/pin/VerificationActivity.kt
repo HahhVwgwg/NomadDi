@@ -27,6 +27,7 @@ class VerificationActivity : AppCompatActivity() {
     lateinit var sharedPreferences: SharedPreferences
     var pinCode = ""
     var isPinCodeCreated = false
+    var fromProfile = false
     private lateinit var binding: com.example.tabyspartner.databinding.ActivityVerificationBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         checkConnectivity()
@@ -37,6 +38,7 @@ class VerificationActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         isPinCodeCreated = sharedPreferences.getBoolean("USER_PIN_CODE_CREATED", false)
         pinCode = sharedPreferences.getString("USER_PIN_CODE", "")!!
+        fromProfile = sharedPreferences.getBoolean("USER_FROM_PROFILE", false)
 
         binding.root
     }
@@ -45,76 +47,135 @@ class VerificationActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onResume() {
         super.onResume()
-        if (isPinCodeCreated) {
-            binding.tvInputTip.text = "Введите ваш код доступа"
-            binding.textField2.visibility = View.GONE
-            binding.textField.hint = "Введите код"
-            binding.forgetPassword.visibility = View.VISIBLE
+        if (fromProfile) {
+            binding.textField3.visibility = View.VISIBLE
+            binding.verifyPinCodeBtn.setOnClickListener {
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
+                if(binding.currentPinCodeText.text.toString() == "") {
+                    binding.verifyCodeFeedBack.text = "Введите текущий пинкод"
+                    binding.verifyCodeFeedBack.visibility = View.VISIBLE
+                }else if(binding.currentPinCodeText.text.toString() == pinCode) {
 
-            binding.forgetPassword.setOnClickListener {
-                MaterialAlertDialogBuilder(this)
-                    .setTitle(resources.getString(R.string.alert_password_recover_title))
-                    .setMessage(resources.getString(R.string.alert_password_recover_message))
-                    .setNegativeButton(resources.getString(R.string.decline)) { dialog, which ->
-                        // Respond to negative button press
-                        dialog.dismiss()
-                    }
-                    .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
-                        // Respond to positive button press
-                        sharedPreferences.edit().clear().apply()
-                        startActivity(Intent(this, Authorization::class.java))
+                    if (binding.pinCodeText.text!!.trim()
+                            .isEmpty() || binding.pinCodeVerifyText.text!!.trim().isEmpty()
+                    ) {
+                        binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
+                    } else if (binding.pinCodeText.text!!.length != 4) {
+                        binding.verifyCodeFeedBack.text = "Код должен состоять из 4 цифр"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
+                    } else if (binding.pinCodeText.text!!.trim() != binding.pinCodeVerifyText.text!!.trim()) {
+                        binding.verifyCodeFeedBack.text = "Новый пин код не совпадает"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
+                    } else {
+                        binding.verifyCodeFeedBack.visibility = View.INVISIBLE
+                        binding.verifyPinCodeBtn.isEnabled = false
+                        sharedPreferences.edit().remove("USER_PIN_CODE_CREATED").apply()
+                        sharedPreferences.edit().remove("USER_PIN_CODE").apply()
+                        sharedPreferences.edit()
+                            .putString(
+                                "USER_PIN_CODE",
+                                binding.pinCodeText.text!!.trim().toString()
+                            )
+                            .putBoolean("USER_PIN_CODE_CREATED", true)
+                            .putBoolean("USER_FROM_PROFILE",false)
+                            .apply()
+                        Toast.makeText(
+                            this@VerificationActivity,
+                            "Пинкод создан",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                        startActivity(Intent(this@VerificationActivity, MainActivity::class.java))
                         finish()
                     }
-                    .show()
-            }
-            binding.verifyPinCodeBtn.setOnClickListener {
-                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
-                if (binding.pinCodeText.text!!.trim().isEmpty()) {
-                    binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
+                }
+                else {
+                    binding.verifyCodeFeedBack.text = "Введенный текущий пинкод не совпадает"
                     binding.verifyCodeFeedBack.visibility = View.VISIBLE
-                } else if (binding.pinCodeText.text!!.trim().toString() != pinCode) {
-                    binding.verifyCodeFeedBack.text = "Неверный пинкод. Попробуйте еще раз."
-                    binding.verifyCodeFeedBack.visibility = View.VISIBLE
-                } else if (binding.pinCodeText.text!!.trim().toString() == pinCode) {
-                    binding.verifyPinCodeBtn.isEnabled = false
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
                 }
             }
+            fromProfile = false
+            ////////////////////////////////
         } else {
-            binding.verifyPinCodeBtn.setOnClickListener {
-                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
-                val firstInput = binding.pinCodeText.text!!.trim()
-                val secondInput = binding.pinCodeVerifyText.text!!.trim()
-                if (binding.pinCodeText.text!!.trim()
-                        .isEmpty() || binding.pinCodeVerifyText.text!!.trim().isEmpty()
-                ) {
-                    binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
-                    binding.verifyCodeFeedBack.visibility = View.VISIBLE
-                } else if (binding.pinCodeText.text!!.length != 4) {
-                    binding.verifyCodeFeedBack.text = "Код должен состоять из 4 цифр"
-                    binding.verifyCodeFeedBack.visibility = View.VISIBLE
-                } else if (binding.pinCodeText.text!!.trim() != binding.pinCodeVerifyText.text!!.trim()) {
-                    binding.verifyCodeFeedBack.text = "Код не совпадает"
-                    binding.verifyCodeFeedBack.visibility = View.VISIBLE
-                } else {
-                    binding.verifyCodeFeedBack.visibility = View.INVISIBLE
-                    binding.verifyPinCodeBtn.isEnabled = false
-                    sharedPreferences.edit()
-                        .putString("USER_PIN_CODE", binding.pinCodeText.text!!.trim().toString())
-                        .putBoolean("USER_PIN_CODE_CREATED", true)
-                        .apply()
-                    Toast.makeText(this@VerificationActivity, "Пинкод создан", Toast.LENGTH_SHORT)
-                        .show()
-                    startActivity(Intent(this@VerificationActivity, MainActivity::class.java))
-                    finish()
-                }
+            if (isPinCodeCreated) {
+                binding.tvInputTip.text = "Введите ваш код доступа"
+                binding.textField2.visibility = View.GONE
+                binding.textField.hint = "Введите код"
+                binding.forgetPassword.visibility = View.VISIBLE
 
+                binding.forgetPassword.setOnClickListener {
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle(resources.getString(R.string.alert_password_recover_title))
+                        .setMessage(resources.getString(R.string.alert_password_recover_message))
+                        .setNegativeButton(resources.getString(R.string.decline)) { dialog, which ->
+                            // Respond to negative button press
+                            dialog.dismiss()
+                        }
+                        .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
+                            // Respond to positive button press
+                            sharedPreferences.edit().clear().apply()
+                            startActivity(Intent(this, Authorization::class.java))
+                            finish()
+                        }
+                        .show()
+                }
+                binding.verifyPinCodeBtn.setOnClickListener {
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
+                    if (binding.pinCodeText.text!!.trim().isEmpty()) {
+                        binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
+                    } else if (binding.pinCodeText.text!!.trim().toString() != pinCode) {
+                        binding.verifyCodeFeedBack.text = "Неверный пинкод. Попробуйте еще раз."
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
+                    } else if (binding.pinCodeText.text!!.trim().toString() == pinCode) {
+                        binding.verifyPinCodeBtn.isEnabled = false
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    }
+                }
+            } else {
+                binding.verifyPinCodeBtn.setOnClickListener {
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
+                    val firstInput = binding.pinCodeText.text!!.trim()
+                    val secondInput = binding.pinCodeVerifyText.text!!.trim()
+                    if (binding.pinCodeText.text!!.trim()
+                            .isEmpty() || binding.pinCodeVerifyText.text!!.trim().isEmpty()
+                    ) {
+                        binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
+                    } else if (binding.pinCodeText.text!!.length != 4) {
+                        binding.verifyCodeFeedBack.text = "Код должен состоять из 4 цифр"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
+                    } else if (binding.pinCodeText.text!!.trim() != binding.pinCodeVerifyText.text!!.trim()) {
+                        binding.verifyCodeFeedBack.text = "Код не совпадает"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
+                    } else {
+                        binding.verifyCodeFeedBack.visibility = View.INVISIBLE
+                        binding.verifyPinCodeBtn.isEnabled = false
+                        sharedPreferences.edit()
+                            .putString(
+                                "USER_PIN_CODE",
+                                binding.pinCodeText.text!!.trim().toString()
+                            )
+                            .putBoolean("USER_PIN_CODE_CREATED", true)
+                            .apply()
+                        Toast.makeText(
+                            this@VerificationActivity,
+                            "Пинкод создан",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                        startActivity(Intent(this@VerificationActivity, MainActivity::class.java))
+                        finish()
+                    }
+
+                }
             }
         }
-
     }
 
     private fun checkConnectivity() {
