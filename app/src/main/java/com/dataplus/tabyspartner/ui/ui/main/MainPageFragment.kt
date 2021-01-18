@@ -21,6 +21,7 @@ import com.dataplus.tabyspartner.databinding.FragmentMainPageBinding
 import com.dataplus.tabyspartner.model.SliderItem
 import com.dataplus.tabyspartner.ui.ui.profile.ProfileFragment
 import com.dataplus.tabyspartner.ui.ui.withdraw.WithDrawFragment
+import kotlinx.android.synthetic.main.fragment_main_page.*
 
 class MainPageFragment : Fragment() {
 
@@ -32,7 +33,7 @@ class MainPageFragment : Fragment() {
     }
 
 
-    private lateinit var binding: FragmentMainPageBinding
+    //private lateinit var binding: FragmentMainPageBinding
     private val viewModel: MainPageViewModel by lazy {
         ViewModelProvider(this).get(MainPageViewModel::class.java)
     }
@@ -43,18 +44,16 @@ class MainPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        super.onCreate(savedInstanceState)
 
         // Inflate the layout for this fragment
-        binding = FragmentMainPageBinding.inflate(inflater)
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
 
-        viewPager2 = binding.onBoardingViewPager
+        viewPager2 = requireActivity().findViewById(R.id.on_boarding_view_pager)
         val sliderItems = mutableListOf(
             SliderItem(R.drawable.banner3),
             SliderItem(R.drawable.bannernew)
         ) as ArrayList
+
         viewPager2.adapter = SliderAdapter(sliderItems, viewPager2)
         viewPager2.clipToPadding = false
         viewPager2.clipChildren = false
@@ -76,9 +75,9 @@ class MainPageFragment : Fragment() {
         viewModel.getYandexDriversProperties(userPhoneNumber!!)
         viewModel.response.observe(viewLifecycleOwner, Observer {
             //Log.d("responseDriver", it.toString())
-            binding.profileNameLabel.text =
+            profile_name_label.text =
                 it.driver_profile.first_name + "\n" + it.driver_profile.last_name
-            binding.amountCashNameLabel.text = it.accounts[0].balance
+            amount_cash_name_label.text = it.accounts[0].balance
             sharedPreferences.edit()
                 .putString(
                     "USER_SHORT_NAME",
@@ -86,7 +85,7 @@ class MainPageFragment : Fragment() {
                 )
                 .apply()
         })
-        return binding.root
+        return inflater.inflate(R.layout.fragment_main_page, container, false)
     }
 
     private fun handleFrame(fragment: Fragment): Boolean {
@@ -98,19 +97,17 @@ class MainPageFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         //sliderHandler.postDelayed(sliderRunnable,3000) //релиз откоммент
-        binding.profileInfoBtn.setOnClickListener {
+        profile_info_btn.setOnClickListener {
             handleFrame(ProfileFragment())
         }
-        binding.balanceInfoBtn.setOnClickListener {
+        balance_info_btn.setOnClickListener {
             handleFrame(WithDrawFragment())
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
     }
-
 
     var sliderRunnable = Runnable {
          viewPager2.setCurrentItem(viewPager2.currentItem + 1) // откоммент релиз

@@ -14,30 +14,31 @@ import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.ActivityMobizonBinding
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity
+import kotlinx.android.synthetic.main.activity_mobizon.*
 
 class MobizonActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMobizonBinding
+    //private lateinit var binding: ActivityMobizonBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_mobizon)
+        setContentView(R.layout.activity_mobizon)
         checkConnectivity()
-        binding.root
+        //binding.root
     }
 
     override fun onResume() {
         super.onResume()
         val otp: String? = intent.getStringExtra("verCode")
         //val phone: String? = intent.getStringExtra("phoneNumber")
-        binding.verifyBtn.setOnClickListener {
+       verify_btn.setOnClickListener {
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(binding.mainLayoutMobizon.getWindowToken(), 0)
-            binding.otpProgressBar.visibility = View.VISIBLE
-            if(binding.otpTextView.text.toString() == otp) {
+            imm.hideSoftInputFromWindow(mainLayoutMobizon.getWindowToken(), 0)
+            otp_progress_bar.visibility = View.VISIBLE
+            if(otp_text_view.text.toString() == otp) {
                 startActivity(Intent(this, VerificationActivity()::class.java))
                 finish()
             }else {
-                binding.otpFormFeedback.text = "Код неверный убедитесь что вы ввели правильный код"
+                otp_form_feedback.text = "Код неверный убедитесь что вы ввели правильный код"
             }
         }
     }

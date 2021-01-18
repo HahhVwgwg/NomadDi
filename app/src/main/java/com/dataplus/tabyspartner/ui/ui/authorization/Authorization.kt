@@ -18,11 +18,12 @@ import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.ActivityAuthorizationBinding
 import com.dataplus.tabyspartner.main.AuthorizationViewModel
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity
+import kotlinx.android.synthetic.main.activity_authorization.*
 
 
 class Authorization : AppCompatActivity() {
 
-    private lateinit var binding: ActivityAuthorizationBinding
+    //private lateinit var binding: ActivityAuthorizationBinding
 
     private val viewModel: AuthorizationViewModel by lazy {
         ViewModelProvider(this).get(AuthorizationViewModel::class.java)
@@ -34,41 +35,42 @@ class Authorization : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_authorization)
+        setContentView(R.layout.activity_authorization)
         checkConnectivity()
-        binding.lifecycleOwner = this
+
 
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         isRegistered = sharedPreferences.getBoolean("USER_REGISTERED", false)
         phoneNumber = sharedPreferences.getString("USER_PHONE_NUMBER", "")!!
 
 
-        if(isRegistered) {
+        if (isRegistered) {
             val intent = Intent(this, VerificationActivity::class.java)
             startActivity(intent)
             finish()
-        }else {
-            binding.generateBtn.setOnClickListener {
+        } else {
+            generate_btn.setOnClickListener {
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.mainLayoutAuthorization.getWindowToken(), 0)
-                val phone_number =  binding.phoneNumberText.text.toString()
+                imm.hideSoftInputFromWindow(mainLayoutAuthorization.getWindowToken(), 0)
+                val phone_number = phone_number_text.text.toString()
                 val complete_phone_number =
-                        binding.countryCodeText.text.subSequence(
-                            1,
-                            binding.countryCodeText.text.length
-                        ).toString()+
-                                "" + binding.phoneNumberText.text.toString()
+                    country_code_text.text.subSequence(
+                        1,
+                        country_code_text.text.length
+                    ).toString() +
+                            "" + phone_number_text.text.toString()
 
-                if(phone_number.trim().isEmpty()) {
-                    binding.loginFormFeedback.text = "Пожалуйста введите номер телефона"
-                    binding.loginFormFeedback.visibility = View.VISIBLE
-                }else if(phone_number.trim().length != 10){
-                    binding.loginFormFeedback.text = "Пожалуйста введите корректный номер xxx-xxx-xx-xx"
-                    binding.loginFormFeedback.visibility = View.VISIBLE
+                if (phone_number.trim().isEmpty()) {
+                    login_form_feedback.text = "Пожалуйста введите номер телефона"
+                    login_form_feedback.visibility = View.VISIBLE
+                } else if (phone_number.trim().length != 10) {
+                    login_form_feedback.text =
+                        "Пожалуйста введите корректный номер xxx-xxx-xx-xx"
+                    login_form_feedback.visibility = View.VISIBLE
                 } else {
 
-                    viewModel.getUser("+$complete_phone_number",this)
-                    viewModel.response.observe(binding.lifecycleOwner as Authorization, Observer {
+                    viewModel.getUser("+$complete_phone_number", this)
+                    viewModel.response.observe(this, Observer {
 
                         if ("+${complete_phone_number}" == it.driver_profile.phones[0]) {
 
@@ -78,7 +80,7 @@ class Authorization : AppCompatActivity() {
                                 .apply()
                             viewModel.getMessageStatus(this, "+$complete_phone_number")
                             viewModel.responseOtp.observe(
-                                binding.lifecycleOwner as Authorization,
+                                this,
                                 Observer {
                                     val intent = Intent(this, MobizonActivity::class.java)
                                     intent.putExtra("phoneNumber", "+$complete_phone_number")
@@ -87,17 +89,19 @@ class Authorization : AppCompatActivity() {
                                     finish()
                                 })
                         } else {
-                            Log.d("Check","+${complete_phone_number}"+" "+it.driver_profile.phones[0])
-                            binding.generateBtn.isEnabled = true
-                            binding.loginFormFeedback.visibility = View.VISIBLE
-                            binding.loginFormFeedback.text =
+                            Log.d(
+                                "Check",
+                                "+${complete_phone_number}" + " " + it.driver_profile.phones[0]
+                            )
+                            generate_btn.isEnabled = true
+                            login_form_feedback.visibility = View.VISIBLE
+                            login_form_feedback.text =
                                 " Данный номер не зарегистрирован в нашей базе. Попробуйте еще раз."
                         }
                     })
                 }
             }
         }
-        binding.root
     }
 
     private fun checkConnectivity() {

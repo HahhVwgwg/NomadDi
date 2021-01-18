@@ -21,17 +21,18 @@ import com.dataplus.tabyspartner.model.CreditCard
 import com.dataplus.tabyspartner.utils.DatabaseHandler
 import com.dataplus.tabyspartner.utils.FourDigitCardFormatWatcher
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.android.synthetic.main.activity_card_form.*
 
 
 class CardFormActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityCardFormBinding
+    //private lateinit var binding: ActivityCardFormBinding
 
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_card_form)
+        setContentView(R.layout.activity_card_form)
         checkConnectivity()
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         val toolbarTitle = findViewById<TextView>(R.id.toolbar_title)
@@ -42,23 +43,22 @@ class CardFormActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             finish()
         }
-        binding.root
     }
 
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onResume() {
         super.onResume()
-        binding.cardNumberEditText.addTextChangedListener(FourDigitCardFormatWatcher());
-        binding.generateBtn.setOnClickListener {
+        card_number_edit_text.addTextChangedListener(FourDigitCardFormatWatcher());
+        generate_btn.setOnClickListener {
             var number = ""
-            for (i in binding.cardNumberEditText.text.toString()) {
+            for (i in card_number_edit_text.text.toString()) {
                 if (i == ' ') continue
                 number += i
             }
             //Log.d("CheckNUmber",number)
-            if (binding.cardNameEditText.text.toString().trim().isEmpty() ||
-                binding.cardNumberEditText.text.toString().trim().isEmpty()
+            if (card_name_edit_text.text.toString().trim().isEmpty() ||
+                card_number_edit_text.text.toString().trim().isEmpty()
             ) {
                 MaterialAlertDialogBuilder(this)
                     .setTitle(resources.getString(R.string.error_empty))
@@ -88,7 +88,7 @@ class CardFormActivity : AppCompatActivity() {
                 db.insertTask(
                     CreditCard(
                         1,
-                        binding.cardNameEditText.text.toString().trim(),
+                        card_name_edit_text.text.toString().trim(),
                         number.trim()
                     )
                 )

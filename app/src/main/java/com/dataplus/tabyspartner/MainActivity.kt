@@ -19,16 +19,17 @@ import com.dataplus.tabyspartner.databinding.ActivityMainBinding
 import com.dataplus.tabyspartner.ui.ui.main.MainPageFragment
 import com.dataplus.tabyspartner.ui.ui.profile.ProfileFragment
 import com.dataplus.tabyspartner.ui.ui.withdraw.WithDrawFragment
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity() : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    //private lateinit var binding: ActivityMainBinding
     lateinit var sharedPreferences: SharedPreferences
     private val REQUEST_CALL = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        setContentView(R.layout.activity_main)
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         val toolbarTitle = findViewById<TextView>(R.id.toolbar_title)
         setSupportActionBar(toolbar)
@@ -36,7 +37,7 @@ class MainActivity() : AppCompatActivity() {
         toolbarTitle.setText("Главная")
         checkConnectivity()
         handleFrame(MainPageFragment())
-        binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
+        bottom_navigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.support_menu_item -> {
                     makePhoneCall()

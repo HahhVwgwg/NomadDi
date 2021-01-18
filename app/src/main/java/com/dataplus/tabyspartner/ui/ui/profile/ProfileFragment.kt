@@ -14,10 +14,11 @@ import com.dataplus.tabyspartner.databinding.FragmentProfileBinding
 import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.android.synthetic.main.fragment_profile.*
 
 
 class ProfileFragment : Fragment() {
-    private lateinit var binding: FragmentProfileBinding
+    //private lateinit var binding: FragmentProfileBinding
     lateinit var sharedPreferences: SharedPreferences
     var fromProfile = false;
     override fun onCreateView(
@@ -25,20 +26,17 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
-
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
-
-        binding.profileFragName.text = sharedPreferences.getString("USER_SHORT_NAME", "")
-        binding.profileFragMobile.text = sharedPreferences.getString("USER_PHONE_NUMBER", "")
+        profile_frag_name.text = sharedPreferences.getString("USER_SHORT_NAME", "")
+        profile_frag_mobile.text = sharedPreferences.getString("USER_PHONE_NUMBER", "")
         fromProfile = sharedPreferences.getBoolean("USER_FROM_PROFILE",false)
-        return binding.root
+        return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
 
     override fun onResume() {
         super.onResume()
-        binding.changePinCodeBtn.setOnClickListener {
+        change_pin_code_btn.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(resources.getString(R.string.change_pincode_title))
                 .setMessage(resources.getString(R.string.change_pincode_message))
@@ -60,7 +58,7 @@ class ProfileFragment : Fragment() {
                 .show()
         }
 
-        binding.logOutBtn.setOnClickListener {
+       log_out_btn.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(resources.getString(R.string.logOut_title))
                 .setMessage(resources.getString(R.string.logOut_message))
