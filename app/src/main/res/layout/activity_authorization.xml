@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.tabyspartner.main.AuthorizationViewModel" />
+            type="com.dataplus.tabyspartner.main.AuthorizationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
