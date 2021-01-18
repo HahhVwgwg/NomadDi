@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     >
-    <data>
-        <variable
-            name="viewModel"
-            type="com.example.tabyspartner.main.AuthorizationViewModel" />
-    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainLayoutAuthorization"
