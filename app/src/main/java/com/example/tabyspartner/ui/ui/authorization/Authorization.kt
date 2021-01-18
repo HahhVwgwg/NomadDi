@@ -1,7 +1,5 @@
 package com.example.tabyspartner.ui.ui.authorization
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -20,7 +18,6 @@ import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.ActivityAuthorizationBinding
 import com.example.tabyspartner.main.AuthorizationViewModel
 import com.example.tabyspartner.ui.ui.pin.VerificationActivity
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class Authorization : AppCompatActivity() {
@@ -77,15 +74,17 @@ class Authorization : AppCompatActivity() {
                         //Log.d("Check",it.toString())
                         if ("+${complete_phone_number}" == it.driver_profile.phones[0]) {
                             //Log.d("Check",it.toString())
-                            //Log.d("Check","+${complete_phone_number}"+" "+it.driver_profile.phones[0])
+                            Log.d("CheckPhoneNUmbers","+${complete_phone_number}"+" "+it.driver_profile.phones[0])
                             sharedPreferences.edit()
                                 .putString("USER_PHONE_NUMBER", "+${complete_phone_number}")
                                 .putBoolean("USER_REGISTERED", true)
                                 .apply()
                             viewModel.getMessageStatus(this, "+$complete_phone_number")
+
                             viewModel.responseOtp.observe(
                                 binding.lifecycleOwner as Authorization,
                                 Observer {
+                                    Log.d("CheckVerCode",it.toString())
                                     val intent = Intent(this, MobizonActivity::class.java)
                                     intent.putExtra("phoneNumber", "+$complete_phone_number")
                                     intent.putExtra("verCode", it)
@@ -93,7 +92,7 @@ class Authorization : AppCompatActivity() {
                                     finish()
                                 })
                         } else {
-                            Log.d("Check","+${complete_phone_number}"+" "+it.driver_profile.phones[0])
+                            //Log.d("Check","+${complete_phone_number}"+" "+it.driver_profile.phones[0])
                             binding.generateBtn.isEnabled = true
                             binding.loginFormFeedback.visibility = View.VISIBLE
                             binding.loginFormFeedback.text =

@@ -1,24 +1,15 @@
 package com.example.tabyspartner.main
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.tabyspartner.R
-import com.example.tabyspartner.databinding.ActivityAuthorizationBinding
-import com.example.tabyspartner.ui.ui.authorization.MobizonActivity
 import com.example.tabyspartner.networking.*
 import com.example.tabyspartner.ui.ui.authorization.Authorization
 import com.example.tabyspartner.ui.ui.otp.Otp
 import kotlinx.android.synthetic.main.activity_authorization.*
-import kotlinx.android.synthetic.main.activity_authorization.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -55,11 +46,8 @@ class AuthorizationViewModel : ViewModel() {
         MobizonApi.retrofitService.sendMessage(recipient = phone,text = "Табыс Партнер: Ваш код авторизации: "+randomOTP,apiKey = apiKey).enqueue(object : Callback<MobizonResponse>{
             override fun onResponse(call: Call<MobizonResponse>, response: Response<MobizonResponse>) {
                if(response.isSuccessful) {
-                   _response.value = response.body()
+                   //_response.value = response.body()
                    _responseOtp.value = randomOTP
-//                   val intent = Intent(context,MobizonActivity::class.java)
-//                   intent.putExtra("verCode",randomOTP)
-//                   context.startActivity(intent)
                }
             }
 

@@ -14,16 +14,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TabysPartner">
-        <activity android:name=".ui.ui.pin.VerificationActivity2"></activity>
-        <activity android:name=".ui.ui.withdraw.CardFormActivity" />
+        <activity android:name="com.example.tabyspartner.ui.ui.pin.VerificationActivity2"></activity>
+        <activity android:name="com.example.tabyspartner.ui.ui.withdraw.CardFormActivity" />
         <activity
-            android:name=".ui.ui.pin.VerificationActivity"
+            android:name="com.example.tabyspartner.ui.ui.pin.VerificationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.ui.authorization.MobizonActivity"
+            android:name="com.example.tabyspartner.ui.ui.authorization.MobizonActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.ui.authorization.Authorization"
+            android:name="com.example.tabyspartner.ui.ui.authorization.Authorization"
 
             android:screenOrientation="portrait">
             <intent-filter>
@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.tabyspartner.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             />

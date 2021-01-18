@@ -1,8 +1,6 @@
 package com.example.tabyspartner.networking
 
 import com.google.gson.annotations.SerializedName
-import retrofit2.http.Query
-import java.util.*
 
 data class GetSomethingRequest(val query: Query) {
     data class Query(val park: Park) {

@@ -20,7 +20,6 @@ import com.example.tabyspartner.databinding.FragmentModalBottomSheetBinding
 import com.example.tabyspartner.databinding.FragmentWithDrawBinding
 import com.example.tabyspartner.model.CreditCard
 import com.example.tabyspartner.ui.ui.withdraw.CardFormActivity
-import com.example.tabyspartner.ui.ui.withdraw.WithDrawFragment
 import com.example.tabyspartner.utils.DatabaseHandler
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

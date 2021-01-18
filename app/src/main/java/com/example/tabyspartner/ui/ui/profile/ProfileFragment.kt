@@ -11,7 +11,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.FragmentProfileBinding
-import com.example.tabyspartner.modal.ModalBottomSheet
 import com.example.tabyspartner.ui.ui.authorization.Authorization
 import com.example.tabyspartner.ui.ui.pin.VerificationActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

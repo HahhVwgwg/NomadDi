@@ -1,7 +1,6 @@
 package com.example.tabyspartner.adapter
 
 import android.annotation.SuppressLint
-import android.app.Fragment
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -9,14 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tabyspartner.R
 import com.example.tabyspartner.model.CreditCard
 import com.example.tabyspartner.ui.ui.withdraw.CardFormActivity
-import com.example.tabyspartner.ui.ui.withdraw.WithDrawFragment
 import com.example.tabyspartner.utils.DatabaseHandler
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.card_item.view.*
 
 

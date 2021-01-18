@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,15 +25,7 @@ import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.FragmentMainPageBinding
 import com.example.tabyspartner.databinding.FragmentWithDrawBinding
 import com.example.tabyspartner.modal.ModalBottomSheet
-import com.example.tabyspartner.networking.WithdrawBodyRequest
-import com.example.tabyspartner.networking.WithdrawResponse
-import com.example.tabyspartner.networking.YandexApi
-import com.example.tabyspartner.ui.ui.pin.VerificationActivity
 import com.example.tabyspartner.ui.ui.pin.VerificationActivity2
-import kotlinx.android.synthetic.main.fragment_with_draw.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class WithDrawFragment : Fragment() {
@@ -44,7 +35,7 @@ class WithDrawFragment : Fragment() {
     lateinit var sharedPreferences: SharedPreferences
     private lateinit var model: ModalBottomSheet.SharedViewModel
     val modalbottomSheetFragment = ModalBottomSheet()
-    private lateinit var driver_id : String
+    private lateinit var driver_id: String
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreateView(
@@ -58,7 +49,7 @@ class WithDrawFragment : Fragment() {
             inflater, R.layout.fragment_main_page, container, false
         )
 
-        Log.i("MainPageFragment", "Called ViewModelProviders.of!")
+        // Log.i("MainPageFragment", "Called ViewModelProviders.of!")
         viewModel = ViewModelProviders.of(this).get(WithDrawViewModel::class.java)
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
         val userPhoneNumber = sharedPreferences.getString("USER_PHONE_NUMBER", "")
@@ -228,13 +219,32 @@ class WithDrawFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            viewModel.withDrawCashFromYandexViewModelFun(amount = "-${binding.withDrawAmount.text.toString()}", driverId = driver_id)
+            viewModel.withDrawCashFromYandexViewModelFun(
+                amount = "-${binding.withDrawAmount.text.toString()}",
+                driverId = driver_id
+            )
             viewModel.responseWithDrawYandex.observe(viewLifecycleOwner, Observer {
-                if(driver_id == it.driver_profile_id) {
-                    viewModel.withdrawCash(binding.withDrawAmount.text.toString(),binding.chooseCardBtn.text.toString(),this.requireContext(),this)
-                    binding.withdrawBtnWithdrawPage.isEnabled = true
-                }else {
-                    Toast.makeText(requireContext(),"Операция провалена",Toast.LENGTH_SHORT).show()
+                if (driver_id == it.driver_profile_id) {
+                    viewModel.withdrawCash(
+                        binding.withDrawAmount.text.toString(),
+                        binding.chooseCardBtn.text.toString(),
+                        this.requireContext(),
+                        this
+                    )
+                    val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                    dialogBuilder.setMessage("Операция прошла успешно. Ждите пополнения.")
+                        .setCancelable(false)
+                        .setPositiveButton(
+                            "Ок",
+                            DialogInterface.OnClickListener { dialog, id ->
+                                binding.withdrawBtnWithdrawPage.isEnabled = true
+                                dialog.dismiss()
+                            })
+                    val alert = dialogBuilder.create()
+                    alert.show()
+                } else {
+                    Toast.makeText(requireContext(), "Операция провалена", Toast.LENGTH_SHORT)
+                        .show()
                 }
             })
         }

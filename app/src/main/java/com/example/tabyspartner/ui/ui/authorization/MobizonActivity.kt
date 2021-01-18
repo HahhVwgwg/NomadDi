@@ -13,7 +13,6 @@ import androidx.databinding.DataBindingUtil
 import com.example.tabyspartner.MainActivity
 import com.example.tabyspartner.R
 import com.example.tabyspartner.databinding.ActivityMobizonBinding
-import com.example.tabyspartner.ui.ui.main.MainPageFragment
 import com.example.tabyspartner.ui.ui.pin.VerificationActivity
 
 class MobizonActivity : AppCompatActivity() {

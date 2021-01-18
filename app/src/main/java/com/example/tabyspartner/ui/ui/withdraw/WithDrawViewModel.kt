@@ -2,7 +2,6 @@ package com.example.tabyspartner.ui.ui.withdraw
 
 import android.content.Context
 import android.os.Build
-import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -10,17 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.tabyspartner.R
 import com.example.tabyspartner.networking.*
-import com.example.tabyspartner.ui.ui.main.MainPageFragment
 import com.example.tabyspartner.ui.ui.otp.Otp
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.fragment_with_draw.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.concurrent.ScheduledThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 
 class WithDrawViewModel : ViewModel() {
 
@@ -80,7 +73,7 @@ class WithDrawViewModel : ViewModel() {
                     response: Response<BukhtaWithDrawResponse>
                 ) {
                     if (response.isSuccessful) {
-                        Toast.makeText(context, "Операция прошла успешна", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, "Операция прошла успешна", Toast.LENGTH_SHORT).show()
                     }else {
                         Toast.makeText(context, "Операция провалена", Toast.LENGTH_SHORT).show()
                     }
