@@ -29,6 +29,14 @@ class WithDrawViewModel : ViewModel() {
     val responseWithDrawYandex: LiveData<WithdrawResponse>
         get() = _responseWithDrawYandex
 
+
+
+    private val _responseFromBukhta = MutableLiveData<Int>()
+
+    // The external immutable LiveData for the request status String
+    val responseFromBukhta: LiveData<Int>
+        get() = _responseFromBukhta
+
     override fun onCleared() {
         super.onCleared()
         Log.i("WithDrawViewModel", "WithDrawViewModel destroyed")
@@ -74,8 +82,10 @@ class WithDrawViewModel : ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         //Toast.makeText(context, "Операция прошла успешна", Toast.LENGTH_SHORT).show()
+                        _responseFromBukhta.value = 1
                     }else {
-                        Toast.makeText(context, "Операция провалена", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, "Операция провалена", Toast.LENGTH_SHORT).show()
+                        _responseFromBukhta.value = 0
                     }
                 }
                 override fun onFailure(call: Call<BukhtaWithDrawResponse>, t: Throwable) {

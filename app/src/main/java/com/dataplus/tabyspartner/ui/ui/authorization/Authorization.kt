@@ -29,7 +29,8 @@ class Authorization : AppCompatActivity() {
     }
 
     lateinit var sharedPreferences: SharedPreferences
-    var isRegistered = false
+    var isRegisteredPhone = false
+    //var isRegisteredMobizonCode = false
     var phoneNumber = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,11 +40,12 @@ class Authorization : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        isRegistered = sharedPreferences.getBoolean("USER_REGISTERED", false)
+        isRegisteredPhone = sharedPreferences.getBoolean("USERPHONE_REGISTERED", false)
+        //isRegisteredMobizonCode = sharedPreferences.getBoolean("USERMOBIZONCODE_REGISTERED", false)
         phoneNumber = sharedPreferences.getString("USER_PHONE_NUMBER", "")!!
 
 
-        if(isRegistered) {
+        if(isRegisteredPhone) {
             val intent = Intent(this, VerificationActivity::class.java)
             startActivity(intent)
             finish()
@@ -70,14 +72,17 @@ class Authorization : AppCompatActivity() {
                     //binding.generateBtn.isEnabled = false
                     //binding.loginFormFeedback.visibility = View.VISIBLE
                     viewModel.getUser("+$complete_phone_number",this)
+                    binding.generateBtn.isEnabled = false
+                    binding.loginProgressBar.isEnabled = true
+                    binding.loginProgressBar.visibility = View.VISIBLE
                     viewModel.response.observe(binding.lifecycleOwner as Authorization, Observer {
                         //Log.d("Check",it.toString())
                         if ("+${complete_phone_number}" == it.driver_profile.phones[0]) {
+                            binding.loginFormFeedback.text = ""
                             //Log.d("Check",it.toString())
                             Log.d("CheckPhoneNUmbers","+${complete_phone_number}"+" "+it.driver_profile.phones[0])
                             sharedPreferences.edit()
                                 .putString("USER_PHONE_NUMBER", "+${complete_phone_number}")
-                                .putBoolean("USER_REGISTERED", true)
                                 .apply()
                             viewModel.getMessageStatus(this, "+$complete_phone_number")
 

@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,7 +72,7 @@ class WithDrawFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        viewModel.getYandexDriversProperties(sharedPreferences.getString("USER_PHONE_NUMBER", "")!!)
+        //viewModel.getYandexDriversProperties(sharedPreferences.getString("USER_PHONE_NUMBER", "")!!)
         model.selected.observe(viewLifecycleOwner, Observer<String> { item ->
             binding.chooseCardBtn.setText(item)
         })
@@ -219,20 +220,41 @@ class WithDrawFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            viewModel.withDrawCashFromYandexViewModelFun(
-                amount = "-${binding.withDrawAmount.text.toString()}",
-                driverId = driver_id
+
+            viewModel.withdrawCash(
+                binding.withDrawAmount.text.toString(),
+                binding.chooseCardBtn.text.toString(),
+                this.requireContext(),
+                this
             )
-            viewModel.responseWithDrawYandex.observe(viewLifecycleOwner, Observer {
-                if (driver_id == it.driver_profile_id) {
-                    viewModel.withdrawCash(
-                        binding.withDrawAmount.text.toString(),
-                        binding.chooseCardBtn.text.toString(),
-                        this.requireContext(),
-                        this
+
+            viewModel.responseFromBukhta.observe(viewLifecycleOwner,Observer {
+                if(it==1) {
+                    val balAmount = binding.balanceAmountWithDrawPage.text.toString()
+                        .substring(0,binding.balanceAmountWithDrawPage.text.toString().indexOf(" ")).trim()
+                        .toInt()
+                    //Log.d("checkbal",balAmount)
+                    viewModel.withDrawCashFromYandexViewModelFun(
+                        amount = "-${binding.withDrawAmount.text.toString()}",
+                        driverId = driver_id
                     )
                     val dialogBuilder = AlertDialog.Builder(this.requireContext())
-                    dialogBuilder.setMessage("Операция прошла успешно. Ждите пополнения.")
+                    dialogBuilder.setMessage("Операция прошла успешно! Ждите пополнения!")
+                        .setCancelable(false)
+                        .setPositiveButton(
+                            "Ок",
+                            DialogInterface.OnClickListener { dialog, id ->
+                                binding.balanceAmountWithDrawPage.text =
+                                    (balAmount - binding.withDrawAmount.text.toString().toInt())
+                                        .toString()
+                                binding.withdrawBtnWithdrawPage.isEnabled = true
+                                dialog.dismiss()
+                            })
+                    val alert = dialogBuilder.create()
+                    alert.show()
+                }else{
+                    val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                    dialogBuilder.setMessage("Операция провалена. Проверьте правильность ввода номера вашей карты!")
                         .setCancelable(false)
                         .setPositiveButton(
                             "Ок",
@@ -242,9 +264,6 @@ class WithDrawFragment : Fragment() {
                             })
                     val alert = dialogBuilder.create()
                     alert.show()
-                } else {
-                    Toast.makeText(requireContext(), "Операция провалена", Toast.LENGTH_SHORT)
-                        .show()
                 }
             })
         }

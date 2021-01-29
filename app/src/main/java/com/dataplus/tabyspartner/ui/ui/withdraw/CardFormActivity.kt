@@ -50,15 +50,22 @@ class CardFormActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.cardNumberEditText.addTextChangedListener(FourDigitCardFormatWatcher());
+        binding.cardNumberRepeatEditText.addTextChangedListener(FourDigitCardFormatWatcher());
         binding.generateBtn.setOnClickListener {
             var number = ""
+            var numberRepeat = ""
             for (i in binding.cardNumberEditText.text.toString()) {
                 if (i == ' ') continue
                 number += i
             }
+            for (i in binding.cardNumberRepeatEditText.text.toString()) {
+                if (i == ' ') continue
+                numberRepeat += i
+            }
             //Log.d("CheckNUmber",number)
             if (binding.cardNameEditText.text.toString().trim().isEmpty() ||
-                binding.cardNumberEditText.text.toString().trim().isEmpty()
+                binding.cardNumberEditText.text.toString().trim().isEmpty() ||
+                binding.cardNumberRepeatEditText.text.toString().trim().isEmpty()
             ) {
                 MaterialAlertDialogBuilder(this)
                     .setTitle(resources.getString(R.string.error_empty))
@@ -67,7 +74,7 @@ class CardFormActivity : AppCompatActivity() {
                         dialog.dismiss()
                     }
                     .show()
-            } else if (number.length < 16) {
+            } else if (number.length < 16 || numberRepeat.length < 16) {
                 MaterialAlertDialogBuilder(this)
                     .setTitle(resources.getString(R.string.error_length))
                     .setPositiveButton(resources.getString(R.string.accept2)) { dialog, which ->
@@ -75,7 +82,7 @@ class CardFormActivity : AppCompatActivity() {
                         dialog.dismiss()
                     }
                     .show()
-            } else if (!number.trim().isDigitsOnly()) {
+            } else if (!number.trim().isDigitsOnly() || !numberRepeat.trim().isDigitsOnly()) {
                 MaterialAlertDialogBuilder(this)
                     .setTitle(resources.getString(R.string.errorAcceptanceCreditCard))
                     .setPositiveButton(resources.getString(R.string.accept2)) { dialog, which ->
@@ -84,16 +91,26 @@ class CardFormActivity : AppCompatActivity() {
                     }
                     .show()
             } else {
-                val db = DatabaseHandler(this)
-                db.insertTask(
-                    CreditCard(
-                        1,
-                        binding.cardNameEditText.text.toString().trim(),
-                        number.trim()
+                if(number.equals(numberRepeat)) {
+                    val db = DatabaseHandler(this)
+                    db.insertTask(
+                        CreditCard(
+                            1,
+                            binding.cardNameEditText.text.toString().trim(),
+                            number.trim()
+                        )
                     )
-                )
-                setResult(Activity.RESULT_OK)
-                onBackPressed()
+                    setResult(Activity.RESULT_OK)
+                    onBackPressed()
+                }else {
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle(resources.getString(R.string.notSameError))
+                        .setPositiveButton(resources.getString(R.string.accept2)) { dialog, which ->
+                            // Respond to positive button press finishAffinity()
+                            dialog.dismiss()
+                        }
+                        .show()
+                }
             }
         }
 

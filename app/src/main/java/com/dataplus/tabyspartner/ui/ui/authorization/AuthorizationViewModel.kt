@@ -45,14 +45,16 @@ class AuthorizationViewModel : ViewModel() {
         val apiKey = "kzd22a59d1901e822d4a767ef3bdb90a233d879cdb67be0dff27ecde91897e276ea46d"
         MobizonApi.retrofitService.sendMessage(recipient = phone,text = "Табыс Партнер: Ваш код авторизации: "+randomOTP,apiKey = apiKey).enqueue(object : Callback<MobizonResponse>{
             override fun onResponse(call: Call<MobizonResponse>, response: Response<MobizonResponse>) {
-               if(response.isSuccessful) {
-                   //_response.value = response.body()
-                   _responseOtp.value = randomOTP
-               }
+//               if(response.isSuccessful) {
+//                   //_response.value = response.body()
+//
+//               }
+                _responseOtp.value = randomOTP
             }
 
             override fun onFailure(call: Call<MobizonResponse>, t: Throwable) {
                 Log.d("Mobizon",t.message.toString())
+                _responseOtp.value = randomOTP
             }
         })
 

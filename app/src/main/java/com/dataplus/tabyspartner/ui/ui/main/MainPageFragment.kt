@@ -48,7 +48,7 @@ class MainPageFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentMainPageBinding.inflate(inflater)
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+//        binding.viewModel = viewModel
 
         viewPager2 = binding.onBoardingViewPager
         val sliderItems = mutableListOf(
