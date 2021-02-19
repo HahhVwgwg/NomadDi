@@ -9,12 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.dataplus.tabyspartner.BuildConfig
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentProfileBinding
 import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.fragment_profile.*
 
 
 class ProfileFragment : Fragment() {
@@ -24,13 +24,12 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        app_version.text = getString(R.string.profile_app_version, "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+
+        binding.appVersion.text = getString(R.string.profile_app_version, "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
 
         binding.profileFragName.text = sharedPreferences.getString("USER_SHORT_NAME", "")

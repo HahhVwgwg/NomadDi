@@ -8,12 +8,8 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.tabyspartner.R
-import com.example.tabyspartner.networking.*
-import com.example.tabyspartner.ui.ui.main.MainPageFragment
-import com.example.tabyspartner.ui.ui.otp.Otp
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.fragment_with_draw.*
+import com.dataplus.tabyspartner.networking.*
+import com.dataplus.tabyspartner.ui.ui.otp.Otp
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -27,11 +27,6 @@ import com.dataplus.tabyspartner.databinding.FragmentMainPageBinding
 import com.dataplus.tabyspartner.databinding.FragmentWithDrawBinding
 import com.dataplus.tabyspartner.modal.ModalBottomSheet
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity2
-import com.dataplus.tabyspartner.R
-import com.dataplus.tabyspartner.databinding.FragmentMainPageBinding
-import com.dataplus.tabyspartner.databinding.FragmentWithDrawBinding
-import com.dataplus.tabyspartner.modal.ModalBottomSheet
-import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_with_draw.*
 
@@ -48,7 +43,7 @@ class WithDrawFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_with_draw, container, false
         )
@@ -88,15 +83,15 @@ class WithDrawFragment : Fragment() {
             @SuppressLint("SetTextI18n")
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (binding.withDrawAmount.text.toString() == "" || binding.withDrawAmount.text.toString()
-                        .toInt() < 150
+                        .toInt() < 130
                 ) {
                     binding.amountFee.text =
-                        "Комиссия 150 ₸"
+                        "Комиссия 130 ₸"
                     binding.withdrawBtnWithdrawPage.text =
                         "Перевести 0 \u20b8"
                 } else if (binding.withDrawAmount.text.toString().length > 4) {
                     val calculateFee =
-                        (binding.withDrawAmount.text.toString().toDouble() * (0.015)).toInt()
+                        (binding.withDrawAmount.text.toString().toDouble() * (0.013)).toInt()
                             .toString()
                     binding.amountFee.text =
                         "Комиссия ${calculateFee} ₸"
@@ -106,9 +101,9 @@ class WithDrawFragment : Fragment() {
                         } \u20b8"
                 } else {
                     binding.amountFee.text =
-                        "Комиссия 150 ₸"
+                        "Комиссия 130 ₸"
                     binding.withdrawBtnWithdrawPage.text =
-                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - 150} \u20b8"
+                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - 130} \u20b8"
                 }
             }
 

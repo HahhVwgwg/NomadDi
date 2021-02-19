@@ -1,4 +1,4 @@
-package com.example.tabyspartner.ui.ui.main
+package com.dataplus.tabyspartner.ui.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -33,6 +33,7 @@ class MainPageFragment : Fragment() {
 
 
     private lateinit var binding: FragmentMainPageBinding
+
     private val viewModel: MainPageViewModel by lazy {
         ViewModelProvider(this).get(MainPageViewModel::class.java)
     }
@@ -42,7 +43,7 @@ class MainPageFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
 
         // Inflate the layout for this fragment
