@@ -5,7 +5,6 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,15 +22,21 @@ class WithDrawViewModel : ViewModel() {
     val responseD: LiveData<DriverProfilesItem>
         get() = _responseD
 
-    private val _responseWithDrawYandex = MutableLiveData<WithdrawResponse>()
+    private val _responseWithDrawYandex = MutableLiveData<Boolean>()
 
     // The external immutable LiveData for the request status String
-    val responseWithDrawYandex: LiveData<WithdrawResponse>
+    val responseWithDrawYandex: LiveData<Boolean>
         get() = _responseWithDrawYandex
+
+    private var driverId : String = ""
 
     override fun onCleared() {
         super.onCleared()
         Log.i("WithDrawViewModel", "WithDrawViewModel destroyed")
+    }
+
+    fun consumeResult() {
+        _responseWithDrawYandex.value = null
     }
 
     fun getFee(amount: String, card_number: String) {
@@ -56,7 +61,7 @@ class WithDrawViewModel : ViewModel() {
             })
     }
 
-    fun withdrawCash(amount: String, card_number: String, context: Context, fragment: Fragment) {
+    private fun withdrawCash(amount: String, card_number: String, context: Context?) {
         val externalRefId = Otp().OTP(6)
         val request = FeeRequest(
             contract_source_id = 24,
@@ -73,12 +78,29 @@ class WithDrawViewModel : ViewModel() {
                     response: Response<BukhtaWithDrawResponse>
                 ) {
                     if (response.isSuccessful) {
-                        Toast.makeText(context, "Операция прошла успешна", Toast.LENGTH_SHORT).show()
-                    }else {
-                        Toast.makeText(context, "Операция провалена", Toast.LENGTH_SHORT).show()
+                        if (context != null) {
+                            Toast.makeText(context, "Операция прошла успешна", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        _responseWithDrawYandex.value = true
+                    } else {
+                        if (context != null) {
+                            Toast.makeText(
+                                context,
+                                "Операция провалена (Bukhta)",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
                 override fun onFailure(call: Call<BukhtaWithDrawResponse>, t: Throwable) {
+                    if (context != null) {
+                        Toast.makeText(
+                            context,
+                            "Операция провалена (Bukhta)",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     Log.d("BukhtaWithDraw", t.message.toString())
                 }
             })
@@ -104,7 +126,9 @@ class WithDrawViewModel : ViewModel() {
                 ) {
                     for (i in response.body()!!.driversList.indices) {
                         if (response.body()!!.driversList[i].driver_profile.phones[0] == phone) {
-                            _responseD.value = response.body()!!.driversList[i]
+                            val result = response.body()!!.driversList[i]
+                            _responseD.value = result
+                            driverId = result.driver_profile.id
                         }
                     }
                 }
@@ -117,10 +141,10 @@ class WithDrawViewModel : ViewModel() {
     }
 
 
-    fun withDrawCashFromYandexViewModelFun(driverId: String, amount: String) {
+    fun withDrawCashFromYandexViewModelFun(amount: String, card_number: String, context: Context?) {
         val parkId = "2e8584835dd64db99482b4b21f62a2ae"
         val request = WithdrawBodyRequest(
-            amount = amount,
+            amount = "-$amount",
             category_id = "partner_service_manual",
             description = "Списание",
             driver_profile_id = driverId,
@@ -133,11 +157,24 @@ class WithDrawViewModel : ViewModel() {
                     call: Call<WithdrawResponse>,
                     response: Response<WithdrawResponse>
                 ) {
-                    _responseWithDrawYandex.value = response.body()
+                    val result = response.body()
+                    if (result?.driver_profile_id == driverId) {
+                        withdrawCash(amount, card_number, context)
+                    } else {
+                        if (context != null) {
+                            Toast.makeText(context, "Операция провалена (Yandex)", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+
                     Log.d("asdasdasdasd", response.body().toString())
                 }
 
                 override fun onFailure(call: Call<WithdrawResponse>, t: Throwable) {
+                    if (context != null) {
+                        Toast.makeText(context, "Операция провалена (Yandex)", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                     Log.d("Error", t.message.toString())
                 }
 

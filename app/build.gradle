@@ -14,9 +14,27 @@ android {
         applicationId "com.dataplus.tabyspartner"
         minSdkVersion 22
         targetSdkVersion 30
-        versionCode 3
+        versionCode 4
         versionName "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+        setProperty("archivesBaseName", "tabyspartner-v.$versionName($versionCode)")
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('TabysKeyStore.jks')
+            storePassword "TabysGo@2021!"
+            keyAlias "tabysgo"
+            keyPassword "TabysGo@2021!"
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
     }
 
     compileOptions {

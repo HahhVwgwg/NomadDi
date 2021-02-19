@@ -34,11 +34,11 @@ import kotlinx.android.synthetic.main.fragment_with_draw.*
 class WithDrawFragment : Fragment() {
     //private lateinit var binding: FragmentWithDrawBinding
     private lateinit var viewModel: WithDrawViewModel
+
     //private lateinit var bindingMainPageBinding: FragmentMainPageBinding
     lateinit var sharedPreferences: SharedPreferences
     private lateinit var model: ModalBottomSheet.SharedViewModel
     val modalbottomSheetFragment = ModalBottomSheet()
-    private lateinit var driver_id : String
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreateView(
@@ -53,7 +53,6 @@ class WithDrawFragment : Fragment() {
         viewModel.responseD.observe(viewLifecycleOwner, Observer {
             balance_amount_with_draw_page.text =
                 it.accounts[0].balance.toDouble().toInt().toString() + " \u20b8"
-            driver_id = it.driver_profile.id
         })
 
         model = activity?.run {
@@ -215,10 +214,14 @@ class WithDrawFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            viewModel.withDrawCashFromYandexViewModelFun(amount = "-${with_draw_amount.text.toString()}", driverId = driver_id)
+            viewModel.withDrawCashFromYandexViewModelFun(
+                amount = with_draw_amount.text.toString(),
+                choose_card_btn.text.toString(),
+                context
+            )
             viewModel.responseWithDrawYandex.observe(viewLifecycleOwner, Observer {
-                if(driver_id == it.driver_profile_id) {
-                    viewModel.withdrawCash(with_draw_amount.text.toString(),choose_card_btn.text.toString(),this.requireContext(),this)
+                if (it == true) {
+                    viewModel.consumeResult()
                     MaterialAlertDialogBuilder(requireContext())
                         .setMessage(resources.getString(R.string.operation_ok))
                         .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
@@ -226,8 +229,6 @@ class WithDrawFragment : Fragment() {
                             dialog.dismiss()
                         }
                         .show()
-                }else {
-                    Toast.makeText(requireContext(),"Операция провалена",Toast.LENGTH_SHORT).show()
                 }
             })
         }

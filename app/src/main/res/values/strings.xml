@@ -31,7 +31,7 @@
     <string name="alert_password_recover_message">Вы уверены что хотите сделать восстановление пинкода?</string>
     <string name="accept">Да</string>
     <string name="accept2">ОК</string>
-    <string name="errorAcceptanceCreditCard">Пожалуйста проверьте правильность ввода номера кредитной карты, поле принимает только цифры (0-9)</string>
+    <string name="errorAcceptanceCreditCard">Пожалуйста, проверьте правильность ввода номера кредитной карты, поле принимает только цифры (0-9)</string>
     <string name="decline">Отмена</string>
     <string name="error_length">Номер карты должен состоять из 16 цифр</string>
     <string name="change_pincode_title">Изменение пинкода</string>
@@ -43,7 +43,7 @@
     <string name="delete_card_title">Вы точно хотите удалить карту?</string>
     <string name="delete_card_message">Если вы удалите карту, вам придётся добавить новую</string>
     <string name="error_empty">Заполните поля!</string>
-    <string name="operation_ok">Операция прошла успешна! Ждите пополнения</string>
+    <string name="operation_ok">Операция прошла успешно! Ждите пополнения</string>
     <string name="internet_message">Убедитесь, что включен WI-FI или мобильный Интернет, и попробуйте еще раз.</string>
     <string name="internet_title">"Подключение к Интернету отсутствует"</string>
     <string name="retry">Повторить</string>
