@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,40 +12,37 @@
             android:id="@+id/profile_info_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/log_out_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:orientation="vertical"
-            >
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:layout_marginTop="?actionBarSize"
                 android:id="@+id/profile_frag_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="Азамат Ж."
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:fontFamily="@font/ubuntubold"
-                android:textSize="26sp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="?actionBarSize"
                 android:layout_marginEnd="16dp"
-                />
+                android:fontFamily="@font/ubuntubold"
+                android:textColor="@color/black"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                tools:text="Азамат Ж." />
 
             <TextView
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:id="@+id/profile_frag_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="+7 701 023 45 45"
-                android:textStyle="bold"
-                android:textColor="@color/black"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
                 android:fontFamily="@font/ubuntubold"
+                android:textColor="@color/black"
                 android:textSize="14sp"
-            />
+                android:textStyle="bold"
+                tools:text="+7 701 023 45 45" />
 
 
             <Button
@@ -55,26 +50,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/change_pin_code_btn_text"
                 android:textAlignment="textStart"
                 android:textAllCaps="false"
-                android:textSize="14sp"
-                android:layout_marginTop="20dp"
-                />
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/app_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/ubuntubold"
+                android:textColor="@color/grey_font"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                tools:text="Версия 1.2 (45)" />
         </LinearLayout>
 
         <Button
             android:id="@+id/log_out_btn"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:textSize="14sp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="Выйти"
             android:backgroundTint="#ff605c"
+            android:text="Выйти"
             android:textAllCaps="false"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

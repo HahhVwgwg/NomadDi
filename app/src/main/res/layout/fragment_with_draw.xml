@@ -104,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                tools:text="Комиссия 150 \u20b8"
+                tools:text="Комиссия 130 \u20b8"
                 android:textColor="@color/red"
                 app:layout_constraintTop_toBottomOf="@id/with_draw_amount"
                 />

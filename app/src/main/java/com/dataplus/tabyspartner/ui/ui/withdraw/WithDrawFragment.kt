@@ -78,15 +78,15 @@ class WithDrawFragment : Fragment() {
             @SuppressLint("SetTextI18n")
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (with_draw_amount.text.toString() == "" || with_draw_amount.text.toString()
-                        .toInt() < 150
+                        .toInt() < 130
                 ) {
                     amountFee.text =
-                        "Комиссия 150 ₸"
+                        "Комиссия 130 ₸"
                     withdraw_btn_withdrawPage.text =
                         "Перевести 0 \u20b8"
                 } else if (with_draw_amount.text.toString().length > 4) {
                     val calculateFee =
-                        (with_draw_amount.text.toString().toDouble() * (0.015)).toInt()
+                        (with_draw_amount.text.toString().toDouble() * (0.013)).toInt()
                             .toString()
                     amountFee.text =
                         "Комиссия ${calculateFee} ₸"
@@ -96,9 +96,9 @@ class WithDrawFragment : Fragment() {
                         } \u20b8"
                 } else {
                     amountFee.text =
-                        "Комиссия 150 ₸"
+                        "Комиссия 130 ₸"
                     withdraw_btn_withdrawPage.text =
-                        "Перевести ${with_draw_amount.text.toString().toInt() - 150} \u20b8"
+                        "Перевести ${with_draw_amount.text.toString().toInt() - 130} \u20b8"
                 }
             }
 
