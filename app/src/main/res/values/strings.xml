@@ -16,6 +16,8 @@
     <string name="change_password_btn_text">Изменить пароль</string>
     <string name="change_pin_code_btn_text">Изменить код быстрого доступа</string>
     <string name="profile_app_version">Версия приложения %s</string>
+    <string name="btn_uploaded_title">Новая версия приложения загружена</string>
+    <string name="btn_uploaded_desc">Перезапустить</string>
     <string name="with_draw_page_balance_title">Мой баланс</string>
     <string name="amount_hint">0</string>
     <string name="bottom_sheet_dialog_title">Карта для вывода</string>

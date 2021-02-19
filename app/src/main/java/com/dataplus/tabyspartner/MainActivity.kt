@@ -13,16 +13,36 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.dataplus.tabyspartner.databinding.ActivityMainBinding
 import com.dataplus.tabyspartner.ui.ui.main.MainPageFragment
 import com.dataplus.tabyspartner.ui.ui.profile.ProfileFragment
 import com.dataplus.tabyspartner.ui.ui.withdraw.WithDrawFragment
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity() : AppCompatActivity() {
+
+    companion object {
+        private const val UPDATE_REQUEST_CODE = 333
+    }
+
+    private var appUpdateManager: AppUpdateManager? = null
+
+    private val installListener = InstallStateUpdatedListener { state ->
+        if (state.installStatus() == InstallStatus.DOWNLOADED) {
+            popupSnackbarForCompleteUpdate()
+        }
+    }
 
     //private lateinit var binding: ActivityMainBinding
     lateinit var sharedPreferences: SharedPreferences
@@ -61,10 +81,46 @@ class MainActivity() : AppCompatActivity() {
                 else -> false
             }
         }
+        appUpdateManager = AppUpdateManagerFactory.create(this)
+        val appUpdateInfoTask = appUpdateManager?.appUpdateInfo
+        appUpdateInfoTask?.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+            ) {
+                appUpdateManager?.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.FLEXIBLE,
+                    this,
+                    UPDATE_REQUEST_CODE
+                )
+                appUpdateManager?.registerListener(installListener)
+            }
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
+        appUpdateManager?.appUpdateInfo?.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                popupSnackbarForCompleteUpdate()
+            }
+        }
+    }
+
+    private fun popupSnackbarForCompleteUpdate() {
+        appUpdateManager?.unregisterListener(installListener)
+        val s: Snackbar = Snackbar.make(
+            cons_layout,
+            R.string.btn_uploaded_title,
+            Snackbar.LENGTH_INDEFINITE
+        )
+        s.setAction(
+            R.string.btn_uploaded_desc
+        ) {
+            appUpdateManager?.completeUpdate()
+        }
+        s.setActionTextColor(ContextCompat.getColor(this, R.color.colorAccent))
+        s.show()
     }
 
     private fun makePhoneCall() {
