@@ -45,10 +45,10 @@ class MainPageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreate(savedInstanceState)
-
+        val v = inflater.inflate(R.layout.fragment_main_page, container, false)
         // Inflate the layout for this fragment
 
-        viewPager2 = requireActivity().findViewById(R.id.on_boarding_view_pager)
+        viewPager2 = v.findViewById(R.id.on_boarding_view_pager)
         val sliderItems = mutableListOf(
             SliderItem(R.drawable.banner3),
             SliderItem(R.drawable.bannernew)
@@ -85,7 +85,7 @@ class MainPageFragment : Fragment() {
                 )
                 .apply()
         })
-        return inflater.inflate(R.layout.fragment_main_page, container, false)
+        return v
     }
 
     private fun handleFrame(fragment: Fragment): Boolean {

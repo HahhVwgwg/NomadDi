@@ -27,16 +27,16 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
-        profile_frag_name.text = sharedPreferences.getString("USER_SHORT_NAME", "")
-        profile_frag_mobile.text = sharedPreferences.getString("USER_PHONE_NUMBER", "")
-        fromProfile = sharedPreferences.getBoolean("USER_FROM_PROFILE",false)
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         app_version.text = getString(R.string.profile_app_version, "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+        sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
+        profile_frag_name.text = sharedPreferences.getString("USER_SHORT_NAME", "")
+        profile_frag_mobile.text = sharedPreferences.getString("USER_PHONE_NUMBER", "")
+        fromProfile = sharedPreferences.getBoolean("USER_FROM_PROFILE",false)
     }
 
     override fun onResume() {
