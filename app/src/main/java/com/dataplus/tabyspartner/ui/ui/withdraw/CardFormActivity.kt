@@ -21,18 +21,17 @@ import com.dataplus.tabyspartner.model.CreditCard
 import com.dataplus.tabyspartner.utils.DatabaseHandler
 import com.dataplus.tabyspartner.utils.FourDigitCardFormatWatcher
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.activity_card_form.*
 
 
 class CardFormActivity : AppCompatActivity() {
 
-    //private lateinit var binding: ActivityCardFormBinding
+    private lateinit var binding: ActivityCardFormBinding
 
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_card_form)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_card_form)
         checkConnectivity()
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         val toolbarTitle = findViewById<TextView>(R.id.toolbar_title)
@@ -43,22 +42,30 @@ class CardFormActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             finish()
         }
+        binding.root
     }
 
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onResume() {
         super.onResume()
-        card_number_edit_text.addTextChangedListener(FourDigitCardFormatWatcher());
-        generate_btn.setOnClickListener {
+        binding.cardNumberEditText.addTextChangedListener(FourDigitCardFormatWatcher());
+        binding.cardNumberRepeatEditText.addTextChangedListener(FourDigitCardFormatWatcher());
+        binding.generateBtn.setOnClickListener {
             var number = ""
-            for (i in card_number_edit_text.text.toString()) {
+            var numberRepeat = ""
+            for (i in binding.cardNumberEditText.text.toString()) {
                 if (i == ' ') continue
                 number += i
             }
+            for (i in binding.cardNumberRepeatEditText.text.toString()) {
+                if (i == ' ') continue
+                numberRepeat += i
+            }
             //Log.d("CheckNUmber",number)
-            if (card_name_edit_text.text.toString().trim().isEmpty() ||
-                card_number_edit_text.text.toString().trim().isEmpty()
+            if (binding.cardNameEditText.text.toString().trim().isEmpty() ||
+                binding.cardNumberEditText.text.toString().trim().isEmpty() ||
+                binding.cardNumberRepeatEditText.text.toString().trim().isEmpty()
             ) {
                 MaterialAlertDialogBuilder(this)
                     .setTitle(resources.getString(R.string.error_empty))
@@ -67,7 +74,7 @@ class CardFormActivity : AppCompatActivity() {
                         dialog.dismiss()
                     }
                     .show()
-            } else if (number.length < 16) {
+            } else if (number.length < 16 || numberRepeat.length < 16) {
                 MaterialAlertDialogBuilder(this)
                     .setTitle(resources.getString(R.string.error_length))
                     .setPositiveButton(resources.getString(R.string.accept2)) { dialog, which ->
@@ -75,7 +82,7 @@ class CardFormActivity : AppCompatActivity() {
                         dialog.dismiss()
                     }
                     .show()
-            } else if (!number.trim().isDigitsOnly()) {
+            } else if (!number.trim().isDigitsOnly() || !numberRepeat.trim().isDigitsOnly()) {
                 MaterialAlertDialogBuilder(this)
                     .setTitle(resources.getString(R.string.errorAcceptanceCreditCard))
                     .setPositiveButton(resources.getString(R.string.accept2)) { dialog, which ->
@@ -84,16 +91,26 @@ class CardFormActivity : AppCompatActivity() {
                     }
                     .show()
             } else {
-                val db = DatabaseHandler(this)
-                db.insertTask(
-                    CreditCard(
-                        1,
-                        card_name_edit_text.text.toString().trim(),
-                        number.trim()
+                if(number.equals(numberRepeat)) {
+                    val db = DatabaseHandler(this)
+                    db.insertTask(
+                        CreditCard(
+                            1,
+                            binding.cardNameEditText.text.toString().trim(),
+                            number.trim()
+                        )
                     )
-                )
-                setResult(Activity.RESULT_OK)
-                onBackPressed()
+                    setResult(Activity.RESULT_OK)
+                    onBackPressed()
+                }else {
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle(resources.getString(R.string.notSameError))
+                        .setPositiveButton(resources.getString(R.string.accept2)) { dialog, which ->
+                            // Respond to positive button press finishAffinity()
+                            dialog.dismiss()
+                        }
+                        .show()
+                }
             }
         }
 

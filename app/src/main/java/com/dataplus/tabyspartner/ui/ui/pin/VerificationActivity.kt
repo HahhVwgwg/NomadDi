@@ -19,7 +19,6 @@ import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.activity_verification.*
 import java.util.*
 
 
@@ -28,17 +27,19 @@ class VerificationActivity : AppCompatActivity() {
     var pinCode = ""
     var isPinCodeCreated = false
     var fromProfile = false
-    //private lateinit var binding: com.dataplus.tabyspartner.databinding.ActivityVerificationBinding
+    private lateinit var binding: com.dataplus.tabyspartner.databinding.ActivityVerificationBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         checkConnectivity()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_verification)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_verification)
+        binding.lifecycleOwner = this
 
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         isPinCodeCreated = sharedPreferences.getBoolean("USER_PIN_CODE_CREATED", false)
         pinCode = sharedPreferences.getString("USER_PIN_CODE", "")!!
         fromProfile = sharedPreferences.getBoolean("USER_FROM_PROFILE", false)
 
+        binding.root
     }
 
 
@@ -49,7 +50,7 @@ class VerificationActivity : AppCompatActivity() {
         if (fromProfile) {
             var firstInput = ""
             var secondInput = ""
-            pin_code_text.addTextChangedListener(object : TextWatcher {
+            binding.pinCodeText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     p0: CharSequence?,
                     p1: Int,
@@ -64,7 +65,7 @@ class VerificationActivity : AppCompatActivity() {
                 override fun afterTextChanged(p0: Editable?) {
                 }
             })
-            pin_code_verify_text.addTextChangedListener(object : TextWatcher {
+            binding.pinCodeVerifyText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     p0: CharSequence?,
                     p1: Int,
@@ -79,33 +80,33 @@ class VerificationActivity : AppCompatActivity() {
                 override fun afterTextChanged(p0: Editable?) {
                 }
             })
-            textField3.visibility = View.VISIBLE
-            verify_pin_code_btn.setOnClickListener {
+            binding.textField3.visibility = View.VISIBLE
+            binding.verifyPinCodeBtn.setOnClickListener {
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(mainLayoutVer.getWindowToken(), 0)
-                if(current_pin_code_text.text.toString() == "") {
-                    verify_codeFeedBack.text = "Введите текущий пинкод"
-                    verify_codeFeedBack.visibility = View.VISIBLE
-                }else if(current_pin_code_text.text.toString() == pinCode) {
+                imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
+                if(binding.currentPinCodeText.text.toString() == "") {
+                    binding.verifyCodeFeedBack.text = "Введите текущий пинкод"
+                    binding.verifyCodeFeedBack.visibility = View.VISIBLE
+                }else if(binding.currentPinCodeText.text.toString() == pinCode) {
                     if (firstInput.trim().isEmpty() || secondInput.trim().isEmpty()
                     ) {
-                        verify_codeFeedBack.text = "Поле не должно быть пустым"
-                        verify_codeFeedBack.visibility = View.VISIBLE
+                        binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
                     } else if (firstInput.length != 4) {
-                        verify_codeFeedBack.text = "Код должен состоять из 4 цифр"
-                        verify_codeFeedBack.visibility = View.VISIBLE
+                        binding.verifyCodeFeedBack.text = "Код должен состоять из 4 цифр"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
                     } else if (firstInput.trim() != secondInput.trim()) {
-                        verify_codeFeedBack.text = "Новый пин код не совпадает"
-                        verify_codeFeedBack.visibility = View.VISIBLE
+                        binding.verifyCodeFeedBack.text = "Новый пин код не совпадает"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
                     } else {
-                        verify_codeFeedBack.visibility = View.INVISIBLE
-                        verify_codeFeedBack.isEnabled = false
+                        binding.verifyCodeFeedBack.visibility = View.INVISIBLE
+                        binding.verifyPinCodeBtn.isEnabled = false
                         sharedPreferences.edit().remove("USER_PIN_CODE_CREATED").apply()
                         sharedPreferences.edit().remove("USER_PIN_CODE").apply()
                         sharedPreferences.edit()
                             .putString(
                                 "USER_PIN_CODE",
-                                pin_code_text.text!!.trim().toString()
+                                binding.pinCodeText.text!!.trim().toString()
                             )
                             .putBoolean("USER_PIN_CODE_CREATED", true)
                             .putBoolean("USER_FROM_PROFILE",false)
@@ -121,20 +122,20 @@ class VerificationActivity : AppCompatActivity() {
                     }
                 }
                 else {
-                    verify_codeFeedBack.text = "Введенный текущий пинкод не совпадает"
-                    verify_codeFeedBack.visibility = View.VISIBLE
+                    binding.verifyCodeFeedBack.text = "Введенный текущий пинкод не совпадает"
+                    binding.verifyCodeFeedBack.visibility = View.VISIBLE
                 }
             }
             fromProfile = false
             ////////////////////////////////
         } else {
             if (isPinCodeCreated) {
-                tv_input_tip.text = "Введите ваш код доступа"
-                textField2.visibility = View.GONE
-                textField.hint = "Введите код"
-                forgetPassword.visibility = View.VISIBLE
+                binding.tvInputTip.text = "Введите ваш код доступа"
+                binding.textField2.visibility = View.GONE
+                binding.textField.hint = "Введите код"
+                binding.forgetPassword.visibility = View.VISIBLE
 
-                forgetPassword.setOnClickListener {
+                binding.forgetPassword.setOnClickListener {
                     MaterialAlertDialogBuilder(this)
                         .setTitle(resources.getString(R.string.alert_password_recover_title))
                         .setMessage(resources.getString(R.string.alert_password_recover_message))
@@ -150,17 +151,17 @@ class VerificationActivity : AppCompatActivity() {
                         }
                         .show()
                 }
-                verify_pin_code_btn.setOnClickListener {
+                binding.verifyPinCodeBtn.setOnClickListener {
                     val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(mainLayoutVer.getWindowToken(), 0)
-                    if (pin_code_text.text!!.trim().isEmpty()) {
-                        verify_codeFeedBack.text = "Поле не должно быть пустым"
-                        verify_codeFeedBack.visibility = View.VISIBLE
-                    } else if (pin_code_text.text!!.trim().toString() != pinCode) {
-                        verify_codeFeedBack.text = "Неверный пинкод. Попробуйте еще раз."
-                        verify_codeFeedBack.visibility = View.VISIBLE
-                    } else if (pin_code_text.text!!.trim().toString() == pinCode) {
-                        verify_pin_code_btn.isEnabled = false
+                    imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
+                    if (binding.pinCodeText.text!!.trim().isEmpty()) {
+                        binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
+                    } else if (binding.pinCodeText.text!!.trim().toString() != pinCode) {
+                        binding.verifyCodeFeedBack.text = "Неверный пинкод. Попробуйте еще раз."
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
+                    } else if (binding.pinCodeText.text!!.trim().toString() == pinCode) {
+                        binding.verifyPinCodeBtn.isEnabled = false
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     }
@@ -168,7 +169,7 @@ class VerificationActivity : AppCompatActivity() {
             } else {
                 var firstInput = ""
                 var secondInput = ""
-                pin_code_text.addTextChangedListener(object : TextWatcher {
+                binding.pinCodeText.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(
                         p0: CharSequence?,
                         p1: Int,
@@ -183,7 +184,7 @@ class VerificationActivity : AppCompatActivity() {
                     override fun afterTextChanged(p0: Editable?) {
                     }
                 })
-                pin_code_verify_text.addTextChangedListener(object : TextWatcher {
+                binding.pinCodeVerifyText.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(
                         p0: CharSequence?,
                         p1: Int,
@@ -198,28 +199,28 @@ class VerificationActivity : AppCompatActivity() {
                     override fun afterTextChanged(p0: Editable?) {
                     }
                 })
-                verify_pin_code_btn.setOnClickListener {
+                binding.verifyPinCodeBtn.setOnClickListener {
                     val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(mainLayoutVer.getWindowToken(), 0)
+                    imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
 
                     if (firstInput.trim()
                             .isEmpty() || secondInput.trim().isEmpty()
                     ) {
-                        verify_codeFeedBack.text = "Поле не должно быть пустым"
-                        verify_codeFeedBack.visibility = View.VISIBLE
+                        binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
                     } else if (firstInput.length != 4) {
-                        verify_codeFeedBack.text = "Код должен состоять из 4 цифр"
-                        verify_codeFeedBack.visibility = View.VISIBLE
+                        binding.verifyCodeFeedBack.text = "Код должен состоять из 4 цифр"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
                     } else if (firstInput.trim() != secondInput.trim()) {
-                        verify_codeFeedBack.text = "Код не совпадает"
-                        verify_codeFeedBack.visibility = View.VISIBLE
+                        binding.verifyCodeFeedBack.text = "Код не совпадает"
+                        binding.verifyCodeFeedBack.visibility = View.VISIBLE
                     } else {
-                        verify_codeFeedBack.visibility = View.INVISIBLE
-                        verify_pin_code_btn.isEnabled = false
+                        binding.verifyCodeFeedBack.visibility = View.INVISIBLE
+                        binding.verifyPinCodeBtn.isEnabled = false
                         sharedPreferences.edit()
                             .putString(
                                 "USER_PIN_CODE",
-                                pin_code_text.text!!.trim().toString()
+                                binding.pinCodeText.text!!.trim().toString()
                             )
                             .putBoolean("USER_PIN_CODE_CREATED", true)
                             .apply()

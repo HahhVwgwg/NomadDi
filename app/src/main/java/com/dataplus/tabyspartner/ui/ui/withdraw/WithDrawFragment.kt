@@ -27,15 +27,19 @@ import com.dataplus.tabyspartner.databinding.FragmentMainPageBinding
 import com.dataplus.tabyspartner.databinding.FragmentWithDrawBinding
 import com.dataplus.tabyspartner.modal.ModalBottomSheet
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity2
+import com.dataplus.tabyspartner.R
+import com.dataplus.tabyspartner.databinding.FragmentMainPageBinding
+import com.dataplus.tabyspartner.databinding.FragmentWithDrawBinding
+import com.dataplus.tabyspartner.modal.ModalBottomSheet
+import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_with_draw.*
 
 
 class WithDrawFragment : Fragment() {
-    //private lateinit var binding: FragmentWithDrawBinding
+    private lateinit var binding: FragmentWithDrawBinding
     private lateinit var viewModel: WithDrawViewModel
-
-    //private lateinit var bindingMainPageBinding: FragmentMainPageBinding
+    private lateinit var bindingMainPageBinding: FragmentMainPageBinding
     lateinit var sharedPreferences: SharedPreferences
     private lateinit var model: ModalBottomSheet.SharedViewModel
     val modalbottomSheetFragment = ModalBottomSheet()
@@ -45,13 +49,20 @@ class WithDrawFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //Log.i("MainPageFragment", "Called ViewModelProviders.of!")
+        binding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_with_draw, container, false
+        )
+        bindingMainPageBinding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_main_page, container, false
+        )
+
+        // Log.i("MainPageFragment", "Called ViewModelProviders.of!")
         viewModel = ViewModelProviders.of(this).get(WithDrawViewModel::class.java)
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
         val userPhoneNumber = sharedPreferences.getString("USER_PHONE_NUMBER", "")
         viewModel.getYandexDriversProperties(userPhoneNumber!!)
         viewModel.responseD.observe(viewLifecycleOwner, Observer {
-            balance_amount_with_draw_page.text =
+            binding.balanceAmountWithDrawPage.text =
                 it.accounts[0].balance.toDouble().toInt().toString() + " \u20b8"
         })
 
@@ -59,45 +70,45 @@ class WithDrawFragment : Fragment() {
             ViewModelProviders.of(this).get(ModalBottomSheet.SharedViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
         model.selected.postValue("Выберите карту");
-        return inflater.inflate(R.layout.fragment_with_draw, container, false)
+        return binding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onResume() {
         super.onResume()
 
-        viewModel.getYandexDriversProperties(sharedPreferences.getString("USER_PHONE_NUMBER", "")!!)
+        //viewModel.getYandexDriversProperties(sharedPreferences.getString("USER_PHONE_NUMBER", "")!!)
         model.selected.observe(viewLifecycleOwner, Observer<String> { item ->
-            choose_card_btn.setText(item)
+            binding.chooseCardBtn.setText(item)
         })
-        with_draw_amount.addTextChangedListener(object : TextWatcher {
+        binding.withDrawAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
             @SuppressLint("SetTextI18n")
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (with_draw_amount.text.toString() == "" || with_draw_amount.text.toString()
-                        .toInt() < 130
+                if (binding.withDrawAmount.text.toString() == "" || binding.withDrawAmount.text.toString()
+                        .toInt() < 150
                 ) {
-                    amountFee.text =
-                        "Комиссия 130 ₸"
-                    withdraw_btn_withdrawPage.text =
+                    binding.amountFee.text =
+                        "Комиссия 150 ₸"
+                    binding.withdrawBtnWithdrawPage.text =
                         "Перевести 0 \u20b8"
-                } else if (with_draw_amount.text.toString().length > 4) {
+                } else if (binding.withDrawAmount.text.toString().length > 4) {
                     val calculateFee =
-                        (with_draw_amount.text.toString().toDouble() * (0.013)).toInt()
+                        (binding.withDrawAmount.text.toString().toDouble() * (0.015)).toInt()
                             .toString()
-                    amountFee.text =
+                    binding.amountFee.text =
                         "Комиссия ${calculateFee} ₸"
-                    withdraw_btn_withdrawPage.text =
+                    binding.withdrawBtnWithdrawPage.text =
                         "Перевести ${
-                            with_draw_amount.text.toString().toInt() - calculateFee.toInt()
+                            binding.withDrawAmount.text.toString().toInt() - calculateFee.toInt()
                         } \u20b8"
                 } else {
-                    amountFee.text =
-                        "Комиссия 130 ₸"
-                    withdraw_btn_withdrawPage.text =
-                        "Перевести ${with_draw_amount.text.toString().toInt() - 130} \u20b8"
+                    binding.amountFee.text =
+                        "Комиссия 150 ₸"
+                    binding.withdrawBtnWithdrawPage.text =
+                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - 150} \u20b8"
                 }
             }
 
@@ -105,16 +116,16 @@ class WithDrawFragment : Fragment() {
             }
         });
 
-        choose_card_btn.setOnClickListener {
+        binding.chooseCardBtn.setOnClickListener {
             modalbottomSheetFragment.show(requireFragmentManager(), modalbottomSheetFragment.tag)
         }
 
-        withdraw_btn_withdrawPage.setOnClickListener {
-            val withDrawAmount = balance_amount_with_draw_page.text.substring(
+        binding.withdrawBtnWithdrawPage.setOnClickListener {
+            val withDrawAmount = binding.balanceAmountWithDrawPage.text.substring(
                 0,
-                balance_amount_with_draw_page.text.length - 2
+                binding.balanceAmountWithDrawPage.text.length - 2
             )
-            if (!choose_card_btn.text.toString().isDigitsOnly()) {
+            if (!binding.chooseCardBtn.text.toString().isDigitsOnly()) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("Пожалуйста, выберите вашу карту")
                     .setCancelable(false)
@@ -124,7 +135,7 @@ class WithDrawFragment : Fragment() {
                 val alert = dialogBuilder.create()
                 alert.setTitle("Вы не выбрали карту перевода!")
                 alert.show()
-            } else if (with_draw_amount.text.toString() == "") {
+            } else if (binding.withDrawAmount.text.toString() == "") {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("Минимальная сумма перевода 200 \u20b8")
                     .setCancelable(false)
@@ -136,10 +147,10 @@ class WithDrawFragment : Fragment() {
                 val alert = dialogBuilder.create()
                 alert.setTitle("Вывод средств невозможен")
                 alert.show()
-            } else if (with_draw_amount.text.toString()
+            } else if (binding.withDrawAmount.text.toString()
                     .toInt() <= 199
             ) {
-                if (withDrawAmount.toInt() - with_draw_amount.text.toString().toInt() < 100) {
+                if (withDrawAmount.toInt() - binding.withDrawAmount.text.toString().toInt() < 100) {
                     val dialogBuilder = AlertDialog.Builder(this.requireContext())
                     dialogBuilder.setMessage("На вашем балансе должно оставаться не менее 100 тг, чтобы вы могли получать \"наличные\" заказы.")
                         .setCancelable(false)
@@ -164,7 +175,7 @@ class WithDrawFragment : Fragment() {
                     alert.setTitle("Вывод средств невозможен")
                     alert.show()
                 }
-            } else if (with_draw_amount.text.toString().toInt() == withDrawAmount.toInt()) {
+            } else if (binding.withDrawAmount.text.toString().toInt() == withDrawAmount.toInt()) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("На вашем балансе должно оставаться не менее 100 тг, чтобы вы могли получать \"наличные\" заказы.")
                     .setCancelable(false)
@@ -174,7 +185,7 @@ class WithDrawFragment : Fragment() {
                 val alert = dialogBuilder.create()
                 alert.setTitle("Вывод средств невозможен")
                 alert.show()
-            } else if (with_draw_amount.text.toString().toInt() > withDrawAmount.toInt()) {
+            } else if (binding.withDrawAmount.text.toString().toInt() > withDrawAmount.toInt()) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("Не достаточно средств")
                     .setCancelable(false)
@@ -184,8 +195,8 @@ class WithDrawFragment : Fragment() {
                 val alert = dialogBuilder.create()
                 alert.setTitle("Вывод средств невозможен")
                 alert.show()
-            } else if (with_draw_amount.text.toString().toInt() > 199) {
-                if (withDrawAmount.toString().toInt() - with_draw_amount.text.toString()
+            } else if (binding.withDrawAmount.text.toString().toInt() > 199) {
+                if (withDrawAmount.toString().toInt() - binding.withDrawAmount.text.toString()
                         .toInt() < 100
                 ) {
                     val dialogBuilder = AlertDialog.Builder(this.requireContext())
@@ -204,7 +215,7 @@ class WithDrawFragment : Fragment() {
                         Intent(requireContext(), VerificationActivity2::class.java),
                         1
                     )
-                    withdraw_btn_withdrawPage.isEnabled = false
+                    binding.withdrawBtnWithdrawPage.isEnabled = false
                 }
             }
         }

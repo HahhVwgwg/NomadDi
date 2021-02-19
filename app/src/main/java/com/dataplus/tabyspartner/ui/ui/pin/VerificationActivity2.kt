@@ -16,30 +16,30 @@ import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.activity_verification2.*
 
 class VerificationActivity2 : AppCompatActivity() {
     lateinit var sharedPreferences: SharedPreferences
     var pinCode = ""
     var isPinCodeCreated = false
-    //private lateinit var binding: com.dataplus.tabyspartner.databinding.ActivityVerification2Binding
+    private lateinit var binding: com.dataplus.tabyspartner.databinding.ActivityVerification2Binding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkConnectivity()
-        setContentView(R.layout.activity_verification2)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_verification2)
+        binding.lifecycleOwner = this
 
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         isPinCodeCreated = sharedPreferences.getBoolean("USER_PIN_CODE_CREATED", false)
         pinCode = sharedPreferences.getString("USER_PIN_CODE", "")!!
-        tv_input_tip.text = "Введите ваш код доступа для подтверждения перевода"
-        textField2.visibility = View.GONE
-        textField.hint = "Введите код"
-        forgetPassword.visibility = View.VISIBLE
+        binding.tvInputTip.text = "Введите ваш код доступа для подтверждения перевода"
+        binding.textField2.visibility = View.GONE
+        binding.textField.hint = "Введите код"
+        binding.forgetPassword.visibility = View.VISIBLE
     }
 
     override fun onResume() {
         super.onResume()
-        forgetPassword.setOnClickListener {
+        binding.forgetPassword.setOnClickListener {
             MaterialAlertDialogBuilder(this)
                 .setTitle(resources.getString(R.string.alert_password_recover_title))
                 .setMessage(resources.getString(R.string.alert_password_recover_message))
@@ -55,17 +55,17 @@ class VerificationActivity2 : AppCompatActivity() {
                 }
                 .show()
         }
-            verify_pin_code_btn.setOnClickListener {
+        binding.verifyPinCodeBtn.setOnClickListener {
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(mainLayoutVer.getWindowToken(), 0)
-            if (pin_code_text.text!!.trim().isEmpty()) {
-                verify_codeFeedBack.text = "Поле не должно быть пустым"
-                verify_codeFeedBack.visibility = View.VISIBLE
-            } else if (pin_code_text.text!!.trim().toString() != pinCode) {
-                verify_codeFeedBack.text = "Неверный пинкод. Попробуйте еще раз."
-                verify_codeFeedBack.visibility = View.VISIBLE
-            } else if (pin_code_text.text!!.trim().toString() == pinCode) {
-                verify_pin_code_btn.isEnabled = false
+            imm.hideSoftInputFromWindow(binding.mainLayoutVer.getWindowToken(), 0)
+            if (binding.pinCodeText.text!!.trim().isEmpty()) {
+                binding.verifyCodeFeedBack.text = "Поле не должно быть пустым"
+                binding.verifyCodeFeedBack.visibility = View.VISIBLE
+            } else if (binding.pinCodeText.text!!.trim().toString() != pinCode) {
+                binding.verifyCodeFeedBack.text = "Неверный пинкод. Попробуйте еще раз."
+                binding.verifyCodeFeedBack.visibility = View.VISIBLE
+            } else if (binding.pinCodeText.text!!.trim().toString() == pinCode) {
+                binding.verifyPinCodeBtn.isEnabled = false
                 setResult(Activity.RESULT_OK)
                 finish()
             }

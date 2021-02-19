@@ -48,6 +48,6 @@
     <string name="internet_title">"Подключение к Интернету отсутствует"</string>
     <string name="retry">Повторить</string>
     <string name="otmenit">Отменить</string>
-
+    <string name="notSameError">Номера карт не совпадают</string>
 
 </resources>

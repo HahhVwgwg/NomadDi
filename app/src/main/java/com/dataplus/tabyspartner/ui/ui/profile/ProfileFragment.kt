@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.dataplus.tabyspartner.BuildConfig
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentProfileBinding
 import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
@@ -19,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 
 class ProfileFragment : Fragment() {
-    //private lateinit var binding: FragmentProfileBinding
+    private lateinit var binding: FragmentProfileBinding
     lateinit var sharedPreferences: SharedPreferences
     var fromProfile = false;
     override fun onCreateView(
@@ -27,21 +26,23 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
-    }
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         app_version.text = getString(R.string.profile_app_version, "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
-        profile_frag_name.text = sharedPreferences.getString("USER_SHORT_NAME", "")
-        profile_frag_mobile.text = sharedPreferences.getString("USER_PHONE_NUMBER", "")
+
+        binding.profileFragName.text = sharedPreferences.getString("USER_SHORT_NAME", "")
+        binding.profileFragMobile.text = sharedPreferences.getString("USER_PHONE_NUMBER", "")
         fromProfile = sharedPreferences.getBoolean("USER_FROM_PROFILE",false)
+        return binding.root
     }
+
 
     override fun onResume() {
         super.onResume()
-        change_pin_code_btn.setOnClickListener {
+        binding.changePinCodeBtn.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(resources.getString(R.string.change_pincode_title))
                 .setMessage(resources.getString(R.string.change_pincode_message))
@@ -63,7 +64,7 @@ class ProfileFragment : Fragment() {
                 .show()
         }
 
-       log_out_btn.setOnClickListener {
+        binding.logOutBtn.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(resources.getString(R.string.logOut_title))
                 .setMessage(resources.getString(R.string.logOut_message))

@@ -1,4 +1,4 @@
-package com.dataplus.tabyspartner.ui.ui.main
+package com.example.tabyspartner.ui.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -21,7 +21,6 @@ import com.dataplus.tabyspartner.databinding.FragmentMainPageBinding
 import com.dataplus.tabyspartner.model.SliderItem
 import com.dataplus.tabyspartner.ui.ui.profile.ProfileFragment
 import com.dataplus.tabyspartner.ui.ui.withdraw.WithDrawFragment
-import kotlinx.android.synthetic.main.fragment_main_page.*
 
 class MainPageFragment : Fragment() {
 
@@ -33,7 +32,7 @@ class MainPageFragment : Fragment() {
     }
 
 
-    //private lateinit var binding: FragmentMainPageBinding
+    private lateinit var binding: FragmentMainPageBinding
     private val viewModel: MainPageViewModel by lazy {
         ViewModelProvider(this).get(MainPageViewModel::class.java)
     }
@@ -44,16 +43,18 @@ class MainPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        super.onCreate(savedInstanceState)
-        val v = inflater.inflate(R.layout.fragment_main_page, container, false)
-        // Inflate the layout for this fragment
 
-        viewPager2 = v.findViewById(R.id.on_boarding_view_pager)
+
+        // Inflate the layout for this fragment
+        binding = FragmentMainPageBinding.inflate(inflater)
+        binding.lifecycleOwner = this
+//        binding.viewModel = viewModel
+
+        viewPager2 = binding.onBoardingViewPager
         val sliderItems = mutableListOf(
             SliderItem(R.drawable.banner3),
             SliderItem(R.drawable.bannernew)
         ) as ArrayList
-
         viewPager2.adapter = SliderAdapter(sliderItems, viewPager2)
         viewPager2.clipToPadding = false
         viewPager2.clipChildren = false
@@ -75,9 +76,9 @@ class MainPageFragment : Fragment() {
         viewModel.getYandexDriversProperties(userPhoneNumber!!)
         viewModel.response.observe(viewLifecycleOwner, Observer {
             //Log.d("responseDriver", it.toString())
-            profile_name_label.text =
+            binding.profileNameLabel.text =
                 it.driver_profile.first_name + "\n" + it.driver_profile.last_name
-            amount_cash_name_label.text = it.accounts[0].balance
+            binding.amountCashNameLabel.text = it.accounts[0].balance
             sharedPreferences.edit()
                 .putString(
                     "USER_SHORT_NAME",
@@ -85,7 +86,7 @@ class MainPageFragment : Fragment() {
                 )
                 .apply()
         })
-        return v
+        return binding.root
     }
 
     private fun handleFrame(fragment: Fragment): Boolean {
@@ -97,17 +98,19 @@ class MainPageFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         //sliderHandler.postDelayed(sliderRunnable,3000) //релиз откоммент
-        profile_info_btn.setOnClickListener {
+        binding.profileInfoBtn.setOnClickListener {
             handleFrame(ProfileFragment())
         }
-        balance_info_btn.setOnClickListener {
+        binding.balanceInfoBtn.setOnClickListener {
             handleFrame(WithDrawFragment())
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
     }
+
 
     var sliderRunnable = Runnable {
          viewPager2.setCurrentItem(viewPager2.currentItem + 1) // откоммент релиз
