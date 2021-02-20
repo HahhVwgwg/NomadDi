@@ -16,10 +16,10 @@ import retrofit2.Response
 
 class WithDrawViewModel : ViewModel() {
 
-    private val _responseD = MutableLiveData<DriverProfilesItem>()
+    private val _responseD = MutableLiveData<Int>()
 
     // The external immutable LiveData for the request status String
-    val responseD: LiveData<DriverProfilesItem>
+    val responseD: LiveData<Int>
         get() = _responseD
 
     private val _responseWithDrawYandex = MutableLiveData<Boolean>()
@@ -127,7 +127,7 @@ class WithDrawViewModel : ViewModel() {
                     for (i in response.body()!!.driversList.indices) {
                         if (response.body()!!.driversList[i].driver_profile.phones[0] == phone) {
                             val result = response.body()!!.driversList[i]
-                            _responseD.value = result
+                            _responseD.value = result.accounts[0].balance.toDouble().toInt()
                             driverId = result.driver_profile.id
                         }
                     }
@@ -159,6 +159,14 @@ class WithDrawViewModel : ViewModel() {
                 ) {
                     val result = response.body()
                     if (result?.driver_profile_id == driverId) {
+                        val previousBalance = _responseD.value ?: -1
+                        when {
+                            previousBalance < 0 -> Unit
+                            previousBalance > amount.toInt() -> {
+                                _responseD.value = previousBalance - amount.toInt()
+                            }
+                            else -> _responseD.value = 0
+                        }
                         withdrawCash(amount, card_number, context)
                     } else {
                         if (context != null) {
