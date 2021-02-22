@@ -13,7 +13,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TabysPartner">
+        android:debuggable="true"
+        android:theme="@style/Theme.TabysPartner"
+        tools:ignore="HardcodedDebugMode">
         <activity
             android:name="com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity2"
             android:screenOrientation="portrait" />

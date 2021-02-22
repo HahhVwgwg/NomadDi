@@ -8,8 +8,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,12 +30,19 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_with_draw.*
 
 class WithDrawFragment : Fragment() {
+
+    companion object {
+        private const val TAG = "WithDrawFragment"
+    }
+
     private lateinit var binding: FragmentWithDrawBinding
     private lateinit var viewModel: WithDrawViewModel
     private lateinit var bindingMainPageBinding: FragmentMainPageBinding
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var model: ModalBottomSheet.SharedViewModel
     val modalBottomSheetFragment = ModalBottomSheet()
+
+    private var timer: CountDownTimer? = null
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreateView(
@@ -49,9 +58,6 @@ class WithDrawFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(WithDrawViewModel::class.java)
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
-        sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
-            viewModel.getYandexDriversProperties(userPhoneNumber)
-        }
 
         viewModel.responseD.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
@@ -63,6 +69,15 @@ class WithDrawFragment : Fragment() {
         } ?: throw Exception("Invalid Activity")
         model.selected.postValue("Выберите карту")
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        count(60000L - (System.currentTimeMillis() - sharedPreferences.getLong("USER_WITHDRAW_TIME", 0L))) {
+            sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
+                viewModel.getYandexDriversProperties(userPhoneNumber)
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -215,6 +230,9 @@ class WithDrawFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
+            sharedPreferences.edit().putLong("USER_WITHDRAW_TIME", System.currentTimeMillis())
+                .apply()
+            count(60000) {}
             viewModel.withDrawCashFromYandexViewModelFun(
                 amount = with_draw_amount.text.toString(),
                 choose_card_btn.text.toString(),
@@ -224,7 +242,7 @@ class WithDrawFragment : Fragment() {
                 if (it == true) {
                     viewModel.consumeResult()
                     sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
-                        viewModel.getYandexDriversProperties(userPhoneNumber)
+                        //viewModel.getYandexDriversProperties(userPhoneNumber)
                     }
                     MaterialAlertDialogBuilder(requireContext())
                         .setMessage(resources.getString(R.string.operation_ok))
@@ -236,5 +254,41 @@ class WithDrawFragment : Fragment() {
                 }
             })
         }
+    }
+
+    private fun count(delay: Long, checkYandex: () -> Unit) {
+        timer?.cancel()
+        Log.d(TAG, "count $delay")
+        if (delay < 1000 || delay > 60000) {
+            checkYandex.invoke()
+            return
+        }
+        timer = object : CountDownTimer(delay, 1000) {
+            override fun onTick(p0: Long) {
+                if (::binding.isInitialized) {
+                    val sec = p0 / 1000
+                    if (sec == 0L) {
+                        onFinish()
+                    } else {
+                        binding.withdrawBtnWithdrawPage.isEnabled = false
+                        binding.withdrawDelay.visibility = View.VISIBLE
+                        binding.withdrawDelay.text =
+                            String.format("Следующий вывод доступен через %d сек.", sec)
+                    }
+
+                }
+            }
+
+            override fun onFinish() {
+                if (::binding.isInitialized) {
+                    binding.withdrawBtnWithdrawPage.isEnabled = true
+                    binding.withdrawDelay.visibility = View.GONE
+                    binding.withdrawDelay.text = ""
+                }
+                checkYandex.invoke()
+            }
+
+        }
+        timer?.start()
     }
 }
