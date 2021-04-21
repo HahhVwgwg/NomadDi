@@ -16,11 +16,12 @@ import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-
 class ProfileFragment : Fragment() {
+
     private lateinit var binding: FragmentProfileBinding
-    lateinit var sharedPreferences: SharedPreferences
-    var fromProfile = false;
+    private lateinit var sharedPreferences: SharedPreferences
+    private var fromProfile = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,14 +46,13 @@ class ProfileFragment : Fragment() {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(resources.getString(R.string.change_pincode_title))
                 .setMessage(resources.getString(R.string.change_pincode_message))
-                .setNegativeButton(resources.getString(R.string.decline)) { dialog, which ->
+                .setNegativeButton(resources.getString(R.string.decline)) { dialog, _ ->
                     // Respond to negative button press
                     dialog.dismiss()
                 }
-                .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
+                .setPositiveButton(resources.getString(R.string.accept)) { _, _ ->
                     // Respond to positive button press
                     sharedPreferences.edit().putBoolean("USER_FROM_PROFILE",true).apply()
-//                    sharedPreferences.edit().remove("USER_PIN_CODE").apply()
                     context?.startActivity(
                         Intent(
                             requireContext(),
@@ -62,16 +62,24 @@ class ProfileFragment : Fragment() {
                 }
                 .show()
         }
+        binding.inviteFriendBtn.setOnClickListener {
+            handleFrame(InviteFriendFragment())
+        }
+        binding.goIncomesBtn.setOnClickListener {
 
+        }
+        binding.goNotificationsBtn.setOnClickListener {
+
+        }
         binding.logOutBtn.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(resources.getString(R.string.logOut_title))
                 .setMessage(resources.getString(R.string.logOut_message))
-                .setNegativeButton(resources.getString(R.string.decline)) { dialog, which ->
+                .setNegativeButton(resources.getString(R.string.decline)) { dialog, _ ->
                     // Respond to negative button press
                     dialog.dismiss()
                 }
-                .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
+                .setPositiveButton(resources.getString(R.string.accept)) { _, _ ->
                     // Respond to positive button press
                     sharedPreferences.edit().clear().apply()
                     context?.startActivity(
@@ -84,6 +92,11 @@ class ProfileFragment : Fragment() {
                 }
                 .show()
         }
+    }
+
+    private fun handleFrame(fragment: Fragment) {
+        val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.navHostFragment, fragment).commit()
     }
 
 }
