@@ -28,7 +28,7 @@ class InviteFriendFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invite, container, false)
-        viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
         sharedPreferences = inflater.context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         return binding.root
     }

@@ -11,7 +11,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-private const val BASE_URL = "http://taxi.mir-crm.com/"
+private const val BASE_URL = "http://5.253.61.170/"
 
 interface OwnApiService {
     @GET("api/drivers/news")

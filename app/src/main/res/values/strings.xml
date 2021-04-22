@@ -20,7 +20,9 @@
     <string name="invite_friend_hint">Номер вашего друга</string>
     <string name="invite_friend_btn">Пригласить друга</string>
     <string name="go_incomes_btn_text">Поступления от друзей</string>
+    <string name="incomes_title">Поступления</string>
     <string name="go_notifications_btn_text">Уведомления</string>
+    <string name="notifications_title">Уведомления</string>
     <string name="profile_app_version">Версия приложения %s</string>
     <string name="btn_uploaded_title">Новая версия приложения загружена</string>
     <string name="btn_uploaded_desc">Перезапустить</string>
@@ -55,5 +57,6 @@
     <string name="retry">Повторить</string>
     <string name="otmenit">Отменить</string>
     <string name="notSameError">Номера карт не совпадают</string>
+    <string name="income_sum">Заработок за неделю: %s ₸</string>
 
 </resources>

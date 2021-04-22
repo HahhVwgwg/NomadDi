@@ -66,10 +66,10 @@ class ProfileFragment : Fragment() {
             handleFrame(InviteFriendFragment())
         }
         binding.goIncomesBtn.setOnClickListener {
-
+            handleFrame(IncomesFragment())
         }
         binding.goNotificationsBtn.setOnClickListener {
-
+            handleFrame(NotificationsFragment())
         }
         binding.logOutBtn.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
