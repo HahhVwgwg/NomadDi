@@ -40,8 +40,10 @@ class NotificationsFragment : Fragment() {
                     Toast.makeText(view.context, it.message, Toast.LENGTH_SHORT).show()
                 }
             }
-
         })
+        binding.back.setOnClickListener {
+            activity?.onBackPressed()
+        }
     }
 
     override fun onResume() {

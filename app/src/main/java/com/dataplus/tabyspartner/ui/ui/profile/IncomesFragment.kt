@@ -48,6 +48,9 @@ class IncomesFragment : Fragment() {
 
             })
         })
+        binding.back.setOnClickListener {
+            activity?.onBackPressed()
+        }
     }
 
     override fun onResume() {

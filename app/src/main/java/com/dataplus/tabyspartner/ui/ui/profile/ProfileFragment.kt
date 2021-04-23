@@ -96,7 +96,8 @@ class ProfileFragment : Fragment() {
 
     private fun handleFrame(fragment: Fragment) {
         val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.navHostFragment, fragment).commit()
+        fragmentTransaction.addToBackStack(fragment::class.java.simpleName)
+        fragmentTransaction.replace(R.id.navHostFragment, fragment, fragment::class.java.simpleName).commit()
     }
 
 }

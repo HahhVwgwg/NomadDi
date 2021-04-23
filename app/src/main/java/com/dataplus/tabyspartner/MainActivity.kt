@@ -10,6 +10,7 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         val toolbarTitle = findViewById<TextView>(R.id.toolbar_title)
         setSupportActionBar(toolbar)
-        supportActionBar?.setTitle("")
+        supportActionBar?.title = ""
         toolbarTitle.text = "Главная"
         checkConnectivity()
         handleFrame(MainPageFragment())
@@ -105,6 +106,10 @@ class MainActivity : AppCompatActivity() {
                 popupSnackbarForCompleteUpdate()
             }
         }
+    }
+
+    fun open(@IdRes item: Int) {
+        binding.bottomNavigation.selectedItemId = item
     }
 
     private fun popupSnackbarForCompleteUpdate() {

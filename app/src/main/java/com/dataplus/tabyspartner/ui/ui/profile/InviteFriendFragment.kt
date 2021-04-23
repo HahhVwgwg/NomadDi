@@ -38,6 +38,9 @@ class InviteFriendFragment : Fragment() {
         binding.inputPhone.addTextChangedListener {
 
         }
+        binding.back.setOnClickListener {
+            activity?.onBackPressed()
+        }
         binding.sendInviteBtn.setOnClickListener {
             val ref = binding.inputPhone.text.toString()
             if (ref.length < 10) {

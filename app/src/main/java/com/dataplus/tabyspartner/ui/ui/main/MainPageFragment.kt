@@ -15,12 +15,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.adapter.SliderAdapter
 import com.dataplus.tabyspartner.databinding.FragmentMainPageBinding
 import com.dataplus.tabyspartner.model.SliderItem
-import com.dataplus.tabyspartner.ui.ui.profile.ProfileFragment
-import com.dataplus.tabyspartner.ui.ui.withdraw.WithDrawFragment
 
 class MainPageFragment : Fragment() {
 
@@ -30,7 +29,6 @@ class MainPageFragment : Fragment() {
     companion object {
         private val TAG = MainPageFragment::class.java
     }
-
 
     private lateinit var binding: FragmentMainPageBinding
 
@@ -90,31 +88,20 @@ class MainPageFragment : Fragment() {
         return binding.root
     }
 
-    private fun handleFrame(fragment: Fragment): Boolean {
-        val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.navHostFragment, fragment).commit()
-        return true
-    }
-
     override fun onResume() {
         super.onResume()
         //sliderHandler.postDelayed(sliderRunnable,3000) //релиз откоммент
         binding.profileInfoBtn.setOnClickListener {
-            handleFrame(ProfileFragment())
+            (activity as? MainActivity)?.open(R.id.profile_menu_item)
         }
         binding.balanceInfoBtn.setOnClickListener {
-            handleFrame(WithDrawFragment())
+            (activity as? MainActivity)?.open(R.id.withdraw_menu_item)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
     }
 
 
     var sliderRunnable = Runnable {
-         viewPager2.setCurrentItem(viewPager2.currentItem + 1) // откоммент релиз
+         viewPager2.currentItem = viewPager2.currentItem + 1 // откоммент релиз
     }
 
     override fun onPause() {

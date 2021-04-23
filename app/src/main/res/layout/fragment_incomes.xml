@@ -6,12 +6,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            app:srcCompat="@drawable/backspace"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/incomes_title"
+            app:layout_constraintBottom_toBottomOf="@+id/incomes_title"
+            android:layout_height="wrap_content"/>
+
         <TextView
             android:id="@+id/incomes_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="?actionBarSize"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/ubuntubold"
             android:gravity="center"
