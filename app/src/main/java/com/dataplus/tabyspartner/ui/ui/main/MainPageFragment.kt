@@ -5,7 +5,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -24,7 +27,7 @@ import com.dataplus.tabyspartner.model.SliderItem
 class MainPageFragment : Fragment() {
 
     private lateinit var viewPager2: ViewPager2
-    var sliderHandler = Handler()
+    var sliderHandler = Handler(Looper.getMainLooper())
 
     companion object {
         private val TAG = MainPageFragment::class.java
@@ -32,10 +35,14 @@ class MainPageFragment : Fragment() {
 
     private lateinit var binding: FragmentMainPageBinding
 
+    private var freeze = false
+
     private val viewModel: MainPageViewModel by lazy {
         ViewModelProvider(this).get(MainPageViewModel::class.java)
     }
+
     lateinit var sharedPreferences: SharedPreferences
+
     var name_short = ""
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -54,7 +61,18 @@ class MainPageFragment : Fragment() {
             SliderItem(R.drawable.banner3),
             SliderItem(R.drawable.bannernew)
         ) as ArrayList
-        viewPager2.adapter = SliderAdapter(sliderItems, viewPager2)
+        viewPager2.adapter = SliderAdapter(sliderItems, viewPager2, object : SliderAdapter.Callback {
+            override fun onAction(action: Int) {
+                if (action == MotionEvent.ACTION_DOWN) {
+                    freeze = true
+                } else if (action == MotionEvent.ACTION_UP) {
+                    freeze = false
+                    sliderHandler.removeCallbacks(sliderRunnable)
+                    sliderHandler.postDelayed(sliderRunnable,3000)
+                }
+            }
+
+        })
         viewPager2.clipToPadding = false
         viewPager2.clipChildren = false
         viewPager2.offscreenPageLimit = 2
@@ -66,7 +84,7 @@ class MainPageFragment : Fragment() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 sliderHandler.removeCallbacks(sliderRunnable)
-                sliderHandler.postDelayed(sliderRunnable,2000)
+                sliderHandler.postDelayed(sliderRunnable,3000)
             }
         })
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
@@ -101,7 +119,9 @@ class MainPageFragment : Fragment() {
 
 
     var sliderRunnable = Runnable {
-         viewPager2.currentItem = viewPager2.currentItem + 1 // откоммент релиз
+        if (!freeze) {
+            viewPager2.currentItem = viewPager2.currentItem + 1 // откоммент релиз
+        }
     }
 
     override fun onPause() {

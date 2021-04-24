@@ -1,6 +1,7 @@
 package com.dataplus.tabyspartner.adapter;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,10 +21,16 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SldierView
 
     private List<SliderItem> sliderItems;
     private ViewPager2 viewPager2;
+    private Callback c;
 
-   public SliderAdapter(List<SliderItem> sliderItems, ViewPager2 viewPager2) {
+    public interface Callback {
+        void onAction(int action);
+    }
+
+   public SliderAdapter(List<SliderItem> sliderItems, ViewPager2 viewPager2, Callback c) {
         this.sliderItems = sliderItems;
         this.viewPager2 = viewPager2;
+        this.c = c;
     }
 
     @NonNull
@@ -54,6 +61,14 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SldierView
         SldierViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             this.imageView = itemView.findViewById(R.id.imageSlide);
+            this.imageView.setOnTouchListener(new View.OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    c.onAction(motionEvent.getAction());
+                    return true;
+                }
+            });
         }
         void setImage(SliderItem sliderItem) {
             imageView.setImageResource(sliderItem.getImage());
