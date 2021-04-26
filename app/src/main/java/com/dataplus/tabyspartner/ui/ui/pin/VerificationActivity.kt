@@ -17,17 +17,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
+import com.dataplus.tabyspartner.databinding.ActivityVerificationBinding
 import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.*
-
 
 class VerificationActivity : AppCompatActivity() {
     lateinit var sharedPreferences: SharedPreferences
     var pinCode = ""
     var isPinCodeCreated = false
     var fromProfile = false
-    private lateinit var binding: com.dataplus.tabyspartner.databinding.ActivityVerificationBinding
+
+    private lateinit var binding: ActivityVerificationBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         checkConnectivity()
         super.onCreate(savedInstanceState)
@@ -37,7 +39,7 @@ class VerificationActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         isPinCodeCreated = sharedPreferences.getBoolean("USER_PIN_CODE_CREATED", false)
         pinCode = sharedPreferences.getString("USER_PIN_CODE", "")!!
-        fromProfile = sharedPreferences.getBoolean("USER_FROM_PROFILE", false)
+        fromProfile = intent?.getBooleanExtra("USER_FROM_PROFILE", false) ?: false
 
         binding.root
     }
@@ -109,7 +111,6 @@ class VerificationActivity : AppCompatActivity() {
                                 binding.pinCodeText.text!!.trim().toString()
                             )
                             .putBoolean("USER_PIN_CODE_CREATED", true)
-                            .putBoolean("USER_FROM_PROFILE",false)
                             .apply()
                         Toast.makeText(
                             this@VerificationActivity,

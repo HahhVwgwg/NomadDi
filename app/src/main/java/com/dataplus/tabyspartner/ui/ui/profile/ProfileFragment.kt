@@ -20,7 +20,6 @@ class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
     private lateinit var sharedPreferences: SharedPreferences
-    private var fromProfile = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,12 +29,14 @@ class ProfileFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
 
 
-        binding.appVersion.text = getString(R.string.profile_app_version, "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+        binding.appVersion.text = getString(
+            R.string.profile_app_version,
+            "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+        )
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
 
         binding.profileFragName.text = sharedPreferences.getString("USER_SHORT_NAME", "")
         binding.profileFragMobile.text = sharedPreferences.getString("USER_PHONE_NUMBER", "")
-        fromProfile = sharedPreferences.getBoolean("USER_FROM_PROFILE",false)
         return binding.root
     }
 
@@ -52,12 +53,11 @@ class ProfileFragment : Fragment() {
                 }
                 .setPositiveButton(resources.getString(R.string.accept)) { _, _ ->
                     // Respond to positive button press
-                    sharedPreferences.edit().putBoolean("USER_FROM_PROFILE",true).apply()
                     context?.startActivity(
                         Intent(
                             requireContext(),
                             VerificationActivity::class.java
-                        )
+                        ).putExtra("USER_FROM_PROFILE", true)
                     )
                 }
                 .show()
@@ -97,7 +97,8 @@ class ProfileFragment : Fragment() {
     private fun handleFrame(fragment: Fragment) {
         val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
         fragmentTransaction.addToBackStack(fragment::class.java.simpleName)
-        fragmentTransaction.replace(R.id.navHostFragment, fragment, fragment::class.java.simpleName).commit()
+        fragmentTransaction.replace(R.id.navHostFragment, fragment, fragment::class.java.simpleName)
+            .commit()
     }
 
 }
