@@ -22,6 +22,10 @@ class WithDrawViewModel : ViewModel() {
     val responseD: LiveData<Int>
         get() = _responseD
 
+    private val _moneySource = MutableLiveData<Int>(0)
+    val moneySource: LiveData<Int>
+        get() = _moneySource
+
     private val _responseWithDrawYandex = MutableLiveData<Boolean>()
 
     // The external immutable LiveData for the request status String
@@ -61,7 +65,7 @@ class WithDrawViewModel : ViewModel() {
             })
     }
 
-    private fun withdrawCash(amount: String, card_number: String, context: Context?) {
+    private fun withdrawCash(amount: String, card_number: String, context: Context?, phone: String) {
         val externalRefId = Otp().OTP(6)
         val request = FeeRequest(
             contract_source_id = 24,
@@ -78,11 +82,23 @@ class WithDrawViewModel : ViewModel() {
                     response: Response<BukhtaWithDrawResponse>
                 ) {
                     if (response.isSuccessful) {
-                        if (context != null) {
-                            Toast.makeText(context, "Операция прошла успешна", Toast.LENGTH_SHORT)
-                                .show()
-                        }
                         _responseWithDrawYandex.value = true
+                        OwnApi.retrofitService.completeWithdraw(phone, amount)
+                            .enqueue(object : Callback<OwnBaseResponse> {
+                                override fun onResponse(
+                                    call: Call<OwnBaseResponse>,
+                                    response: Response<OwnBaseResponse>
+                                ) {
+                                    if (context != null) {
+                                        Toast.makeText(context, "Операция прошла успешна", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<OwnBaseResponse>, t: Throwable) {
+
+                                }
+                            })
                     } else {
                         if (context != null) {
                             Toast.makeText(
@@ -141,7 +157,7 @@ class WithDrawViewModel : ViewModel() {
     }
 
 
-    fun withDrawCashFromYandexViewModelFun(amount: String, card_number: String, context: Context?) {
+    fun withDrawCashFromYandexViewModelFun(amount: String, cardNumber: String, context: Context?, phone: String) {
         val parkId = "2e8584835dd64db99482b4b21f62a2ae"
         val request = WithdrawBodyRequest(
             amount = "-$amount",
@@ -167,7 +183,7 @@ class WithDrawViewModel : ViewModel() {
                             }
                             else -> _responseD.value = 0
                         }
-                        withdrawCash(amount, card_number, context)
+                        withdrawCash(amount, cardNumber, context, phone)
                     } else {
                         if (context != null) {
                             Toast.makeText(context, "Операция провалена (Yandex)", Toast.LENGTH_SHORT)
@@ -188,6 +204,10 @@ class WithDrawViewModel : ViewModel() {
 
             })
 
+    }
+
+    fun setMoneySource(source: Int) {
+        _moneySource.postValue(source)
     }
 
 }

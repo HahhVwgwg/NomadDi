@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.annotation.RequiresApi
 import androidx.core.text.isDigitsOnly
 import androidx.databinding.DataBindingUtil
@@ -28,6 +29,7 @@ import com.dataplus.tabyspartner.modal.ModalBottomSheet
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_with_draw.*
+
 
 class WithDrawFragment : Fragment() {
 
@@ -73,11 +75,26 @@ class WithDrawFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        count(60000L - (System.currentTimeMillis() - sharedPreferences.getLong("USER_WITHDRAW_TIME", 0L))) {
+        count(
+            60000L - (System.currentTimeMillis() - sharedPreferences.getLong(
+                "USER_WITHDRAW_TIME",
+                0L
+            ))
+        ) {
             sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
                 viewModel.getYandexDriversProperties(userPhoneNumber)
             }
         }
+        viewModel.moneySource.observe(viewLifecycleOwner, {
+            when (it) {
+                0 -> {
+                    binding.myBalanceTitle.text = getString(R.string.balance_menu)
+                }
+                1 -> {
+                    binding.myBalanceTitle.text = getString(R.string.partners_menu)
+                }
+            }
+        })
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -124,6 +141,19 @@ class WithDrawFragment : Fragment() {
         binding.chooseCardBtn.setOnClickListener {
             modalBottomSheetFragment.show(parentFragmentManager, modalBottomSheetFragment.tag)
         }
+        binding.myBalanceTitle.setOnClickListener {
+            val popupMenu = PopupMenu(it.context, it)
+            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.balance -> viewModel.setMoneySource(0)
+                    R.id.partners -> viewModel.setMoneySource(1)
+                }
+                true
+            }
+            popupMenu.show()
+        }
+
 
         binding.withdrawBtnWithdrawPage.setOnClickListener {
             val withDrawAmount = binding.balanceAmountWithDrawPage.text.substring(
@@ -233,17 +263,17 @@ class WithDrawFragment : Fragment() {
             sharedPreferences.edit().putLong("USER_WITHDRAW_TIME", System.currentTimeMillis())
                 .apply()
             count(60000) {}
-            viewModel.withDrawCashFromYandexViewModelFun(
-                amount = with_draw_amount.text.toString(),
-                choose_card_btn.text.toString(),
-                context
-            )
+            sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
+                viewModel.withDrawCashFromYandexViewModelFun(
+                    amount = with_draw_amount.text.toString(),
+                    cardNumber = choose_card_btn.text.toString(),
+                    context = context,
+                    phone = userPhoneNumber.replace("+", "")
+                )
+            }
             viewModel.responseWithDrawYandex.observe(viewLifecycleOwner, {
                 if (it == true) {
                     viewModel.consumeResult()
-                    sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
-                        //viewModel.getYandexDriversProperties(userPhoneNumber)
-                    }
                     MaterialAlertDialogBuilder(requireContext())
                         .setMessage(resources.getString(R.string.operation_ok))
                         .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->

@@ -6,6 +6,15 @@ data class OwnNewsResponse(
     val text: String?,
     val date_in: String?,
     val date_out: String?,
+    val photo: String?
+)
+
+data class OwnRefResponse(
+    val id: String?,
+    val out_id: String?,
+    val in_id: String?,
+    val summa: String?,
+    val create_at: String?
 )
 
 data class OwnBaseResponse(

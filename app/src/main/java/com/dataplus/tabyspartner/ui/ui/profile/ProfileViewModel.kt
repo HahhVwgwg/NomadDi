@@ -7,12 +7,14 @@ import com.dataplus.tabyspartner.networking.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ProfileViewModel : ViewModel() {
 
     val responseInvite = MutableLiveData<String>()
     val responseNews = MutableLiveData<ResultResponse<List<OwnNewsResponse>>>()
-    val responseIncomes = MutableLiveData<ResultResponse<List<String>>>()
+    val responseIncomes = MutableLiveData<ResultResponse<List<Pair<String, String>>>>()
 
     fun sendInvite(phone: String, ref: String) {
         OwnApi.retrofitService.invite(phone, ref)
@@ -50,19 +52,65 @@ class ProfileViewModel : ViewModel() {
 
     fun getIncomes(phone: String) {
         OwnApi.retrofitService.getIncome(phone)
-            .enqueue(object : Callback<OwnBaseResponse> {
+            .enqueue(object : Callback<List<OwnRefResponse>> {
                 override fun onResponse(
-                    call: Call<OwnBaseResponse>,
-                    response: Response<OwnBaseResponse>
+                    call: Call<List<OwnRefResponse>>,
+                    response: Response<List<OwnRefResponse>>
                 ) {
                     val resp = response.body()
-                    responseIncomes.postValue(ResultResponse.Success(listOfNotNull(resp?.success)))
+                    val list: MutableList<Pair<String, String>> = mutableListOf()
+                    resp?.let { l ->
+                        l.forEach { orf ->
+                            try {
+                                val date = SimpleDateFormat(
+                                    "yyyy-MM-dd HH:mm:ss",
+                                    Locale.getDefault()
+                                ).parse(orf.create_at ?: "")
+                                val cal = Calendar.getInstance()
+                                cal.time = date ?: Date()
+                                val week = cal.get(Calendar.WEEK_OF_YEAR)
+                                val year = cal.get(Calendar.YEAR)
+
+                                cal[Calendar.DAY_OF_WEEK] = Calendar.MONDAY
+                                cal[Calendar.YEAR] = year
+                                cal[Calendar.WEEK_OF_YEAR] = week
+                                val monday = cal.time
+
+                                cal[Calendar.DAY_OF_WEEK] = Calendar.SUNDAY
+                                cal[Calendar.YEAR] = year
+                                cal[Calendar.WEEK_OF_YEAR] = week
+                                val sunday = cal.time
+
+                                val sdf = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+                                val period = "${sdf.format(monday)}-${sdf.format(sunday)}"
+                                list.add(Pair(period, orf.summa ?: ""))
+                            } catch (e: Exception) {
+
+                            }
+                        }
+                    }
+                    val list2 = mutableMapOf<String, String>()
+                    list.forEach {
+                        val curr = list2[it.first]
+                        if (curr == null) {
+                            list2[it.first] = it.second
+                        } else {
+                            list2[it.first] = plus(curr, it.second)
+                        }
+                    }
+                    responseIncomes.postValue(ResultResponse.Success(list2.toList()))
                 }
 
-                override fun onFailure(call: Call<OwnBaseResponse>, t: Throwable) {
+                override fun onFailure(call: Call<List<OwnRefResponse>>, t: Throwable) {
                     responseIncomes.postValue(ResultResponse.Error(t.toString()))
                 }
             })
+    }
+
+    private fun plus(old: String?, new: String?): String {
+        val oldInt = old?.toInt() ?: 0
+        val newInt = new?.toInt() ?: 0
+        return (oldInt + newInt).toString()
     }
 
 }

@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dataplus.tabyspartner.R
 
-class IncomesAdapter(private val data: List<String>) : RecyclerView.Adapter<IncomeHolder>() {
+class IncomesAdapter(private val data: List<Pair<String, String>>) : RecyclerView.Adapter<IncomeHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = IncomeHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_income, parent, false)
@@ -24,8 +24,10 @@ class IncomesAdapter(private val data: List<String>) : RecyclerView.Adapter<Inco
 class IncomeHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private val sum: TextView = view.findViewById(R.id.sum)
+    private val period: TextView = view.findViewById(R.id.period)
 
-    fun bind(item: String) {
-        sum.text = itemView.context.getString(R.string.income_sum, item)
+    fun bind(item: Pair<String, String>) {
+        period.text = item.first
+        sum.text = itemView.context.getString(R.string.income_sum, item.second)
     }
 }

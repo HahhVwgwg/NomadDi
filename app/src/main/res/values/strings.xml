@@ -57,6 +57,8 @@
     <string name="retry">Повторить</string>
     <string name="otmenit">Отменить</string>
     <string name="notSameError">Номера карт не совпадают</string>
-    <string name="income_sum">Заработок за неделю: %s ₸</string>
+    <string name="income_sum">%s ₸</string>
+    <string name="balance_menu">Мой баланс</string>
+    <string name="partners_menu">Баланс партнерского счета</string>
 
 </resources>
