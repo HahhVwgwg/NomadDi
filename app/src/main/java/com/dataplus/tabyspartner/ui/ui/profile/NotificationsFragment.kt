@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentNewsBinding
 import com.dataplus.tabyspartner.model.ResultResponse
@@ -41,13 +42,11 @@ class NotificationsFragment : Fragment() {
                 }
             }
         })
-        binding.back.setOnClickListener {
-            activity?.onBackPressed()
-        }
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.getNews()
+        (activity as? MainActivity)?.setToolbarTitle(getString(R.string.notifications_title), true)
     }
 }

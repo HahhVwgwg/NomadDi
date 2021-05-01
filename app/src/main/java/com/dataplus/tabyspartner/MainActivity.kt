@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityMainBinding
+    private var toolbar: Toolbar? = null
 
     private var appUpdateManager: AppUpdateManager? = null
 
@@ -51,11 +53,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        toolbar = findViewById(R.id.toolbar)
         val toolbarTitle = findViewById<TextView>(R.id.toolbar_title)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        supportActionBar?.setDisplayShowHomeEnabled(false)
         supportActionBar?.title = ""
         toolbarTitle.text = "Главная"
+        toolbar?.setNavigationOnClickListener { onBackPressed() }
         checkConnectivity()
         handleFrame(MainPageFragment())
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
@@ -110,6 +115,12 @@ class MainActivity : AppCompatActivity() {
 
     fun open(@IdRes item: Int) {
         binding.bottomNavigation.selectedItemId = item
+    }
+
+    fun setToolbarTitle(title: String, needBack: Boolean) {
+        findViewById<TextView>(R.id.toolbar_title).text = title
+        supportActionBar?.setDisplayHomeAsUpEnabled(needBack)
+        supportActionBar?.setDisplayShowHomeEnabled(needBack)
     }
 
     private fun popupSnackbarForCompleteUpdate() {

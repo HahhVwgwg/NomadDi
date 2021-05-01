@@ -16,13 +16,44 @@ interface OwnApiService {
     fun getNews(): Call<List<OwnNewsResponse>>
 
     @GET("api/drivers/ref7")
-    fun getIncome(@Query("phone") phone: String): Call<List<OwnRefResponse>>
+    fun getIncome(
+        @Query("phone") phone: String
+    ): Call<List<OwnRefResponse>>
 
     @GET("api/drivers/new-ref")
-    fun invite(@Query("phone") phone: String, @Query("ref") ref: String): Call<OwnBaseResponse>
+    fun invite(
+        @Query("phone") phone: String,
+        @Query("ref") ref: String
+    ): Call<OwnBaseResponse>
+
+    @GET("api/drivers/my-balance")
+    fun getBalance(
+        @Query("phone") phone: String
+    ): Call<OwnBaseResponse>
+
+    @GET("api/drivers/his-out")
+    fun getWithdrawHistory(
+        @Query("phone") phone: String
+    ): Call<List<OwnRefResponse>>
+
+    @GET("api/drivers/his-out-ref")
+    fun getWithdrawHistoryRef(
+        @Query("phone") phone: String
+    ): Call<List<OwnRefResponse>>
 
     @GET("api/drivers/transactions-new")
-    fun completeWithdraw(@Query("phone") phone: String, @Query("sum") sum: String): Call<OwnBaseResponse>
+    fun makeWithdraw(
+        @Query("phone") phone: String,
+        @Query("sum") sum: String,
+        @Query("card") card: String
+    ): Call<OwnBaseResponse>
+
+    @GET("api/drivers/transactions-new-ref")
+    fun makeWithdrawRef(
+        @Query("phone") phone: String,
+        @Query("sum") sum: String,
+        @Query("card") card: String
+    ): Call<OwnBaseResponse>
 }
 
 object OwnApi {
@@ -39,7 +70,7 @@ object OwnApi {
         .baseUrl(BASE_URL_OWN)
         .build()
 
-    val retrofitService : OwnApiService by lazy {
+    val retrofitService: OwnApiService by lazy {
         retrofit.create(OwnApiService::class.java)
     }
 }

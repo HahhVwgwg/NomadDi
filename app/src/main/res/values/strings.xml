@@ -21,12 +21,15 @@
     <string name="invite_friend_btn">Пригласить друга</string>
     <string name="go_incomes_btn_text">Поступления от друзей</string>
     <string name="incomes_title">Поступления</string>
+    <string name="history_title">История выводов</string>
+    <string name="history_title_ref">История партнерских выводов</string>
     <string name="go_notifications_btn_text">Уведомления</string>
     <string name="notifications_title">Уведомления</string>
     <string name="profile_app_version">Версия приложения %s</string>
     <string name="btn_uploaded_title">Новая версия приложения загружена</string>
     <string name="btn_uploaded_desc">Перезапустить</string>
     <string name="with_draw_page_balance_title">Мой баланс</string>
+    <string name="with_draw_page_balance_history_title">История</string>
     <string name="amount_hint">0</string>
     <string name="bottom_sheet_dialog_title">Карта для вывода</string>
     <string name="bottom_sheet_dialog_remove_card_title">Изменить</string>

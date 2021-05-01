@@ -1,4 +1,4 @@
-package com.dataplus.tabyspartner.ui.ui.profile
+package com.dataplus.tabyspartner.ui.ui.withdraw
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -16,26 +16,34 @@ import com.dataplus.tabyspartner.databinding.FragmentIncomesBinding
 import com.dataplus.tabyspartner.model.ResultResponse
 import com.dataplus.tabyspartner.ui.ui.profile.adapter.IncomesAdapter
 
-class IncomesFragment : Fragment() {
+class HistoryFragment : Fragment() {
+
+    companion object {
+        private const val MODE = "extra.mode"
+        fun getInstance(mode: Int) = HistoryFragment().apply {
+            arguments = Bundle().apply {
+                putInt(MODE, mode)
+            }
+        }
+    }
 
     private lateinit var binding: FragmentIncomesBinding
-    private lateinit var viewModel: ProfileViewModel
+    private lateinit var viewModel: WithDrawViewModel
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_incomes, container, false)
         sharedPreferences = inflater.context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        viewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(WithDrawViewModel::class.java)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.responseIncomes.observe(viewLifecycleOwner, {
+        /*viewModel.responseIncomes.observe(viewLifecycleOwner, {
             when (it) {
                 is ResultResponse.Loading -> {
                 }
@@ -47,14 +55,18 @@ class IncomesFragment : Fragment() {
                 }
             }
 
-        })
+        })*/
     }
 
     override fun onResume() {
         super.onResume()
-        (activity as? MainActivity)?.setToolbarTitle(getString(R.string.incomes_title), true)
+        val mode = arguments?.getInt(MODE, 0) ?: 0
+        (activity as? MainActivity)?.setToolbarTitle(
+            getString(if (mode == 0) R.string.history_title else R.string.history_title_ref),
+            true
+        )
         sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
-            viewModel.getIncomes(userPhoneNumber.replace("+", ""))
+            viewModel.getHistory(userPhoneNumber.replace("+", ""), mode)
         }
     }
 }

@@ -19,6 +19,7 @@ data class OwnRefResponse(
 
 data class OwnBaseResponse(
     val success: String?,
+    val ref_balance: String?,
     val error: String?
 )
 

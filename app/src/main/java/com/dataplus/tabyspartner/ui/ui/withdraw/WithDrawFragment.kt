@@ -16,12 +16,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.text.isDigitsOnly
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentMainPageBinding
 import com.dataplus.tabyspartner.databinding.FragmentWithDrawBinding
@@ -29,7 +31,6 @@ import com.dataplus.tabyspartner.modal.ModalBottomSheet
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_with_draw.*
-
 
 class WithDrawFragment : Fragment() {
 
@@ -58,13 +59,8 @@ class WithDrawFragment : Fragment() {
             inflater, R.layout.fragment_main_page, container, false
         )
 
-        viewModel = ViewModelProvider(this).get(WithDrawViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(WithDrawViewModel::class.java)
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
-
-        viewModel.responseD.observe(viewLifecycleOwner, Observer {
-            it ?: return@Observer
-            binding.balanceAmountWithDrawPage.text = String.format("%s %s", "$it", "\u20b8")
-        })
 
         model = activity?.run {
             ViewModelProvider(this).get(ModalBottomSheet.SharedViewModel::class.java)
@@ -82,24 +78,51 @@ class WithDrawFragment : Fragment() {
             ))
         ) {
             sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
-                viewModel.getYandexDriversProperties(userPhoneNumber)
+                viewModel.getDriversProperties(userPhoneNumber.replace("+", ""))
             }
         }
         viewModel.moneySource.observe(viewLifecycleOwner, {
+            val balance = viewModel.balance.value
             when (it) {
                 0 -> {
                     binding.myBalanceTitle.text = getString(R.string.balance_menu)
+                    binding.balanceAmountWithDrawPage.text = String.format("%s %s",
+                        balance?.first ?: "0", "\u20b8")
                 }
                 1 -> {
                     binding.myBalanceTitle.text = getString(R.string.partners_menu)
+                    binding.balanceAmountWithDrawPage.text = String.format("%s %s",
+                        balance?.second ?: "0", "\u20b8")
                 }
             }
         })
+        viewModel.balance.observe(viewLifecycleOwner, Observer {
+            it ?: return@Observer
+            when (viewModel.moneySource.value) {
+                0 -> {
+                    binding.balanceAmountWithDrawPage.text = String.format("%s %s",
+                        it.first, "\u20b8")
+                }
+                1 -> {
+                    binding.balanceAmountWithDrawPage.text = String.format("%s %s",
+                        it.second, "\u20b8")
+                }
+            }
+        })
+        viewModel.error.observe(viewLifecycleOwner, Observer {
+            it ?: return@Observer
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            viewModel.consumeError()
+        })
+        binding.myBalanceHistory.setOnClickListener {
+            handleFrame(HistoryFragment.getInstance(viewModel.moneySource.value ?: 0))
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onResume() {
         super.onResume()
+        (activity as? MainActivity)?.setToolbarTitle("Вывод средств", false)
         model.selected.observe(viewLifecycleOwner, { item ->
             binding.chooseCardBtn.text = item
         })
@@ -144,8 +167,8 @@ class WithDrawFragment : Fragment() {
         binding.myBalanceTitle.setOnClickListener {
             val popupMenu = PopupMenu(it.context, it)
             popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
-            popupMenu.setOnMenuItemClickListener {
-                when (it.itemId) {
+            popupMenu.setOnMenuItemClickListener { mi ->
+                when (mi.itemId) {
                     R.id.balance -> viewModel.setMoneySource(0)
                     R.id.partners -> viewModel.setMoneySource(1)
                 }
@@ -264,14 +287,13 @@ class WithDrawFragment : Fragment() {
                 .apply()
             count(60000) {}
             sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
-                viewModel.withDrawCashFromYandexViewModelFun(
+                viewModel.withDrawCashViewModelFun(
                     amount = with_draw_amount.text.toString(),
                     cardNumber = choose_card_btn.text.toString(),
-                    context = context,
                     phone = userPhoneNumber.replace("+", "")
                 )
             }
-            viewModel.responseWithDrawYandex.observe(viewLifecycleOwner, {
+            viewModel.responseWithDraw.observe(viewLifecycleOwner, {
                 if (it == true) {
                     viewModel.consumeResult()
                     MaterialAlertDialogBuilder(requireContext())
@@ -320,5 +342,12 @@ class WithDrawFragment : Fragment() {
 
         }
         timer?.start()
+    }
+
+    private fun handleFrame(fragment: Fragment) {
+        val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+        fragmentTransaction.addToBackStack(fragment::class.java.simpleName)
+        fragmentTransaction.replace(R.id.navHostFragment, fragment, fragment::class.java.simpleName)
+            .commit()
     }
 }

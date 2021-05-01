@@ -13,6 +13,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentInviteBinding
 
@@ -33,13 +34,15 @@ class InviteFriendFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.setToolbarTitle(getString(R.string.invite_friend_title), true)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.inputPhone.addTextChangedListener {
 
-        }
-        binding.back.setOnClickListener {
-            activity?.onBackPressed()
         }
         binding.sendInviteBtn.setOnClickListener {
             val ref = binding.inputPhone.text.toString()

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.dataplus.tabyspartner.BuildConfig
+import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentProfileBinding
 import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
@@ -43,6 +44,7 @@ class ProfileFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        (activity as? MainActivity)?.setToolbarTitle("Профиль", false)
         binding.changePinCodeBtn.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(resources.getString(R.string.change_pincode_title))
