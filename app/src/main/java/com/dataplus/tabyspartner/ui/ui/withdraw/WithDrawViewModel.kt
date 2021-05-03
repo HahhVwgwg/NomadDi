@@ -12,6 +12,9 @@ import retrofit2.Response
 
 class WithDrawViewModel : ViewModel() {
 
+    val responseHistory = MutableLiveData<ResultResponse<List<OwnWithdrawResponse>>>()
+    val responseHistoryRef = MutableLiveData<ResultResponse<List<OwnWithdrawResponse>>>()
+
     private val _balance = MutableLiveData<Pair<String, String>>()
     val balance: LiveData<Pair<String, String>>
         get() = _balance
@@ -122,19 +125,27 @@ class WithDrawViewModel : ViewModel() {
         } else {
             OwnApi.retrofitService.getWithdrawHistoryRef(phone)
         }
-        call.enqueue(object : Callback<List<OwnRefResponse>> {
-                override fun onResponse(
-                    call: Call<List<OwnRefResponse>>,
-                    response: Response<List<OwnRefResponse>>
-                ) {
-                    val resp = response.body()
-                   // responseNews.postValue(ResultResponse.Success(resp ?: listOf()))
+        call.enqueue(object : Callback<ListResponse<OwnWithdrawResponse>> {
+            override fun onResponse(
+                call: Call<ListResponse<OwnWithdrawResponse>>,
+                response: Response<ListResponse<OwnWithdrawResponse>>
+            ) {
+                val resp = response.body()
+                if (mode == 0) {
+                    responseHistory.postValue(ResultResponse.Success(resp?.list ?: listOf()))
+                } else {
+                    responseHistoryRef.postValue(ResultResponse.Success(resp?.list ?: listOf()))
                 }
+            }
 
-                override fun onFailure(call: Call<List<OwnRefResponse>>, t: Throwable) {
-                   // responseNews.postValue(ResultResponse.Error(t.toString()))
+            override fun onFailure(call: Call<ListResponse<OwnWithdrawResponse>>, t: Throwable) {
+                if (mode == 0) {
+                    responseHistory.postValue(ResultResponse.Error(t.toString()))
+                } else {
+                    responseHistoryRef.postValue(ResultResponse.Error(t.toString()))
                 }
-            })
+            }
+        })
     }
 
 }

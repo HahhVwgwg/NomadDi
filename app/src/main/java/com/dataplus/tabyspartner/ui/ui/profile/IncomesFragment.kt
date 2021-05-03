@@ -41,6 +41,7 @@ class IncomesFragment : Fragment() {
                 }
                 is ResultResponse.Success -> {
                     binding.list.adapter = IncomesAdapter(it.data)
+                    binding.empty.visibility = if (it.data.isNullOrEmpty()) View.VISIBLE else View.GONE
                 }
                 is ResultResponse.Error -> {
                     Toast.makeText(view.context, it.message, Toast.LENGTH_SHORT).show()

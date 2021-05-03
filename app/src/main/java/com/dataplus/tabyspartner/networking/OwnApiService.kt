@@ -18,7 +18,7 @@ interface OwnApiService {
     @GET("api/drivers/ref7")
     fun getIncome(
         @Query("phone") phone: String
-    ): Call<List<OwnRefResponse>>
+    ): Call<ListResponse<OwnRefResponse>>
 
     @GET("api/drivers/new-ref")
     fun invite(
@@ -34,12 +34,12 @@ interface OwnApiService {
     @GET("api/drivers/his-out")
     fun getWithdrawHistory(
         @Query("phone") phone: String
-    ): Call<List<OwnRefResponse>>
+    ): Call<ListResponse<OwnWithdrawResponse>>
 
     @GET("api/drivers/his-out-ref")
     fun getWithdrawHistoryRef(
         @Query("phone") phone: String
-    ): Call<List<OwnRefResponse>>
+    ): Call<ListResponse<OwnWithdrawResponse>>
 
     @GET("api/drivers/transactions-new")
     fun makeWithdraw(

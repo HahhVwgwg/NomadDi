@@ -14,7 +14,7 @@ import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentIncomesBinding
 import com.dataplus.tabyspartner.model.ResultResponse
-import com.dataplus.tabyspartner.ui.ui.profile.adapter.IncomesAdapter
+import com.dataplus.tabyspartner.ui.ui.withdraw.adapter.HistoryAdapter
 
 class HistoryFragment : Fragment() {
 
@@ -43,19 +43,22 @@ class HistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /*viewModel.responseIncomes.observe(viewLifecycleOwner, {
+        binding.empty.text = "Выводов еще не было"
+        val mode = arguments?.getInt(MODE, 0) ?: 0
+        (if (mode == 0) viewModel.responseHistory else viewModel.responseHistoryRef).observe(viewLifecycleOwner, {
             when (it) {
                 is ResultResponse.Loading -> {
                 }
                 is ResultResponse.Success -> {
-                    binding.list.adapter = IncomesAdapter(it.data)
+                    binding.list.adapter = HistoryAdapter(it.data, mode)
+                    binding.empty.visibility = if (it.data.isNullOrEmpty()) View.VISIBLE else View.GONE
                 }
                 is ResultResponse.Error -> {
                     Toast.makeText(view.context, it.message, Toast.LENGTH_SHORT).show()
                 }
             }
 
-        })*/
+        })
     }
 
     override fun onResume() {

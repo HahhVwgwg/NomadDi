@@ -22,6 +22,10 @@
     <string name="go_incomes_btn_text">Поступления от друзей</string>
     <string name="incomes_title">Поступления</string>
     <string name="history_title">История выводов</string>
+    <string name="history_card_name">Название карты</string>
+    <string name="history_account">Основной баланс</string>
+    <string name="history_account_partner">Партнерский баланс</string>
+    <string name="history_card_mask">**** **** **** %s</string>
     <string name="history_title_ref">История партнерских выводов</string>
     <string name="go_notifications_btn_text">Уведомления</string>
     <string name="notifications_title">Уведомления</string>

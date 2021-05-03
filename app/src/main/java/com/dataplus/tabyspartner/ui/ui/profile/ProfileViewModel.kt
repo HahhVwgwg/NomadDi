@@ -52,14 +52,14 @@ class ProfileViewModel : ViewModel() {
 
     fun getIncomes(phone: String) {
         OwnApi.retrofitService.getIncome(phone)
-            .enqueue(object : Callback<List<OwnRefResponse>> {
+            .enqueue(object : Callback<ListResponse<OwnRefResponse>> {
                 override fun onResponse(
-                    call: Call<List<OwnRefResponse>>,
-                    response: Response<List<OwnRefResponse>>
+                    call: Call<ListResponse<OwnRefResponse>>,
+                    response: Response<ListResponse<OwnRefResponse>>
                 ) {
                     val resp = response.body()
                     val list: MutableList<Pair<String, String>> = mutableListOf()
-                    resp?.let { l ->
+                    resp?.list?.let { l ->
                         l.forEach { orf ->
                             try {
                                 val date = SimpleDateFormat(
@@ -101,7 +101,7 @@ class ProfileViewModel : ViewModel() {
                     responseIncomes.postValue(ResultResponse.Success(list2.toList()))
                 }
 
-                override fun onFailure(call: Call<List<OwnRefResponse>>, t: Throwable) {
+                override fun onFailure(call: Call<ListResponse<OwnRefResponse>>, t: Throwable) {
                     responseIncomes.postValue(ResultResponse.Error(t.toString()))
                 }
             })
