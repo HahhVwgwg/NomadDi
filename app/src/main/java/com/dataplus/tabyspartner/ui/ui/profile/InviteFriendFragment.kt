@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.telephony.SmsManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,6 @@ import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentInviteBinding
 import com.redmadrobot.inputmask.MaskedTextChangedListener
-
 
 class InviteFriendFragment : Fragment() {
 
@@ -99,9 +99,9 @@ class InviteFriendFragment : Fragment() {
     private fun sendSms(phone: String, ref: String) {
         try {
             val smsMgrVar: SmsManager = SmsManager.getDefault()
-            smsMgrVar.sendTextMessage(ref, null, "Рекомендую \"Tabys Go\"\n" +
-                    "https://play.google.com/store/apps/details?id=com.dataplus.tabyspartner", null, null)
+            smsMgrVar.sendTextMessage("+$ref", null, "https://play.google.com/store/apps/details?id=com.dataplus.tabyspartner", null, null)
             viewModel.sendInvite(phone, ref)
+            Log.d("okh", "sms $ref")
         } catch (e: Exception) {
             Toast.makeText(requireContext(), e.toString(), Toast.LENGTH_SHORT).show()
         }
