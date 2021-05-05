@@ -91,12 +91,12 @@ class WithDrawViewModel : ViewModel() {
                 response: Response<OwnBaseResponse>
             ) {
                 val res = response.body()
-                if (res?.error.isNullOrEmpty()) {
+                if (response.isSuccessful && res?.error.isNullOrEmpty()) {
                     _responseWithDraw.postValue(true)
                     getDriversProperties(phone)
                 } else {
                     _responseWithDraw.postValue(false)
-                    _error.postValue(res?.error)
+                    _error.postValue(res?.error ?: response.errorBody().toString())
                 }
             }
 

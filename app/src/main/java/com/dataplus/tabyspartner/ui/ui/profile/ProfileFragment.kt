@@ -3,10 +3,12 @@ package com.dataplus.tabyspartner.ui.ui.profile
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.dataplus.tabyspartner.BuildConfig
@@ -15,13 +17,16 @@ import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentProfileBinding
 import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity
+import com.dataplus.tabyspartner.utils.DatabaseHandler
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var myDb: DatabaseHandler
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,13 +40,14 @@ class ProfileFragment : Fragment() {
             "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
         )
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
-
+        myDb = DatabaseHandler(requireContext())
         binding.profileFragName.text = sharedPreferences.getString("USER_SHORT_NAME", "")
         binding.profileFragMobile.text = sharedPreferences.getString("USER_PHONE_NUMBER", "")
         return binding.root
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onResume() {
         super.onResume()
         (activity as? MainActivity)?.setToolbarTitle("Профиль", false)
@@ -84,6 +90,7 @@ class ProfileFragment : Fragment() {
                 .setPositiveButton(resources.getString(R.string.accept)) { _, _ ->
                     // Respond to positive button press
                     sharedPreferences.edit().clear().apply()
+                    myDb.deleteAllData()
                     context?.startActivity(
                         Intent(
                             requireContext(),

@@ -179,10 +179,7 @@ class WithDrawFragment : Fragment() {
 
 
         binding.withdrawBtnWithdrawPage.setOnClickListener {
-            val withDrawAmount = binding.balanceAmountWithDrawPage.text.substring(
-                0,
-                binding.balanceAmountWithDrawPage.text.length - 2
-            )
+            val withDrawAmount = binding.balanceAmountWithDrawPage.text.substring(0, binding.balanceAmountWithDrawPage.text.indexOf("."))
             if (!binding.chooseCardBtn.text.toString().isDigitsOnly()) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("Пожалуйста, выберите вашу карту")

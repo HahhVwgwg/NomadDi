@@ -34,7 +34,7 @@ class HistoryHolder(view: View, private val mode: Int) : RecyclerView.ViewHolder
     private val account: TextView = view.findViewById(R.id.account)
 
     fun bind(item: OwnWithdrawResponse) {
-        card.text = itemView.context.getString(R.string.history_card_mask, item.card)
+        card.text = item.card
         account.text =
             itemView.context.getString(if (mode == 0) R.string.history_account else R.string.history_account_partner)
         date.text = SimpleDateFormat(
