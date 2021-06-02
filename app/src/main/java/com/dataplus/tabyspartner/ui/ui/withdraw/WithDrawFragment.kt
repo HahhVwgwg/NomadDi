@@ -164,18 +164,6 @@ class WithDrawFragment : Fragment() {
         binding.chooseCardBtn.setOnClickListener {
             modalBottomSheetFragment.show(parentFragmentManager, modalBottomSheetFragment.tag)
         }
-        binding.myBalanceTitle.setOnClickListener {
-            val popupMenu = PopupMenu(it.context, it)
-            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
-            popupMenu.setOnMenuItemClickListener { mi ->
-                when (mi.itemId) {
-                    R.id.balance -> viewModel.setMoneySource(0)
-                    R.id.partners -> viewModel.setMoneySource(1)
-                }
-                true
-            }
-            popupMenu.show()
-        }
 
 
         binding.withdrawBtnWithdrawPage.setOnClickListener {

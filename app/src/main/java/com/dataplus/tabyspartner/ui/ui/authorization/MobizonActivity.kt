@@ -81,7 +81,7 @@ class MobizonActivity : AppCompatActivity() {
             binding.otpProgressBar.visibility = View.VISIBLE
             if (binding.otpTextView.text.toString() == otp) {
                 sharedPreferences.edit()
-                    .putBoolean("USERPHONE_RfEGISTERED", true)
+                    .putBoolean("USERPHONE_REGISTERED", true)
                     .putBoolean("USER_PIN_CODE_CREATED", false).apply()
                 startActivity(Intent(this, VerificationActivity()::class.java))
                 finish()
@@ -93,7 +93,7 @@ class MobizonActivity : AppCompatActivity() {
 
     private fun resetTimer() {
         timer?.cancel()
-        timer = object : CountDownTimer(5000, 1000) {
+        timer = object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 binding.sendCodeAgain.text =
                     "Отправить повторно через " + millisUntilFinished / 1000 + " сек"
