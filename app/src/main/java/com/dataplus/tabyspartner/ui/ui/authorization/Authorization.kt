@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.ActivityAuthorizationBinding
-import com.dataplus.tabyspartner.main.AuthorizationViewModel
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity
 
 

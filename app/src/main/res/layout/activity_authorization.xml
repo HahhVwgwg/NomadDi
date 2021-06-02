@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.dataplus.tabyspartner.main.AuthorizationViewModel" />
+            type="com.dataplus.tabyspartner.ui.ui.authorization.AuthorizationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

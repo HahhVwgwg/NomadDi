@@ -18,15 +18,18 @@
         android:theme="@style/Theme.TabysPartner">
         <activity
             android:name="com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity2"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity android:name="com.dataplus.tabyspartner.ui.ui.withdraw.CardFormActivity"
             android:screenOrientation="portrait"
             />
         <activity
             android:name="com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.dataplus.tabyspartner.ui.ui.authorization.MobizonActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.dataplus.tabyspartner.ui.ui.authorization.Authorization"

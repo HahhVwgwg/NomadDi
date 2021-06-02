@@ -43,17 +43,25 @@ class DatabaseHandler(
         onCreate(db)
     }
 
-    fun insertTask(creditCard: CreditCard) {
+    fun insertTask(creditCard: CreditCard): Boolean {
         val db = this.writableDatabase
         val cv = ContentValues()
         cv.put(CREDIT_CARD_NAME, creditCard.creditCardName)
         cv.put(CREDIT_CARD_NUMBER, creditCard.creditCardNumber)
+        val creditCards = getAllCreditCards()
+        for (item in creditCards!!){
+            if (item.creditCardNumber == creditCard.creditCardNumber){
+                Toast.makeText(context,"Такая карта уже добавлена!",Toast.LENGTH_SHORT).show()
+                return false
+            }
+        }
         val result = db?.insert(CREDIT_CARD_TABLE, null, cv)
         if(result?.toInt() == -1) {
             Toast.makeText(context,"Ошибка!",Toast.LENGTH_SHORT).show()
         }else {
             Toast.makeText(context,"Карта успешно добавлена",Toast.LENGTH_SHORT).show()
         }
+        return true
     }
 
     fun getAllCreditCards(): List<CreditCard>? {

@@ -91,18 +91,20 @@ class CardFormActivity : AppCompatActivity() {
                     }
                     .show()
             } else {
-                if(number.equals(numberRepeat)) {
+                if (number == numberRepeat) {
                     val db = DatabaseHandler(this)
-                    db.insertTask(
-                        CreditCard(
-                            1,
-                            binding.cardNameEditText.text.toString().trim(),
-                            number.trim()
+                    if (db.insertTask(
+                            CreditCard(
+                                1,
+                                binding.cardNameEditText.text.toString().trim(),
+                                number.trim()
+                            )
                         )
-                    )
-                    setResult(Activity.RESULT_OK)
-                    onBackPressed()
-                }else {
+                    ) {
+                        setResult(Activity.RESULT_OK)
+                        onBackPressed()
+                    }
+                } else {
                     MaterialAlertDialogBuilder(this)
                         .setTitle(resources.getString(R.string.notSameError))
                         .setPositiveButton(resources.getString(R.string.accept2)) { dialog, which ->

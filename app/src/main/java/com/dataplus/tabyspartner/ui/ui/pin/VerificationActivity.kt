@@ -42,12 +42,7 @@ class VerificationActivity : AppCompatActivity() {
         fromProfile = intent?.getBooleanExtra("USER_FROM_PROFILE", false) ?: false
 
         binding.root
-    }
 
-
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onResume() {
-        super.onResume()
 
         if (fromProfile) {
             var firstInput = ""
@@ -238,6 +233,12 @@ class VerificationActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onResume() {
+        super.onResume()
     }
 
     private fun checkConnectivity() {

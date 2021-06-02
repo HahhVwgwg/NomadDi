@@ -179,7 +179,12 @@ class WithDrawFragment : Fragment() {
 
 
         binding.withdrawBtnWithdrawPage.setOnClickListener {
-            val withDrawAmount = binding.balanceAmountWithDrawPage.text.substring(0, binding.balanceAmountWithDrawPage.text.indexOf("."))
+            var withDrawAmount = 0
+            try {
+                withDrawAmount = binding.balanceAmountWithDrawPage.text.substring(0, binding.balanceAmountWithDrawPage.text.indexOf(".")).toInt()
+            }catch (e: StringIndexOutOfBoundsException ){
+            }
+
             if (!binding.chooseCardBtn.text.toString().isDigitsOnly()) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("Пожалуйста, выберите вашу карту")
@@ -205,7 +210,7 @@ class WithDrawFragment : Fragment() {
             } else if (binding.withDrawAmount.text.toString()
                     .toInt() <= 199
             ) {
-                if (withDrawAmount.toInt() - binding.withDrawAmount.text.toString().toInt() < 100) {
+                if (withDrawAmount - binding.withDrawAmount.text.toString().toInt() < 100) {
                     val dialogBuilder = AlertDialog.Builder(this.requireContext())
                     dialogBuilder.setMessage("На вашем балансе должно оставаться не менее 100 тг, чтобы вы могли получать \"наличные\" заказы.")
                         .setCancelable(false)
@@ -230,7 +235,7 @@ class WithDrawFragment : Fragment() {
                     alert.setTitle("Вывод средств невозможен")
                     alert.show()
                 }
-            } else if (binding.withDrawAmount.text.toString().toInt() == withDrawAmount.toInt()) {
+            } else if (binding.withDrawAmount.text.toString().toInt() == withDrawAmount) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("На вашем балансе должно оставаться не менее 100 тг, чтобы вы могли получать \"наличные\" заказы.")
                     .setCancelable(false)
@@ -240,7 +245,7 @@ class WithDrawFragment : Fragment() {
                 val alert = dialogBuilder.create()
                 alert.setTitle("Вывод средств невозможен")
                 alert.show()
-            } else if (binding.withDrawAmount.text.toString().toInt() > withDrawAmount.toInt()) {
+            } else if (binding.withDrawAmount.text.toString().toInt() > withDrawAmount) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("Не достаточно средств")
                     .setCancelable(false)
@@ -251,7 +256,7 @@ class WithDrawFragment : Fragment() {
                 alert.setTitle("Вывод средств невозможен")
                 alert.show()
             } else if (binding.withDrawAmount.text.toString().toInt() > 199) {
-                if (withDrawAmount.toInt() - binding.withDrawAmount.text.toString()
+                if (withDrawAmount - binding.withDrawAmount.text.toString()
                         .toInt() < 100
                 ) {
                     val dialogBuilder = AlertDialog.Builder(this.requireContext())

@@ -1,4 +1,4 @@
-package com.dataplus.tabyspartner.main
+package com.dataplus.tabyspartner.ui.ui.authorization
 
 import android.content.Context
 import android.util.Log
