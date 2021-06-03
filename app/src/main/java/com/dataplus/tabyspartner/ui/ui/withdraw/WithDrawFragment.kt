@@ -167,10 +167,10 @@ class WithDrawFragment : Fragment() {
 
 
         binding.withdrawBtnWithdrawPage.setOnClickListener {
-            var withDrawAmount = 0
-            try {
-                withDrawAmount = binding.balanceAmountWithDrawPage.text.substring(0, binding.balanceAmountWithDrawPage.text.indexOf(".")).toInt()
+            val withDrawAmount: Int = try {
+                binding.balanceAmountWithDrawPage.text.substring(0, binding.balanceAmountWithDrawPage.text.indexOf(".")).toInt()
             }catch (e: StringIndexOutOfBoundsException ){
+                binding.balanceAmountWithDrawPage.text.substring(0, binding.balanceAmountWithDrawPage.text.length - 2).toInt()
             }
 
             if (!binding.chooseCardBtn.text.toString().isDigitsOnly()) {
