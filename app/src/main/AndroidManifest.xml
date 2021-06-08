@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.dataplus.tabyspartner">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
-        android:usesCleartextTraffic="true"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TabysPartner">
+        android:name="com.dataplus.tabyspartner.Application"
+        android:theme="@style/Theme.TabysPartner"
+        android:usesCleartextTraffic="true">
         <activity
             android:name="com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity2"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
-        <activity android:name="com.dataplus.tabyspartner.ui.ui.withdraw.CardFormActivity"
             android:screenOrientation="portrait"
-            />
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.dataplus.tabyspartner.ui.ui.withdraw.CardFormActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.dataplus.tabyspartner.ui.ui.authorization.MobizonActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.dataplus.tabyspartner.ui.ui.authorization.Authorization"
             android:screenOrientation="portrait">
@@ -43,8 +45,7 @@
         <activity
             android:name="com.dataplus.tabyspartner.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>
