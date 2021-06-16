@@ -66,6 +66,9 @@ class Authorization : AppCompatActivity() {
                 }else if(phone_number.trim().length != 10){
                     binding.loginFormFeedback.text = "Пожалуйста введите корректный номер xxx-xxx-xx-xx"
                     binding.loginFormFeedback.visibility = View.VISIBLE
+                } else if(phone_number.trim() == "7471053955" || phone_number.trim() == "7052664639"){
+                    binding.loginFormFeedback.text = "Ваш номер заблокирован"
+                    binding.loginFormFeedback.visibility = View.VISIBLE
                 } else {
                     //binding.loginProgressBar.visibility = View.VISIBLE
                     //binding.generateBtn.isEnabled = false
