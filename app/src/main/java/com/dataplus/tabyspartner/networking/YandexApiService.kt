@@ -1,5 +1,6 @@
 package com.dataplus.tabyspartner.networking
 
+import com.google.gson.JsonObject
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -15,6 +16,8 @@ interface YandexApiService {
     @POST("/v1/parks/driver-profiles/list")
     fun getUser(@Body request: GetSomethingRequest): Call<DriverProfilesResponse>
 }
+
+
 
 object YandexApi {
     private val client = OkHttpClient.Builder().apply {

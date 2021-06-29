@@ -67,5 +67,6 @@
     <string name="income_sum">%s ₸</string>
     <string name="balance_menu">Мой счет</string>
     <string name="partners_menu">Партнерский счет</string>
+    <string name="default_notification_channel_id">10003</string>
 
 </resources>

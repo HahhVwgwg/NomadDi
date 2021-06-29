@@ -28,6 +28,7 @@ import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentMainPageBinding
 import com.dataplus.tabyspartner.databinding.FragmentWithDrawBinding
 import com.dataplus.tabyspartner.modal.ModalBottomSheet
+import com.dataplus.tabyspartner.networking.CardOtp
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_with_draw.*
@@ -38,6 +39,7 @@ class WithDrawFragment : Fragment() {
         private const val TAG = "WithDrawFragment"
     }
 
+    private var cardId: Int = -1
     private lateinit var binding: FragmentWithDrawBinding
     private lateinit var viewModel: WithDrawViewModel
     private lateinit var bindingMainPageBinding: FragmentMainPageBinding
@@ -65,34 +67,38 @@ class WithDrawFragment : Fragment() {
         model = activity?.run {
             ViewModelProvider(this).get(ModalBottomSheet.SharedViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
-        model.selected.postValue("Выберите карту")
+        val cardOtp = CardOtp()
+        cardOtp.lastFour = "Выберите карту"
+        model.selected.postValue(cardOtp)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         count(
-            60000L - (System.currentTimeMillis() - sharedPreferences.getLong(
+            10000L - (System.currentTimeMillis() - sharedPreferences.getLong(
                 "USER_WITHDRAW_TIME",
                 0L
             ))
         ) {
-            sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
-                viewModel.getDriversProperties(userPhoneNumber.replace("+", ""))
-            }
+            viewModel.getProfile()
         }
         viewModel.moneySource.observe(viewLifecycleOwner, {
             val balance = viewModel.balance.value
             when (it) {
                 0 -> {
                     binding.myBalanceTitle.text = getString(R.string.balance_menu)
-                    binding.balanceAmountWithDrawPage.text = String.format("%s %s",
-                        balance?.first ?: "0", "\u20b8")
+                    binding.balanceAmountWithDrawPage.text = String.format(
+                        "%s %s",
+                        balance?.first ?: "0", "\u20b8"
+                    )
                 }
                 1 -> {
                     binding.myBalanceTitle.text = getString(R.string.partners_menu)
-                    binding.balanceAmountWithDrawPage.text = String.format("%s %s",
-                        balance?.second ?: "0", "\u20b8")
+                    binding.balanceAmountWithDrawPage.text = String.format(
+                        "%s %s",
+                        balance?.second ?: "0", "\u20b8"
+                    )
                 }
             }
         })
@@ -100,12 +106,16 @@ class WithDrawFragment : Fragment() {
             it ?: return@Observer
             when (viewModel.moneySource.value) {
                 0 -> {
-                    binding.balanceAmountWithDrawPage.text = String.format("%s %s",
-                        it.first, "\u20b8")
+                    binding.balanceAmountWithDrawPage.text = String.format(
+                        "%s %s",
+                        it.first, "\u20b8"
+                    )
                 }
                 1 -> {
-                    binding.balanceAmountWithDrawPage.text = String.format("%s %s",
-                        it.second, "\u20b8")
+                    binding.balanceAmountWithDrawPage.text = String.format(
+                        "%s %s",
+                        it.second, "\u20b8"
+                    )
                 }
             }
         })
@@ -124,7 +134,8 @@ class WithDrawFragment : Fragment() {
         super.onResume()
         (activity as? MainActivity)?.setToolbarTitle("Вывод средств", false)
         model.selected.observe(viewLifecycleOwner, { item ->
-            binding.chooseCardBtn.text = item
+            binding.chooseCardBtn.text = item.lastFour
+            cardId = item.id
         })
         binding.withDrawAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -133,10 +144,10 @@ class WithDrawFragment : Fragment() {
             @SuppressLint("SetTextI18n")
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (binding.withDrawAmount.text.toString() == "" || binding.withDrawAmount.text.toString()
-                        .toInt() < 130
+                        .toInt() < 150
                 ) {
                     binding.amountFee.text =
-                        "Комиссия 130 ₸"
+                        "Комиссия 150 ₸"
                     binding.withdrawBtnWithdrawPage.text =
                         "Перевести 0 \u20b8"
                 } else if (binding.withDrawAmount.text.toString().length > 4) {
@@ -151,9 +162,9 @@ class WithDrawFragment : Fragment() {
                         } \u20b8"
                 } else {
                     binding.amountFee.text =
-                        "Комиссия 130 ₸"
+                        "Комиссия 150 ₸"
                     binding.withdrawBtnWithdrawPage.text =
-                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - 130} \u20b8"
+                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - 150} \u20b8"
                 }
             }
 
@@ -168,9 +179,15 @@ class WithDrawFragment : Fragment() {
 
         binding.withdrawBtnWithdrawPage.setOnClickListener {
             val withDrawAmount: Int = try {
-                binding.balanceAmountWithDrawPage.text.substring(0, binding.balanceAmountWithDrawPage.text.indexOf(".")).toInt()
-            }catch (e: StringIndexOutOfBoundsException ){
-                binding.balanceAmountWithDrawPage.text.substring(0, binding.balanceAmountWithDrawPage.text.length - 2).toInt()
+                binding.balanceAmountWithDrawPage.text.substring(
+                    0,
+                    binding.balanceAmountWithDrawPage.text.indexOf(".")
+                ).toInt()
+            } catch (e: StringIndexOutOfBoundsException) {
+                binding.balanceAmountWithDrawPage.text.substring(
+                    0,
+                    binding.balanceAmountWithDrawPage.text.length - 2
+                ).toInt()
             }
 
             if (!binding.chooseCardBtn.text.toString().isDigitsOnly()) {
@@ -269,23 +286,38 @@ class WithDrawFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             sharedPreferences.edit().putLong("USER_WITHDRAW_TIME", System.currentTimeMillis())
                 .apply()
-            count(60000) {}
-            sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
-                viewModel.withDrawCashViewModelFun(
-                    amount = with_draw_amount.text.toString(),
-                    cardNumber = choose_card_btn.text.toString(),
-                    phone = userPhoneNumber.replace("+", "")
-                )
-            }
+            count(10000) {}
+//            sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
+////                viewModel.withDrawCashViewModelFun(
+////                    amount = with_draw_amount.text.toString(),
+////                    cardNumber = choose_card_btn.text.toString(),
+////                    phone = userPhoneNumber.replace("+", "")
+////                )
+//                val hashMap2 = HashMap<String, Any>()
+//                hashMap2["card_id"] = "4"
+//                hashMap2["amount"] = with_draw_amount.text.toString()
+//                viewModel.withdraw(hashMap2)
+//            }
+            val hashMap2 = HashMap<String, Any>()
+            hashMap2["card_id"] = cardId
+            hashMap2["amount"] = with_draw_amount.text.toString()
+            viewModel.withdraw(hashMap2)
             viewModel.responseWithDraw.observe(viewLifecycleOwner, {
                 if (it == true) {
+                    viewModel.getProfile()
                     viewModel.consumeResult()
+                    binding.amountFee.text = ""
+                    with_draw_amount.text.clear()
+                    with_draw_amount.text = Editable.Factory.getInstance().newEditable("0")
+                    binding.withdrawBtnWithdrawPage.text =
+                        "Перевести 0 \u20b8"
                     MaterialAlertDialogBuilder(requireContext())
                         .setMessage(resources.getString(R.string.operation_ok))
                         .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
@@ -301,7 +333,7 @@ class WithDrawFragment : Fragment() {
     private fun count(delay: Long, checkYandex: () -> Unit) {
         timer?.cancel()
         Log.d(TAG, "count $delay")
-        if (delay < 1000 || delay > 60000) {
+        if (delay < 1000 || delay > 10000) {
             checkYandex.invoke()
             return
         }

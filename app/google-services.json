@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "326017968386",
+    "project_id": "partners-go",
+    "storage_bucket": "partners-go.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:326017968386:android:a46a2604bb05c04edbba1b",
+        "android_client_info": {
+          "package_name": "com.dataplus.partnersgo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "326017968386-ev2hpncp4t40tgraul6c7ibja43q73fm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUWjOvOEGXqFCf18Q96mWHJNMCftQqwsM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "326017968386-ev2hpncp4t40tgraul6c7ibja43q73fm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

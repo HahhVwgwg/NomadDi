@@ -7,10 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.networking.OwnWithdrawResponse
+import com.dataplus.tabyspartner.networking.WalletTransation
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HistoryAdapter(private val data: List<OwnWithdrawResponse>, private val mode: Int) :
+class HistoryAdapter(private val data: List<WalletTransation>, private val mode: Int) :
     RecyclerView.Adapter<HistoryHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = HistoryHolder(
@@ -33,14 +34,13 @@ class HistoryHolder(view: View, private val mode: Int) : RecyclerView.ViewHolder
     private val card: TextView = view.findViewById(R.id.card)
     private val account: TextView = view.findViewById(R.id.account)
 
-    fun bind(item: OwnWithdrawResponse) {
-        card.text = item.card
-        account.text =
-            itemView.context.getString(if (mode == 0) R.string.history_account else R.string.history_account_partner)
+    fun bind(item: WalletTransation) {
+        card.text = item.cardName
+        account.text = item.cardNumber
         date.text = SimpleDateFormat(
             "dd.MM.yyyy",
             Locale.getDefault()
-        ).format(SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(item.create_at ?: "2021-01-01 13:00:00") ?: Date())
-        sum.text = itemView.context.getString(R.string.income_sum, item.summa)
+        ).format(SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(item.createdAt ?: "2021-01-01 13:00:00") ?: Date())
+        sum.text = itemView.context.getString(R.string.income_sum, item.amount.toString())
     }
 }

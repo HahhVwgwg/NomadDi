@@ -14,6 +14,7 @@ import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentIncomesBinding
 import com.dataplus.tabyspartner.model.ResultResponse
+import com.dataplus.tabyspartner.networking.WalletTransation
 import com.dataplus.tabyspartner.ui.ui.withdraw.adapter.HistoryAdapter
 
 class HistoryFragment : Fragment() {
@@ -45,12 +46,13 @@ class HistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.empty.text = "Выводов еще не было"
         val mode = arguments?.getInt(MODE, 0) ?: 0
+        viewModel.getWalletTransaction()
         (if (mode == 0) viewModel.responseHistory else viewModel.responseHistoryRef).observe(viewLifecycleOwner, {
             when (it) {
                 is ResultResponse.Loading -> {
                 }
                 is ResultResponse.Success -> {
-                    binding.list.adapter = HistoryAdapter(it.data, mode)
+                    binding.list.adapter = HistoryAdapter(it.data as List<WalletTransation>, mode)
                     binding.empty.visibility = if (it.data.isNullOrEmpty()) View.VISIBLE else View.GONE
                 }
                 is ResultResponse.Error -> {
@@ -68,8 +70,8 @@ class HistoryFragment : Fragment() {
             getString(if (mode == 0) R.string.history_title else R.string.history_title_ref),
             true
         )
-        sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
-            viewModel.getHistory(userPhoneNumber.replace("+", ""), mode)
-        }
+//        sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
+//            viewModel.getHistory(userPhoneNumber.replace("+", ""), mode)
+//        }
     }
 }

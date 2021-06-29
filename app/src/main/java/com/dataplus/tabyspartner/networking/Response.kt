@@ -13,6 +13,7 @@ class DriverProfilesResponse (
         @SerializedName("driver_profiles") val driversList: List<DriverProfilesItem>
         )
 
+
 data class DriverProfilesItem(
     val accounts: List<Account>,
     val driver_profile: DriverProfile

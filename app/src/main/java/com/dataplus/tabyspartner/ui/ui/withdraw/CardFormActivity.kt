@@ -8,12 +8,14 @@ import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.text.isDigitsOnly
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.ActivityCardFormBinding
@@ -26,6 +28,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class CardFormActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCardFormBinding
+    private lateinit var viewModel: CardViewModel
 
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -36,6 +39,7 @@ class CardFormActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         val toolbarTitle = findViewById<TextView>(R.id.toolbar_title)
         setSupportActionBar(toolbar)
+        viewModel = ViewModelProvider(this).get(CardViewModel::class.java)
         supportActionBar?.setTitle("")
         toolbarTitle.setText("Добавление карты")
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -92,18 +96,30 @@ class CardFormActivity : AppCompatActivity() {
                     .show()
             } else {
                 if (number == numberRepeat) {
-                    val db = DatabaseHandler(this)
-                    if (db.insertTask(
-                            CreditCard(
-                                1,
-                                binding.cardNameEditText.text.toString().trim(),
-                                number.trim()
-                            )
-                        )
-                    ) {
+//                    val db = DatabaseHandler(this)
+//                    if (db.insertTask(
+//                            CreditCard(
+//                                1,
+//                                binding.cardNameEditText.text.toString().trim(),
+//                                number.trim()
+//                            )
+//                        )
+//                    ) {
+//                        setResult(Activity.RESULT_OK)
+//                        onBackPressed()
+//                    }
+
+                    val hashMap = HashMap<String, Any>()
+                    hashMap["card_id"] = number.trim()
+                    hashMap["brand"] = if (number[0] == '4') "V" else "M"
+                    hashMap["card_name"] = binding.cardNameEditText.text.toString().trim()
+
+                    viewModel.addCard(hashMap)
+                    viewModel.response.observe(this, {
+                        Toast.makeText(this, it, Toast.LENGTH_LONG).show()
                         setResult(Activity.RESULT_OK)
                         onBackPressed()
-                    }
+                    })
                 } else {
                     MaterialAlertDialogBuilder(this)
                         .setTitle(resources.getString(R.string.notSameError))

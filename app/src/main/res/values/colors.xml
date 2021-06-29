@@ -11,12 +11,12 @@
     <color name="red">#FF0000</color>
     <color name="green">#00FF00</color>
     <color name="lightGray">#F2F2F2</color>
-    <color name="colorPrimary">#6177FC</color>
+    <color name="colorPrimary">#956520</color>
     <color name="successColor">#4bb543</color>
 
 
     ///
-    <color name="colorPrimaryDark">#171717</color>
+    <color name="colorPrimaryDark">#FFC107</color>
     <color name="colorAccent">#03DAC5</color>
 
     <color name="clr_otp_bg">#535288</color>

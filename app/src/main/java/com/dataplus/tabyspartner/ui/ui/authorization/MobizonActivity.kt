@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
@@ -20,11 +21,16 @@ import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.ActivityMobizonBinding
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity
+import com.dataplus.tabyspartner.utils.SharedHelper
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
+import java.util.*
 
 
 class MobizonActivity : AppCompatActivity() {
 
 
+    private lateinit var phone: String
     private var timer: CountDownTimer? = null
     private lateinit var binding: ActivityMobizonBinding
     private val viewModel: AuthorizationViewModel by lazy {
@@ -34,6 +40,7 @@ class MobizonActivity : AppCompatActivity() {
     var isRegisteredPhone = false
     var isPinCodeCreated = false
     private lateinit var otp: String
+
     //error code
     //make button send code again
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +55,8 @@ class MobizonActivity : AppCompatActivity() {
         binding.root
         resetTimer()
         otp = intent.getStringExtra("verCode").toString()
+        phone = intent.getStringExtra("phoneNumber").toString()
+
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -60,11 +69,11 @@ class MobizonActivity : AppCompatActivity() {
                 binding.verifyBtn.isEnabled = false
                 binding.otpProgressBar.isEnabled = true
                 binding.otpProgressBar.visibility = View.VISIBLE
-                viewModel.getMessageStatus(this, "+${intent.getStringExtra("phoneNumber")}")
-                viewModel.responseOtp.observe(
+                viewModel.getUser(intent.getStringExtra("phoneNumber")!!)
+                viewModel.response.observe(
                     binding.lifecycleOwner as MobizonActivity,
                     Observer {
-                        otp = it
+                        otp = it.otp!!
                         binding.verifyBtn.isEnabled = true
                         binding.otpProgressBar.isEnabled = false
                         binding.otpProgressBar.visibility = View.INVISIBLE
@@ -80,15 +89,49 @@ class MobizonActivity : AppCompatActivity() {
             imm.hideSoftInputFromWindow(binding.mainLayoutMobizon.getWindowToken(), 0)
             binding.otpProgressBar.visibility = View.VISIBLE
             if (binding.otpTextView.text.toString() == otp) {
-                sharedPreferences.edit()
-                    .putBoolean("USERPHONE_REGISTERED", true)
-                    .putBoolean("USER_PIN_CODE_CREATED", false).apply()
-                startActivity(Intent(this, VerificationActivity()::class.java))
-                finish()
+                registerByToken()
             } else {
                 binding.otpFormFeedback.text = "Код неверный убедитесь что вы ввели правильный код"
             }
         }
+    }
+
+    private fun registerByToken() {
+        if (SharedHelper.getKey(this, "device_token").isEmpty()) {
+            getToken()
+            return
+        }
+        val map = HashMap<String, Any>()
+        map["device_token"] = SharedHelper.getKey(this, "device_token", "No device")
+        map["device_id"] = SharedHelper.getKey(this, "device_id", "123")
+        map["device_type"] = "android"
+        map["otp"] = otp
+        map["mobile"] = phone
+        viewModel.loginByOtp(map, this)
+    }
+
+    fun redirectToPinCodeActivity() {
+        sharedPreferences.edit()
+            .putBoolean("USERPHONE_REGISTERED", true)
+            .putBoolean("USER_PIN_CODE_CREATED", false).apply()
+        startActivity(Intent(this, VerificationActivity()::class.java))
+        finish()
+    }
+
+    private fun getToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("device_token", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            // Log and toast
+            Log.d("device_token", token!!)
+            SharedHelper.putKey(this, "device_token", token)
+            registerByToken()
+        })
     }
 
     private fun resetTimer() {
@@ -102,7 +145,8 @@ class MobizonActivity : AppCompatActivity() {
 
             override fun onFinish() {
                 binding.sendCodeAgain.text = "Отправить повторно"
-                binding.sendCodeAgain.background = ContextCompat.getDrawable(this@MobizonActivity, R.drawable.card_chooser_btn_bbg)
+                binding.sendCodeAgain.background =
+                    ContextCompat.getDrawable(this@MobizonActivity, R.drawable.card_chooser_btn_bbg)
             }
         }.start()
     }
@@ -135,4 +179,6 @@ class MobizonActivity : AppCompatActivity() {
             alert.show()
         }
     }
+
+
 }

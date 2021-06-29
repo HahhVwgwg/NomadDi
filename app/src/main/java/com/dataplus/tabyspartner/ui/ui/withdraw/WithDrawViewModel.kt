@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.model.ResultResponse
 import com.dataplus.tabyspartner.networking.*
 import retrofit2.Call
@@ -12,7 +13,7 @@ import retrofit2.Response
 
 class WithDrawViewModel : ViewModel() {
 
-    val responseHistory = MutableLiveData<ResultResponse<List<OwnWithdrawResponse>>>()
+    val responseHistory = MutableLiveData<ResultResponse<List<WalletTransation>>>()
     val responseHistoryRef = MutableLiveData<ResultResponse<List<OwnWithdrawResponse>>>()
 
     private val _balance = MutableLiveData<Pair<String, String>>()
@@ -78,6 +79,29 @@ class WithDrawViewModel : ViewModel() {
 
     }
 
+    fun getProfile() {
+        APIClient.aPIClient?.getProfile()?.enqueue(object : Callback<ProfileOtp> {
+            override fun onResponse(call: Call<ProfileOtp>, response: Response<ProfileOtp>) {
+                if (response.isSuccessful) {
+                    val profileOtp: ProfileOtp = response.body()!!
+                    _balance.postValue(
+                        Pair(
+                            profileOtp.walletBalance.toString().parseSum(),
+                            "0"
+                        )
+                    )
+
+                } else {
+                    Log.d("device_token", "Error")
+                }
+            }
+
+            override fun onFailure(call: Call<ProfileOtp>, t: Throwable) {
+                println("MineMineFailure" + t.localizedMessage + t.message)
+            }
+        })
+    }
+
     fun withDrawCashViewModelFun(amount: String, cardNumber: String, phone: String) {
         val mode = moneySource.value ?: 0
         val call = if (mode == 0) {
@@ -107,6 +131,22 @@ class WithDrawViewModel : ViewModel() {
         })
     }
 
+    fun withdraw(hashMap: HashMap<String, Any>) {
+        APIClient.aPIClient?.withdraw(hashMap)?.enqueue(object : Callback<MessageOtp> {
+            override fun onResponse(call: Call<MessageOtp>, response: Response<MessageOtp>) {
+                if (response.isSuccessful) {
+                    _responseWithDraw.postValue(true)
+                } else {
+                    _error.postValue("Карта не найдена")
+                }
+            }
+
+            override fun onFailure(call: Call<MessageOtp>, t: Throwable) {
+                println("MineMineFailure" + t.localizedMessage + t.message)
+            }
+        })
+    }
+
     fun setMoneySource(source: Int) {
         _moneySource.postValue(source)
     }
@@ -119,33 +159,57 @@ class WithDrawViewModel : ViewModel() {
         _responseWithDraw.postValue(null)
     }
 
-    fun getHistory(phone: String, mode: Int) {
-        val call = if (mode == 0) {
-            OwnApi.retrofitService.getWithdrawHistory(phone)
-        } else {
-            OwnApi.retrofitService.getWithdrawHistoryRef(phone)
-        }
-        call.enqueue(object : Callback<ListResponse<OwnWithdrawResponse>> {
+    fun getWalletTransaction() {
+        APIClient.aPIClient?.getWalletTransaction()?.enqueue(object : Callback<WalletTransactions> {
             override fun onResponse(
-                call: Call<ListResponse<OwnWithdrawResponse>>,
-                response: Response<ListResponse<OwnWithdrawResponse>>
+                call: Call<WalletTransactions>,
+                response: Response<WalletTransactions>
             ) {
-                val resp = response.body()
-                if (mode == 0) {
-                    responseHistory.postValue(ResultResponse.Success(resp?.list ?: listOf()))
+                if (response.isSuccessful) {
+                    val resp = response.body()
+                    responseHistory.postValue(
+                        ResultResponse.Success(
+                            resp?.walletTransation ?: listOf()
+                        )
+                    )
                 } else {
-                    responseHistoryRef.postValue(ResultResponse.Success(resp?.list ?: listOf()))
+                    Log.d("device_token", "Error")
                 }
             }
 
-            override fun onFailure(call: Call<ListResponse<OwnWithdrawResponse>>, t: Throwable) {
-                if (mode == 0) {
-                    responseHistory.postValue(ResultResponse.Error(t.toString()))
-                } else {
-                    responseHistoryRef.postValue(ResultResponse.Error(t.toString()))
-                }
+            override fun onFailure(call: Call<WalletTransactions>, t: Throwable) {
+                responseHistory.postValue(ResultResponse.Error(t.toString()))
             }
         })
     }
+
+//    fun getHistory(phone: String, mode: Int) {
+//        val call = if (mode == 0) {
+//            OwnApi.retrofitService.getWithdrawHistory(phone)
+//        } else {
+//            OwnApi.retrofitService.getWithdrawHistoryRef(phone)
+//        }
+//        call.enqueue(object : Callback<ListResponse<OwnWithdrawResponse>> {
+//            override fun onResponse(
+//                call: Call<ListResponse<OwnWithdrawResponse>>,
+//                response: Response<ListResponse<OwnWithdrawResponse>>
+//            ) {
+//                val resp = response.body()
+//                if (mode == 0) {
+//                    responseHistory.postValue(ResultResponse.Success(resp?.list ?: listOf()))
+//                } else {
+//                    responseHistoryRef.postValue(ResultResponse.Success(resp?.list ?: listOf()))
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<ListResponse<OwnWithdrawResponse>>, t: Throwable) {
+//                if (mode == 0) {
+//                    responseHistory.postValue(ResultResponse.Error(t.toString()))
+//                } else {
+//                    responseHistoryRef.postValue(ResultResponse.Error(t.toString()))
+//                }
+//            }
+//        })
+//    }
 
 }

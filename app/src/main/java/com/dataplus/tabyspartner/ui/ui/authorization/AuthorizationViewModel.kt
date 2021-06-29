@@ -7,18 +7,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dataplus.tabyspartner.networking.*
-import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
 import com.dataplus.tabyspartner.ui.ui.otp.Otp
+import com.dataplus.tabyspartner.utils.SharedHelper
 import kotlinx.android.synthetic.main.activity_authorization.*
+import kotlinx.android.synthetic.main.activity_mobizon.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class AuthorizationViewModel : ViewModel() {
 
-    private val _responseDriver = MutableLiveData<DriverProfilesItem>()
-    val response: LiveData<DriverProfilesItem>
+    private val _responseDriver = MutableLiveData<OtpResponse>()
+    val response: LiveData<OtpResponse>
         get() = _responseDriver
 
 
@@ -40,11 +43,19 @@ class AuthorizationViewModel : ViewModel() {
     /**
      * Sets the value of the status LiveData to the Yandex status.
      */
-    fun getMessageStatus(context: Context,phone:String) {
-        val randomOTP  = Otp().OTP(4)
+    var randomOTP = Otp().OTP(4)
+    fun getMessageStatus(context: Context, phone: String, otp: String?) {
         val apiKey = "kzd22a59d1901e822d4a767ef3bdb90a233d879cdb67be0dff27ecde91897e276ea46d"
-        MobizonApi.retrofitService.sendMessage(recipient = phone,text = "Табыс Партнер: Ваш код авторизации: "+randomOTP,apiKey = apiKey).enqueue(object : Callback<MobizonResponse>{
-            override fun onResponse(call: Call<MobizonResponse>, response: Response<MobizonResponse>) {
+        randomOTP = otp!!
+        MobizonApi.retrofitService.sendMessage(
+            recipient = phone,
+            text = "Табыс Партнер: Ваш код авторизации: " + randomOTP,
+            apiKey = apiKey
+        ).enqueue(object : Callback<MobizonResponse> {
+            override fun onResponse(
+                call: Call<MobizonResponse>,
+                response: Response<MobizonResponse>
+            ) {
 //               if(response.isSuccessful) {
 //                   //_response.value = response.body()
 //
@@ -53,41 +64,73 @@ class AuthorizationViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<MobizonResponse>, t: Throwable) {
-                Log.d("Mobizon",t.message.toString())
+                Log.d("Mobizon", t.message.toString())
                 _responseOtp.value = randomOTP
             }
         })
 
     }
 
-    fun getUser(phone:String,activity : Authorization) {
-        val parkId = "2e8584835dd64db99482b4b21f62a2ae"
-        val request = GetSomethingRequest(
-                query = GetSomethingRequest.Query(
-                        park = GetSomethingRequest.Query.Park(parkId)
-                )
-        )
-        var isFound = false
-        YandexApi.retrofitService.getUser(request).enqueue(object : Callback<DriverProfilesResponse>{
-
-            override fun onResponse(call: Call<DriverProfilesResponse>, response: Response<DriverProfilesResponse>) {
-                for (i in response.body()!!.driversList.indices){
-                    if(response.body()!!.driversList[i].driver_profile.phones[0]==phone) {
-                        //Log.d("Yandex",response.body()!!.driversList[i].toString())
-                            isFound = true
-                        _responseDriver.value = response.body()!!.driversList[i]
-                    }
-                }
-                if(!isFound) {
-                    activity.login_form_feedback.visibility = View.VISIBLE
-                    activity.login_form_feedback.textAlignment = View.TEXT_ALIGNMENT_CENTER
-                    activity.login_form_feedback.text = "Данный номер не зарегистрирован в нашей базе. Попробуйте еще раз."
+    fun getUser(phone: String) {
+        val hashMap = HashMap<String, Any>()
+        hashMap["mobile"] = phone
+        APIClient.aPIClient?.getUser(hashMap)?.enqueue(object : Callback<OtpResponse> {
+            override fun onResponse(call: Call<OtpResponse>, response: Response<OtpResponse>) {
+                if (response.isSuccessful) {
+                    _responseDriver.value = response.body()
+                } else {
+                    println("afldkjal;akdf;l")
                 }
             }
-            override fun onFailure(call: Call<DriverProfilesResponse>, t: Throwable) {
-                Log.d("Yandex",t.message.toString())
+
+            override fun onFailure(call: Call<OtpResponse>, t: Throwable) {
+                println("MineMineFailure" + t.localizedMessage + t.message)
             }
         })
-
     }
+
+    fun getUser(phone: String, activity: Authorization) {
+        val hashMap = HashMap<String, Any>()
+        hashMap["mobile"] = phone
+        APIClient.aPIClient?.getUser(hashMap)?.enqueue(object : Callback<OtpResponse> {
+            override fun onResponse(call: Call<OtpResponse>, response: Response<OtpResponse>) {
+                if (response.isSuccessful) {
+                    _responseDriver.value = response.body()
+                } else {
+                    activity.login_form_feedback.visibility = View.VISIBLE
+                    activity.login_form_feedback.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                    activity.login_form_feedback.text =
+                        "Данный номер не зарегистрирован в нашей базе. Попробуйте еще раз."
+                    activity.generate_btn.isEnabled = true
+                    activity.login_progress_bar.isEnabled = false
+                    activity.phone_number_text.text.clear()
+                }
+            }
+
+            override fun onFailure(call: Call<OtpResponse>, t: Throwable) {
+                println("MineMineFailure" + t.localizedMessage + t.message)
+            }
+        })
+    }
+
+    fun loginByOtp(hashMap: HashMap<String, Any>, activity: MobizonActivity) {
+        APIClient.aPIClient?.loginByOtp(hashMap)?.enqueue(object : Callback<TokenOtp> {
+            override fun onResponse(call: Call<TokenOtp>, response: Response<TokenOtp>) {
+                if (response.isSuccessful) {
+                    println("device_tokenwws" + response.body().toString())
+                    val tokenOtp = response.body()
+                    val accessToken = "Bearer " + tokenOtp?.accessToken
+                    SharedHelper.putKey(activity, "access_token", accessToken)
+                    activity.redirectToPinCodeActivity()
+                } else {
+                    Log.d("device_token", "Error")
+                }
+            }
+
+            override fun onFailure(call: Call<TokenOtp>, t: Throwable) {
+                println("MineMineFailure" + t.localizedMessage + t.message)
+            }
+        })
+    }
+
 }

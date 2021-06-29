@@ -9,7 +9,9 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +24,7 @@ import com.dataplus.tabyspartner.databinding.ActivityMainBinding
 import com.dataplus.tabyspartner.ui.ui.main.MainPageFragment
 import com.dataplus.tabyspartner.ui.ui.profile.ProfileFragment
 import com.dataplus.tabyspartner.ui.ui.withdraw.WithDrawFragment
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -29,6 +32,7 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class MainActivity : AppCompatActivity() {
@@ -62,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         toolbarTitle.text = "Главная"
         toolbar?.setNavigationOnClickListener { onBackPressed() }
         checkConnectivity()
+
         handleFrame(MainPageFragment())
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -175,7 +180,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkConnectivity() {
-        val manager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val manager = this.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = manager.activeNetworkInfo
 
         if (null == activeNetwork) {
@@ -201,6 +206,7 @@ class MainActivity : AppCompatActivity() {
             // show alert dialog
             alert.show()
         }
+
     }
 
 }

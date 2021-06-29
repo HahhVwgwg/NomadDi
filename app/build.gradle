@@ -2,21 +2,24 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.dataplus.data"
+        applicationId "com.dataplus.partnersgo"
         minSdkVersion 22
         targetSdkVersion 30
-        versionCode 20
-        versionName "1.1.6"
+        versionCode 3
+        versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         setProperty("archivesBaseName", "tabyspartner-v.$versionName($versionCode)")
+
+        buildConfigField "String", "DEVICE_TYPE", '"android"'
     }
 
     signingConfigs {
@@ -87,5 +90,11 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
     implementation 'com.yandex.android:mobmetricalib:3.21.0'
-
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.8.7'
+    //firebase
+    implementation platform('com.google.firebase:firebase-bom:28.2.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging'
+    //json parser
 }

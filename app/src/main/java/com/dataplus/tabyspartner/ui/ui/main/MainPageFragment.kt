@@ -44,6 +44,7 @@ class MainPageFragment : Fragment() {
     lateinit var sharedPreferences: SharedPreferences
 
     var name_short = ""
+
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,18 +62,19 @@ class MainPageFragment : Fragment() {
             SliderItem(R.drawable.banner3),
             SliderItem(R.drawable.bannernew)
         ) as ArrayList
-        viewPager2.adapter = SliderAdapter(sliderItems, viewPager2, object : SliderAdapter.Callback {
-            override fun onAction(action: Int) {
-                if (action == MotionEvent.ACTION_DOWN) {
-                    freeze = true
-                } else if (action == MotionEvent.ACTION_UP) {
-                    freeze = false
-                    sliderHandler.removeCallbacks(sliderRunnable)
-                    sliderHandler.postDelayed(sliderRunnable,3000)
+        viewPager2.adapter =
+            SliderAdapter(sliderItems, viewPager2, object : SliderAdapter.Callback {
+                override fun onAction(action: Int) {
+                    if (action == MotionEvent.ACTION_DOWN) {
+                        freeze = true
+                    } else if (action == MotionEvent.ACTION_UP) {
+                        freeze = false
+                        sliderHandler.removeCallbacks(sliderRunnable)
+                        sliderHandler.postDelayed(sliderRunnable, 3000)
+                    }
                 }
-            }
 
-        })
+            })
         viewPager2.clipToPadding = false
         viewPager2.clipChildren = false
         viewPager2.offscreenPageLimit = 2
@@ -80,26 +82,57 @@ class MainPageFragment : Fragment() {
         val compositePageTransformer = CompositePageTransformer()
         compositePageTransformer.addTransformer(MarginPageTransformer(50))
         viewPager2.setPageTransformer(compositePageTransformer)
-        viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() { // релиз откоммент
+        viewPager2.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() { // релиз откоммент
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 sliderHandler.removeCallbacks(sliderRunnable)
-                sliderHandler.postDelayed(sliderRunnable,3000)
+                sliderHandler.postDelayed(sliderRunnable, 3000)
             }
         })
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
         name_short = sharedPreferences.getString("USER_SHORT_NAME", "")!!
         val userPhoneNumber = sharedPreferences.getString("USER_PHONE_NUMBER", "")
-        viewModel.getYandexDriversProperties(userPhoneNumber!!)
-        viewModel.response.observe(viewLifecycleOwner, Observer {
-            //Log.d("responseDriver", it.toString())
+
+//        viewModel.getProviderCard(activity as MainActivity)
+//        val hashMap = HashMap<String, Any>()
+//        hashMap["card_id"] = "4400430190598950"
+//        hashMap["brand"] = "V"
+//        hashMap["card_name"] = "File"
+//
+//        viewModel.addCard(hashMap,activity as MainActivity)
+//        viewModel.getWalletTransaction(activity as MainActivity)
+//        viewModel.getTransferList(activity as MainActivity)
+//        val hashMap2 = HashMap<String, Any>()
+//        hashMap2["card_id"] = "4"
+//        hashMap2["amount"] = "1500"
+//        viewModel.withdraw(hashMap2, activity as MainActivity)
+
+
+
+//        viewModel.getYandexDriversProperties(userPhoneNumber!!)
+//        viewModel.response.observe(viewLifecycleOwner, Observer {
+//            //Log.d("responseDriver", it.toString())
+//            binding.profileNameLabel.text =
+//                it.driver_profile.first_name + "\n" + it.driver_profile.last_name
+//            binding.amountCashNameLabel.text = it.accounts[0].balance
+//            sharedPreferences.edit()
+//                .putString(
+//                    "USER_SHORT_NAME",
+//                    it.driver_profile.first_name + " " + it.driver_profile.last_name[0] + "."
+//                )
+//                .apply()
+//        })
+
+        viewModel.getProfile(activity as MainActivity)
+        viewModel.profileData.observe(viewLifecycleOwner, {
             binding.profileNameLabel.text =
-                it.driver_profile.first_name + "\n" + it.driver_profile.last_name
-            binding.amountCashNameLabel.text = it.accounts[0].balance
+                it.firstName + "\n" + it.lastName
+            binding.amountCashNameLabel.text = it.walletBalance.toString()
             sharedPreferences.edit()
                 .putString(
                     "USER_SHORT_NAME",
-                    it.driver_profile.first_name + " " + it.driver_profile.last_name[0] + "."
+                    it.firstName + " " + it.lastName + "."
                 )
                 .apply()
         })
@@ -126,6 +159,6 @@ class MainPageFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-         sliderHandler.removeCallbacks(sliderRunnable) //откоммент релиз
+        sliderHandler.removeCallbacks(sliderRunnable) //откоммент релиз
     }
 }

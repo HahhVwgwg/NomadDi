@@ -3,11 +3,11 @@
     package="com.dataplus.tabyspartner">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name="com.dataplus.tabyspartner.Application"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@drawable/app_logo"
@@ -15,7 +15,6 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name="com.dataplus.tabyspartner.Application"
         android:theme="@style/Theme.TabysPartner"
         android:usesCleartextTraffic="true">
         <activity
@@ -35,6 +34,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.dataplus.tabyspartner.ui.ui.authorization.Authorization"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,6 +46,25 @@
             android:name="com.dataplus.tabyspartner.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
+
+        <service
+            android:name=".networking.fcm.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_baseline_credit_card_24" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
     </application>
 
 </manifest>

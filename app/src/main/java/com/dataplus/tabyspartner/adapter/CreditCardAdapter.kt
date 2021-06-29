@@ -11,26 +11,27 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.model.CreditCard
+import com.dataplus.tabyspartner.networking.CardOtp
 import com.dataplus.tabyspartner.ui.ui.withdraw.CardFormActivity
 import com.dataplus.tabyspartner.utils.DatabaseHandler
 import kotlinx.android.synthetic.main.card_item.view.*
 
 
 class CreditCardAdapter(
-    private val items: MutableList<CreditCard> = mutableListOf(),
-    private val onItemClick: (CreditCard) -> Unit,
-    private val onDelete: (CreditCard) -> Unit,
+    private val items: MutableList<CardOtp> = mutableListOf(),
+    private val onItemClick: (CardOtp) -> Unit,
+    private val onDelete: (CardOtp) -> Unit,
     private val databaseHandler: DatabaseHandler,
     private val context: Context?,
 ) : RecyclerView.Adapter<CreditCardAdapter.CreditCardViewHolder>() {
     private val limit = 3
 
     inner class CreditCardViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        @SuppressLint("RestrictedApi")
+        @SuppressLint("RestrictedApi", "SetTextI18n")
         @RequiresApi(Build.VERSION_CODES.P)
-        fun bindItem(item: CreditCard) {
-            view.card_item_name.text = item.creditCardName
-            view.card_item_number.text = item.creditCardNumber
+        fun bindItem(item: CardOtp) {
+            view.card_item_name.text = item.cardName
+            view.card_item_number.text = "**** **** **** ${item.lastFour}"
             view.deleteCardBtn.setOnClickListener {
                 onDelete(item)
             }
@@ -66,8 +67,8 @@ class CreditCardAdapter(
     public fun editCard(position: Int) {
         val cardItem = items[position]
         val bundle = Bundle()
-        bundle.putString("card_name", cardItem.creditCardName)
-        bundle.putString("card_number", cardItem.creditCardNumber)
+        bundle.putString("card_name", cardItem.cardName)
+        bundle.putString("card_number", cardItem.lastFour)
         val cardFormActivity = CardFormActivity()
     }
 
