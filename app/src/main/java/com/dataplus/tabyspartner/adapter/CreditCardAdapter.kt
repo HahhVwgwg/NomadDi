@@ -31,7 +31,7 @@ class CreditCardAdapter(
         @RequiresApi(Build.VERSION_CODES.P)
         fun bindItem(item: CardOtp) {
             view.card_item_name.text = item.cardName
-            view.card_item_number.text = "**** **** **** ${item.lastFour}"
+            view.card_item_number.text = item.lastFour
             view.deleteCardBtn.setOnClickListener {
                 onDelete(item)
             }

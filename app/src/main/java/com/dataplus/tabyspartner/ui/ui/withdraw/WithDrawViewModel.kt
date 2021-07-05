@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.dataplus.tabyspartner.MainActivity
+import com.dataplus.tabyspartner.BuildConfig
 import com.dataplus.tabyspartner.model.ResultResponse
 import com.dataplus.tabyspartner.networking.*
 import retrofit2.Call
@@ -19,6 +19,10 @@ class WithDrawViewModel : ViewModel() {
     private val _balance = MutableLiveData<Pair<String, String>>()
     val balance: LiveData<Pair<String, String>>
         get() = _balance
+
+    private val _response = MutableLiveData<String>()
+    val response: LiveData<String>
+        get() = _response
 
     private val _moneySource = MutableLiveData(0)
     val moneySource: LiveData<Int>
@@ -80,24 +84,27 @@ class WithDrawViewModel : ViewModel() {
     }
 
     fun getProfile() {
-        APIClient.aPIClient?.getProfile()?.enqueue(object : Callback<ProfileOtp> {
+        APIClient.aPIClient?.getProfile(BuildConfig.DEVICE_TYPE, BuildConfig.VERSION_NAME)?.enqueue(object : Callback<ProfileOtp> {
             override fun onResponse(call: Call<ProfileOtp>, response: Response<ProfileOtp>) {
-                if (response.isSuccessful) {
-                    val profileOtp: ProfileOtp = response.body()!!
-                    _balance.postValue(
-                        Pair(
-                            profileOtp.walletBalance.toString().parseSum(),
-                            "0"
-                        )
-                    )
-
+                if (response.body()?.error != null) {
+                    _error.value = response.body()!!.error
                 } else {
-                    Log.d("device_token", "Error")
+                    val profileOtp: ProfileOtp = response.body()!!
+                    if (profileOtp.forceUpdate){
+                        _error.value = profileOtp.url
+                    } else {
+                        _balance.postValue(
+                            Pair(
+                                profileOtp.walletBalance.toString().parseSum(),
+                                "0"
+                            )
+                        )
+                    }
                 }
             }
 
             override fun onFailure(call: Call<ProfileOtp>, t: Throwable) {
-                println("MineMineFailure" + t.localizedMessage + t.message)
+                _error.postValue(t.message.toString())
             }
         })
     }
@@ -134,15 +141,16 @@ class WithDrawViewModel : ViewModel() {
     fun withdraw(hashMap: HashMap<String, Any>) {
         APIClient.aPIClient?.withdraw(hashMap)?.enqueue(object : Callback<MessageOtp> {
             override fun onResponse(call: Call<MessageOtp>, response: Response<MessageOtp>) {
-                if (response.isSuccessful) {
+                val res = response.body()
+                if (response.isSuccessful && res?.error.isNullOrEmpty()) {
                     _responseWithDraw.postValue(true)
                 } else {
-                    _error.postValue("Карта не найдена")
+                    _error.postValue(res!!.error)
                 }
             }
 
             override fun onFailure(call: Call<MessageOtp>, t: Throwable) {
-                println("MineMineFailure" + t.localizedMessage + t.message)
+                _error.postValue(t.message.toString())
             }
         })
     }
@@ -165,7 +173,8 @@ class WithDrawViewModel : ViewModel() {
                 call: Call<WalletTransactions>,
                 response: Response<WalletTransactions>
             ) {
-                if (response.isSuccessful) {
+                val res = response.body()
+                if (response.isSuccessful && res?.error.isNullOrEmpty()) {
                     val resp = response.body()
                     responseHistory.postValue(
                         ResultResponse.Success(
@@ -173,12 +182,30 @@ class WithDrawViewModel : ViewModel() {
                         )
                     )
                 } else {
-                    Log.d("device_token", "Error")
+                    _error.postValue(res!!.error)
                 }
             }
 
             override fun onFailure(call: Call<WalletTransactions>, t: Throwable) {
-                responseHistory.postValue(ResultResponse.Error(t.toString()))
+                _error.postValue(t.message.toString())
+            }
+        })
+    }
+
+    fun addCard(hashMap: HashMap<String, Any>) {
+        APIClient.aPIClient?.addCard(hashMap)?.enqueue(object : Callback<MessageOtp> {
+            override fun onResponse(call: Call<MessageOtp>, response: Response<MessageOtp>) {
+                val res = response.body()
+                if (response.isSuccessful && res?.error.isNullOrEmpty()) {
+                    _response.value = response.body()?.url
+                    println("wwwwws")
+                } else {
+                    _error.postValue(res!!.error)
+                }
+            }
+
+            override fun onFailure(call: Call<MessageOtp>, t: Throwable) {
+                _error.postValue(t.message.toString())
             }
         })
     }

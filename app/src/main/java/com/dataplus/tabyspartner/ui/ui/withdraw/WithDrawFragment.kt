@@ -15,7 +15,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.text.isDigitsOnly
@@ -28,8 +30,11 @@ import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentMainPageBinding
 import com.dataplus.tabyspartner.databinding.FragmentWithDrawBinding
 import com.dataplus.tabyspartner.modal.ModalBottomSheet
+import com.dataplus.tabyspartner.modal.UpdateBottomSheet
 import com.dataplus.tabyspartner.networking.CardOtp
+import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity2
+import com.dataplus.tabyspartner.utils.SharedHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_with_draw.*
 
@@ -63,13 +68,37 @@ class WithDrawFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity()).get(WithDrawViewModel::class.java)
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
-
+        viewModel.error.observe(viewLifecycleOwner, {
+            if (it.startsWith("http")) {
+                (activity as? MainActivity)?.showBottomSheet(requireContext(), it)
+            } else {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                if (it == "token_invalid") {
+                    sharedPreferences.edit().clear().apply()
+                    requireContext().startActivity(
+                        Intent(
+                            requireContext(),
+                            Authorization::class.java
+                        )
+                    )
+                    requireActivity().finish()
+                }
+            }
+            viewModel.consumeError()
+        })
         model = activity?.run {
             ViewModelProvider(this).get(ModalBottomSheet.SharedViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
         val cardOtp = CardOtp()
         cardOtp.lastFour = "Выберите карту"
         model.selected.postValue(cardOtp)
+        binding.chooseCardBtn.visibility =
+            if (SharedHelper.getKey(context, "KASSA", false) && SharedHelper.getKey(
+                    context,
+                    "CARD_COUNT",
+                    0
+                ) == 0
+            ) View.GONE else View.VISIBLE
         return binding.root
     }
 
@@ -119,23 +148,34 @@ class WithDrawFragment : Fragment() {
                 }
             }
         })
-        viewModel.error.observe(viewLifecycleOwner, Observer {
-            it ?: return@Observer
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-            viewModel.consumeError()
-        })
+//        viewModel.error.observe(viewLifecycleOwner, Observer {
+//            it ?: return@Observer
+//            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+//            viewModel.consumeError()
+//        })
         binding.myBalanceHistory.setOnClickListener {
             handleFrame(HistoryFragment.getInstance(viewModel.moneySource.value ?: 0))
         }
-    }
 
-    @RequiresApi(Build.VERSION_CODES.P)
-    override fun onResume() {
-        super.onResume()
         (activity as? MainActivity)?.setToolbarTitle("Вывод средств", false)
         model.selected.observe(viewLifecycleOwner, { item ->
-            binding.chooseCardBtn.text = item.lastFour
-            cardId = item.id
+            if (item.lastFour == null) {
+                println("WithDrawAmount" + "----" + with_draw_amount.text.toString())
+                if (with_draw_amount.text.toString().isNotEmpty()) {
+                    val map = HashMap<String, Any>()
+                    map["amount"] = with_draw_amount.text.toString()
+                    viewModel.addCard(map)
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Для добавления карты, сперва укажите сумму вывода",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                binding.chooseCardBtn.text = item.lastFour
+                cardId = item.id
+            }
         })
         binding.withDrawAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -176,6 +216,11 @@ class WithDrawFragment : Fragment() {
             modalBottomSheetFragment.show(parentFragmentManager, modalBottomSheetFragment.tag)
         }
 
+        viewModel.response.observe(viewLifecycleOwner, {
+            binding.webView.visibility = View.VISIBLE
+            initializeWebView(it)
+        })
+
 
         binding.withdrawBtnWithdrawPage.setOnClickListener {
             val withDrawAmount: Int = try {
@@ -190,7 +235,12 @@ class WithDrawFragment : Fragment() {
                 ).toInt()
             }
 
-            if (!binding.chooseCardBtn.text.toString().isDigitsOnly()) {
+            if (!binding.chooseCardBtn.text.toString().isDigitsOnly() && !SharedHelper.getKey(
+                    context,
+                    "KASSA",
+                    false
+                )
+            ) {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("Пожалуйста, выберите вашу карту")
                     .setCancelable(false)
@@ -276,14 +326,65 @@ class WithDrawFragment : Fragment() {
                     alert.setTitle("Вывод средств невозможен")
                     alert.show()
                 } else {
-                    startActivityForResult(
-                        Intent(requireContext(), VerificationActivity2::class.java),
-                        1
-                    )
-                    binding.withdrawBtnWithdrawPage.isEnabled = false
+                    if (SharedHelper.getKey(context, "CARD_COUNT", 0) == 0 && SharedHelper.getKey(
+                            context,
+                            "KASSA",
+                            false
+                        )
+                    ) {
+                        val map = HashMap<String, Any>()
+                        map["amount"] = with_draw_amount.text.toString()
+                        viewModel.addCard(map)
+                    } else {
+                        startActivityForResult(
+                            Intent(requireContext(), VerificationActivity2::class.java),
+                            1
+                        )
+                        binding.withdrawBtnWithdrawPage.isEnabled = false
+                    }
                 }
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    override fun onResume() {
+        super.onResume()
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun initializeWebView(url: String) {
+        val mWebView: WebView = binding.webView
+        mWebView.visibility = View.VISIBLE
+        webView.clearCache(true)
+        mWebView.loadUrl(url)
+
+        // Enable Javascript
+
+        // Enable Javascript
+        val webSettings: WebSettings = mWebView.settings
+        webSettings.javaScriptEnabled = true
+
+        // Force links and redirects to open in the WebView instead of in a browser
+        val webViewClient: WebViewClient = object : WebViewClient() {
+            override fun doUpdateVisitedHistory(
+                view: WebView, url: String,
+                isReload: Boolean
+            ) {
+                Log.e("TAG", "doUpdateVisited History: " + view.url)
+            }
+
+            override fun onLoadResource(view: WebView, url: String) {
+                Log.e("TAG", "onLoadResource: " + view.url)
+                if (view.url == "https://www.google.com/") {
+                    mWebView.visibility = View.GONE
+                    mWebView.destroy()
+                }
+            }
+        }
+        // Force links and redirects to open in the WebView instead of in a browser
+        mWebView.webViewClient = webViewClient
+
     }
 
     @SuppressLint("SetTextI18n")

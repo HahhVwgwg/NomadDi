@@ -3,135 +3,146 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp"
-        tools:context=".ui.ui.withdraw.WithDrawFragment">
-
-        <TextView
-            android:id="@+id/my_balance_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/balance_menu"
-            android:textColor="@color/black"
-            android:textSize="19sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/my_balance_history"
-            android:layout_width="0dp"
-            android:gravity="end"
-            android:layout_marginStart="24dp"
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            app:layout_constraintStart_toEndOf="@+id/my_balance_title"
-            android:layout_height="wrap_content"
-            android:text="@string/with_draw_page_balance_history_title"
-            android:textColor="#ff605c"
-            android:textSize="19sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/balance_amount_with_draw_page"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/ubuntubold"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/my_balance_title"
-            app:layout_constraintStart_toStartOf="@+id/my_balance_title"
-            app:layout_constraintTop_toBottomOf="@+id/my_balance_title"
-            app:layout_constraintVertical_bias="0.04000002"
-            tools:text="12 500 \u20b8" />
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/balance_amount_with_draw_page">
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            tools:context=".ui.ui.withdraw.WithDrawFragment">
 
-            <Button
-                android:id="@+id/choose_card_btn"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_24"
-                android:drawableTint="@color/white"
-                android:text="Выберите карту"
-                android:textAlignment="textStart"
-                android:textAllCaps="false"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.187" />
-
-            <EditText
-                android:id="@+id/with_draw_amount"
+            <TextView
+                android:id="@+id/my_balance_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="44dp"
-                android:background="@android:color/transparent"
-                android:drawableEnd="@drawable/ic_tenge_sign"
-                android:drawablePadding="10dp"
-                android:gravity="center"
-                android:hint="@string/amount_hint"
-                android:inputType="numberDecimal"
-                android:maxLength="6"
+                android:text="@string/balance_menu"
                 android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:textSize="33sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="19sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/choose_card_btn"
-                tools:ignore="RtlCompat" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/amountFee"
+                android:id="@+id/my_balance_history"
+                android:layout_width="0dp"
+                android:gravity="end"
+                android:layout_marginStart="24dp"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                app:layout_constraintStart_toEndOf="@+id/my_balance_title"
+                android:layout_height="wrap_content"
+                android:text="@string/with_draw_page_balance_history_title"
+                android:textColor="#ff605c"
+                android:textSize="19sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/balance_amount_with_draw_page"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/red"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/with_draw_amount"
-                tools:text="Комиссия 130 \u20b8" />
+                android:fontFamily="@font/ubuntubold"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="30sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/my_balance_title"
+                app:layout_constraintStart_toStartOf="@+id/my_balance_title"
+                app:layout_constraintTop_toBottomOf="@+id/my_balance_title"
+                app:layout_constraintVertical_bias="0.04000002"
+                tools:text="12 500 \u20b8" />
 
-            <Button
-                android:id="@+id/withdraw_btn_withdrawPage"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:text="Перевести 0 \u20b8"
-                android:textAllCaps="false"
-                android:textSize="16sp"
+                android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/with_draw_amount"
-                app:layout_constraintVertical_bias="0.202" />
+                app:layout_constraintTop_toBottomOf="@id/balance_amount_with_draw_page">
 
-            <TextView
-                android:id="@+id/withdraw_delay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/grey_font"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/withdraw_btn_withdrawPage"
-                tools:text="Следующий вывод доступен через 40 сек." />
+                <Button
+                    android:id="@+id/choose_card_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_24"
+                    android:drawableTint="@color/white"
+                    android:text="Выберите карту"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.187" />
+
+                <EditText
+                    android:id="@+id/with_draw_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="44dp"
+                    android:background="@android:color/transparent"
+                    android:drawableEnd="@drawable/ic_tenge_sign"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:hint="@string/amount_hint"
+                    android:inputType="numberDecimal"
+                    android:maxLength="6"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="33sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/choose_card_btn"
+                    tools:ignore="RtlCompat" />
+
+                <TextView
+                    android:id="@+id/amountFee"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/red"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/with_draw_amount"
+                    tools:text="Комиссия 130 \u20b8" />
+
+                <Button
+                    android:id="@+id/withdraw_btn_withdrawPage"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:text="Перевести 0 \u20b8"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/with_draw_amount"
+                    app:layout_constraintVertical_bias="0.202" />
+
+                <TextView
+                    android:id="@+id/withdraw_delay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/grey_font"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/withdraw_btn_withdrawPage"
+                    tools:text="Следующий вывод доступен через 40 сек." />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <WebView
+            android:id="@+id/webView"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 </layout>

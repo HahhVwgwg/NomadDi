@@ -19,8 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.ActivityCardFormBinding
-import com.dataplus.tabyspartner.model.CreditCard
-import com.dataplus.tabyspartner.utils.DatabaseHandler
+import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
 import com.dataplus.tabyspartner.utils.FourDigitCardFormatWatcher
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -46,6 +45,22 @@ class CardFormActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             finish()
         }
+
+        viewModel.error.observe(this, {
+            Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT).show()
+            if (it == "token_invalid"){
+                val sharedPreferences =
+                    applicationContext.getSharedPreferences("app_prefs", MODE_PRIVATE)!!
+                sharedPreferences.edit().clear().apply()
+                applicationContext.startActivity(
+                    Intent(
+                        applicationContext,
+                        Authorization::class.java
+                    )
+                )
+                finish()
+            }
+        })
         binding.root
     }
 

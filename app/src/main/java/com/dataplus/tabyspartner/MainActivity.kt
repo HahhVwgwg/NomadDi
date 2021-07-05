@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.dataplus.tabyspartner.databinding.ActivityMainBinding
+import com.dataplus.tabyspartner.modal.UpdateBottomSheet
 import com.dataplus.tabyspartner.ui.ui.main.MainPageFragment
 import com.dataplus.tabyspartner.ui.ui.profile.ProfileFragment
 import com.dataplus.tabyspartner.ui.ui.withdraw.WithDrawFragment
@@ -207,6 +208,15 @@ class MainActivity : AppCompatActivity() {
             alert.show()
         }
 
+    }
+
+    public fun showBottomSheet(context: Context, url: String) {
+        val bottomSheetFragment = UpdateBottomSheet()
+        val bundle = Bundle()
+        bottomSheetFragment.isCancelable = false
+        bundle.putString("url", url)
+        bottomSheetFragment.arguments = bundle
+        bottomSheetFragment.show((context as MainActivity).supportFragmentManager, null)
     }
 
 }

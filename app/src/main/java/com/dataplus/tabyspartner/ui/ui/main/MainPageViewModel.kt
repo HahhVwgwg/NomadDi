@@ -1,9 +1,11 @@
 package com.dataplus.tabyspartner.ui.ui.main
 
+import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.dataplus.tabyspartner.BuildConfig
 import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.networking.*
 import com.dataplus.tabyspartner.ui.ui.authorization.MobizonActivity
@@ -25,6 +27,12 @@ class MainPageViewModel : ViewModel() {
         get() = _response
     val profileData: LiveData<ProfileOtp>
         get() = _profileData
+
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String>
+        get() = _error
+
+
 
     /**
      * Call getYandexDriversProperties() on init so we can display status immediately.
@@ -91,19 +99,23 @@ class MainPageViewModel : ViewModel() {
 
     }
 
-    fun getProfile(activity: MainActivity) {
-        APIClient.aPIClient?.getProfile()?.enqueue(object : Callback<ProfileOtp> {
+    fun getProfile() {
+        APIClient.aPIClient?.getProfile(BuildConfig.DEVICE_TYPE, BuildConfig.VERSION_NAME)?.enqueue(object : Callback<ProfileOtp> {
             override fun onResponse(call: Call<ProfileOtp>, response: Response<ProfileOtp>) {
-                if (response.isSuccessful) {
-                    val profileOtp: ProfileOtp = response.body()!!
-                    _profileData.value = profileOtp
+                val profileOtp: ProfileOtp = response.body()!!
+                if (response.isSuccessful && profileOtp.error.isNullOrEmpty()) {
+                    if (profileOtp.forceUpdate){
+                        _error.value = profileOtp.url
+                    } else {
+                        _profileData.value = profileOtp
+                    }
                 } else {
-                    Log.d("device_token", "Error")
+                    _error.postValue(profileOtp.error)
                 }
             }
 
             override fun onFailure(call: Call<ProfileOtp>, t: Throwable) {
-                println("MineMineFailure" + t.localizedMessage + t.message)
+                _error.postValue(t.message.toString())
             }
         })
     }
@@ -117,10 +129,11 @@ class MainPageViewModel : ViewModel() {
                 } else {
                     Log.d("device_token", "Error")
                 }
+
             }
 
             override fun onFailure(call: Call<TransferLists>, t: Throwable) {
-                println("MineMineFailure" + t.localizedMessage + t.message)
+                _error.postValue(t.message.toString())
             }
         })
     }

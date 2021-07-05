@@ -2,6 +2,7 @@ package com.dataplus.tabyspartner.ui.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +25,8 @@ import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.adapter.SliderAdapter
 import com.dataplus.tabyspartner.databinding.FragmentMainPageBinding
 import com.dataplus.tabyspartner.model.SliderItem
+import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
+import com.dataplus.tabyspartner.utils.SharedHelper
 
 class MainPageFragment : Fragment() {
 
@@ -123,8 +127,24 @@ class MainPageFragment : Fragment() {
 //                )
 //                .apply()
 //        })
-
-        viewModel.getProfile(activity as MainActivity)
+        viewModel.error.observe(viewLifecycleOwner, {
+            if (it.startsWith("http")) {
+                (activity as? MainActivity)?.showBottomSheet(requireContext(), it)
+            } else {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                if (it == "token_invalid") {
+                    sharedPreferences.edit().clear().apply()
+                    requireContext().startActivity(
+                        Intent(
+                            requireContext(),
+                            Authorization::class.java
+                        )
+                    )
+                    requireActivity().finish()
+                }
+            }
+        })
+        viewModel.getProfile()
         viewModel.profileData.observe(viewLifecycleOwner, {
             binding.profileNameLabel.text =
                 it.firstName + "\n" + it.lastName
@@ -135,6 +155,8 @@ class MainPageFragment : Fragment() {
                     it.firstName + " " + it.lastName + "."
                 )
                 .apply()
+            SharedHelper.putKey(context, "KASSA", it.paymentType.equals("KASSA"))
+            SharedHelper.putKey(context, "CARD_COUNT", it.cardCount)
         })
         return binding.root
     }

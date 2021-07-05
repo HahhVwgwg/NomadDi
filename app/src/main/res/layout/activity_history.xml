@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F8F8F8"
+        tools:context=".ui.ui.withdraw.HistoryActivity">
+
+        <RelativeLayout
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@color/colorPrimaryDark">
+
+            <include layout="@layout/toolbar" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/amount"
+                android:layout_centerHorizontal="true"
+                android:text="Общая сумма"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="200T"
+                android:textColor="@color/white"
+                android:textSize="36sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/item_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="240dp"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/static_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/created_at"
+                android:textColor="#f5f5f5"
+                android:textSize="23sp"
+                android:text="Дата" />
+            <TextView
+                android:id="@+id/created_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="12/20/2018"
+                android:textSize="23sp"
+                android:layout_alignParentEnd="true"
+                android:textColor="#f5f5f5"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_view"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/bg_rounded"
+            android:elevation="20dp"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:transitionName="item_view">
+
+            <TextView
+                android:id="@+id/transaction_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Вывод средств на водителя"
+                android:textColor="@color/clr_grey_text"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="Название карты"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/card_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    tools:text="Основной"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="ID транзакции"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/transaction_alias"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    tools:text="FSEND000001"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="Номер карты"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/card_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    tools:text="************6039"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="Время транзакции"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/exact_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    tools:text="20:19"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="Сумма баланса до транзакции"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/open_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    tools:text="1000"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="Сумма баланса после транзакции"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/close_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    tools:text="1000"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="Статус"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    tools:text="Завершен"
+                    android:padding="3dp"
+                    android:textColor="@color/grey_font"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

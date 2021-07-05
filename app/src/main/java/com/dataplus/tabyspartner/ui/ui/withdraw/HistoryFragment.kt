@@ -1,6 +1,7 @@
 package com.dataplus.tabyspartner.ui.ui.withdraw
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +16,8 @@ import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentIncomesBinding
 import com.dataplus.tabyspartner.model.ResultResponse
 import com.dataplus.tabyspartner.networking.WalletTransation
+import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
+import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity
 import com.dataplus.tabyspartner.ui.ui.withdraw.adapter.HistoryAdapter
 
 class HistoryFragment : Fragment() {
@@ -26,6 +29,11 @@ class HistoryFragment : Fragment() {
                 putInt(MODE, mode)
             }
         }
+    }
+    private fun appClickListener(position: Int) {
+        val intent = Intent(activity, HistoryActivity::class.java)
+        intent.putExtra("id", position)
+        startActivity(intent)
     }
 
     private lateinit var binding: FragmentIncomesBinding
@@ -39,6 +47,19 @@ class HistoryFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_incomes, container, false)
         sharedPreferences = inflater.context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         viewModel = ViewModelProvider(requireActivity()).get(WithDrawViewModel::class.java)
+        viewModel.error.observe(viewLifecycleOwner, {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            if (it == "token_invalid"){
+                sharedPreferences.edit().clear().apply()
+                requireContext().startActivity(
+                    Intent(
+                        requireContext(),
+                        Authorization::class.java
+                    )
+                )
+                requireActivity().finish()
+            }
+        })
         return binding.root
     }
 
@@ -52,7 +73,7 @@ class HistoryFragment : Fragment() {
                 is ResultResponse.Loading -> {
                 }
                 is ResultResponse.Success -> {
-                    binding.list.adapter = HistoryAdapter(it.data as List<WalletTransation>, mode)
+                    binding.list.adapter = HistoryAdapter(it.data as List<WalletTransation>,clickListener = { it1 -> appClickListener(it1)}, mode)
                     binding.empty.visibility = if (it.data.isNullOrEmpty()) View.VISIBLE else View.GONE
                 }
                 is ResultResponse.Error -> {

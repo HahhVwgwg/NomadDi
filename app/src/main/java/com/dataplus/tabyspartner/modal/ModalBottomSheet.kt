@@ -30,6 +30,7 @@ import com.dataplus.tabyspartner.networking.WalletTransation
 import com.dataplus.tabyspartner.ui.ui.profile.adapter.IncomesAdapter
 import com.dataplus.tabyspartner.ui.ui.withdraw.CardFormActivity
 import com.dataplus.tabyspartner.utils.DatabaseHandler
+import com.dataplus.tabyspartner.utils.SharedHelper
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import retrofit2.Call
@@ -89,7 +90,13 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
         )
 
         binding.addCardBtn.setOnClickListener {
-            startActivityForResult(Intent(requireContext(), CardFormActivity::class.java), 1)
+            if (SharedHelper.getKey(context, "KASSA", false)) {
+                model.select(CardOtp())
+                dismiss()
+            } else {
+                startActivityForResult(Intent(requireContext(), CardFormActivity::class.java), 1)
+            }
+
         }
 
         binding.buttonDialogSheet.setOnClickListener {

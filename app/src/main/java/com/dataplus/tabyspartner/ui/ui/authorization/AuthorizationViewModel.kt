@@ -34,6 +34,10 @@ class AuthorizationViewModel : ViewModel() {
     val responseOtp: LiveData<String>
         get() = _responseOtp
 
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String>
+        get() = _error
+
 
     override fun onCleared() {
         super.onCleared()
@@ -76,15 +80,16 @@ class AuthorizationViewModel : ViewModel() {
         hashMap["mobile"] = phone
         APIClient.aPIClient?.getUser(hashMap)?.enqueue(object : Callback<OtpResponse> {
             override fun onResponse(call: Call<OtpResponse>, response: Response<OtpResponse>) {
-                if (response.isSuccessful) {
+                val res = response.body()
+                if (response.isSuccessful && res?.error.isNullOrEmpty()) {
                     _responseDriver.value = response.body()
                 } else {
-                    println("afldkjal;akdf;l")
+                    _error.postValue(res!!.error)
                 }
             }
 
             override fun onFailure(call: Call<OtpResponse>, t: Throwable) {
-                println("MineMineFailure" + t.localizedMessage + t.message)
+                _error.postValue(t.message.toString())
             }
         })
     }

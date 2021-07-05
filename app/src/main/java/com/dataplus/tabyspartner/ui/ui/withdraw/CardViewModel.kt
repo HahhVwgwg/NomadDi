@@ -21,18 +21,15 @@ class CardViewModel : ViewModel() {
     fun addCard(hashMap: HashMap<String, Any>) {
         APIClient.aPIClient?.addCard(hashMap)?.enqueue(object : Callback<MessageOtp> {
             override fun onResponse(call: Call<MessageOtp>, response: Response<MessageOtp>) {
-                if (response.isSuccessful) {
-                    if (response.body()?.success != null)
-                        _response.value = response.body()?.success
-                    else
-                        _response.value = response.body()?.error
-                } else {
-                    _response.value = "            "
+                if (response.body()?.success != null)
+                    _response.value = response.body()?.success
+                else if (response.body()?.error != null) {
+                    _error.value = response.body()!!.error
                 }
             }
 
             override fun onFailure(call: Call<MessageOtp>, t: Throwable) {
-                _response.value = t.localizedMessage + t.message
+                _error.postValue(t.message.toString())
             }
         })
     }
