@@ -12,8 +12,8 @@ android {
         applicationId "com.dataplus.partnersgo"
         minSdkVersion 22
         targetSdkVersion 30
-        versionCode 5
-        versionName "1.0.0"
+        versionCode 12
+        versionName "1.0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -33,7 +33,12 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            debuggable false
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
         }
     }
     compileOptions {
@@ -96,5 +101,6 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.2.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
-    //json parser
+    //refresh button
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }

@@ -17,7 +17,10 @@ interface PartnersApiService {
     fun loginByOtp(@FieldMap params: HashMap<String, Any>): Call<TokenOtp>
 
     @GET("/api/provider/profile")
-    fun getProfile(@Query("device_type") device_type: String, @Query("version") version: String): Call<ProfileOtp>
+    fun getProfile(
+        @Query("device_type") device_type: String,
+        @Query("version") version: String
+    ): Call<ProfileOtp>
 
     @POST("/api/provider/providercard")
     fun getProviderCard(): Call<List<CardOtp>>
@@ -33,6 +36,9 @@ interface PartnersApiService {
     @GET("/api/provider/wallettransaction")
     fun getWalletTransaction(): Call<WalletTransactions>
 
+    @GET("/api/provider/notifications")
+    fun getNews(): Call<List<NotificationElement>>
+
     @GET("/api/provider/wallettransaction/details")
     fun getHistoryById(@Query("id") id: Int): Call<HistoryOtp>
 
@@ -42,6 +48,32 @@ interface PartnersApiService {
     @FormUrlEncoded
     @POST("/api/provider/requestamount")
     fun withdraw(@FieldMap params: HashMap<String, Any>): Call<MessageOtp>
+}
+
+class NotificationElement(
+    val id: Long,
+
+    @SerializedName("notify_type")
+    val notifyType: String,
+
+    val image: String,
+    val title: String,
+    val description: String,
+
+    @SerializedName("expiry_date")
+    val expiryDate: String,
+
+    val status: String,
+
+    @SerializedName("viewed_users_json")
+    val viewedUsersJSON: String,
+
+    @SerializedName("error")
+    val error: String
+) {
+    override fun toString(): String {
+        return "NotificationElement(id=$id, notifyType='$notifyType', image='$image', title='$title', description='$description', expiryDate='$expiryDate', status='$status', viewedUsersJSON='$viewedUsersJSON', error='$error')"
+    }
 }
 
 
@@ -86,13 +118,13 @@ class WalletDetails(
     val transactionRecept: String,
 
     val type: String,
-    val amount: Long,
+    val amount: Double,
 
     @SerializedName("open_balance")
-    val openBalance: Long,
+    val openBalance: Double,
 
     @SerializedName("close_balance")
-    val closeBalance: Long,
+    val closeBalance: Double,
 
     @SerializedName("payment_mode")
     val paymentMode: String,
@@ -293,7 +325,7 @@ class WalletTransactions(
     val walletTransation: List<WalletTransation>,
 
     @SerializedName("wallet_balance")
-    val walletBalance: Long,
+    val walletBalance: Int,
 
     @SerializedName("error")
     val error: String? = null
@@ -328,13 +360,13 @@ class WalletTransation(
     val transactionDesc: String,
 
     val type: String,
-    val amount: Long,
+    val amount: Double,
 
     @SerializedName("open_balance")
-    val openBalance: Long,
+    val openBalance: Double,
 
     @SerializedName("close_balance")
-    val closeBalance: Long,
+    val closeBalance: Double,
 
     @SerializedName("payment_mode")
     val paymentMode: String,
@@ -353,7 +385,7 @@ class TransferLists(
     val pendinglist: List<Pendinglist>,
 
     @SerializedName("wallet_balance")
-    val walletBalance: Long
+    val walletBalance: Int
 ) {
     override fun toString(): String {
         return "TransferLists(pendinglist=$pendinglist, walletBalance=$walletBalance)"
@@ -385,13 +417,13 @@ class Pendinglist(
     val transactionDesc: String,
 
     val type: String,
-    val amount: Long,
+    val amount: Double,
 
     @SerializedName("open_balance")
-    val openBalance: Long,
+    val openBalance: Double,
 
     @SerializedName("close_balance")
-    val closeBalance: Long,
+    val closeBalance: Double,
 
     @SerializedName("payment_mode")
     val paymentMode: String,

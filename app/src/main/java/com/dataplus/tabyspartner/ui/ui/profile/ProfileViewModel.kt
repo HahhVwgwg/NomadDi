@@ -1,5 +1,6 @@
 package com.dataplus.tabyspartner.ui.ui.profile
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dataplus.tabyspartner.model.ResultResponse
@@ -14,6 +15,7 @@ class ProfileViewModel : ViewModel() {
 
     val responseInvite = MutableLiveData<String>()
     val responseNews = MutableLiveData<ResultResponse<List<OwnNewsResponse>>>()
+    val responseNewsPartners = MutableLiveData<ResultResponse<List<NotificationElement>>>()
     val responseIncomes = MutableLiveData<ResultResponse<List<Pair<String, String>>>>()
 
     fun sendInvite(phone: String, ref: String) {
@@ -33,6 +35,10 @@ class ProfileViewModel : ViewModel() {
             })
     }
 
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String>
+        get() = _error
+
     fun getNews() {
         OwnApi.retrofitService.getNews()
             .enqueue(object : Callback<List<OwnNewsResponse>> {
@@ -49,6 +55,33 @@ class ProfileViewModel : ViewModel() {
                 }
             })
     }
+
+    fun getNewsPartners() {
+        APIClient.aPIClient?.getNews()?.enqueue(object : Callback<List<NotificationElement>> {
+            override fun onResponse(
+                call: Call<List<NotificationElement>>,
+                response: Response<List<NotificationElement>>
+            ) {
+                val res = response.body()
+                if (response.isSuccessful ) {
+                    val resp = response.body()
+                    responseNewsPartners.postValue(ResultResponse.Success(resp ?: listOf()))
+//                    responseHistory.postValue(
+//                        ResultResponse.Success(
+//                            resp?.walletTransation ?: listOf()
+//                        )
+//                    )
+                } else {
+//                    _error.postValue(res!!.error)
+                }
+            }
+
+            override fun onFailure(call: Call<List<NotificationElement>>, t: Throwable) {
+                _error.postValue(t.message.toString())
+            }
+        })
+    }
+
 
     fun getIncomes(phone: String) {
         OwnApi.retrofitService.getIncome(phone)

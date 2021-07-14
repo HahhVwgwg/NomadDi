@@ -1,6 +1,7 @@
 package com.dataplus.tabyspartner.ui.ui.main
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -97,7 +98,12 @@ class MainPageFragment : Fragment() {
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
         name_short = sharedPreferences.getString("USER_SHORT_NAME", "")!!
         val userPhoneNumber = sharedPreferences.getString("USER_PHONE_NUMBER", "")
-
+        binding.refreshLayout.setOnRefreshListener {
+            (activity as MainActivity).handleFrame(MainPageFragment())
+        }
+        binding.refresh.setOnClickListener {
+            (activity as MainActivity).handleFrame(MainPageFragment())
+        }
 //        viewModel.getProviderCard(activity as MainActivity)
 //        val hashMap = HashMap<String, Any>()
 //        hashMap["card_id"] = "4400430190598950"
@@ -131,7 +137,16 @@ class MainPageFragment : Fragment() {
             if (it.startsWith("http")) {
                 (activity as? MainActivity)?.showBottomSheet(requireContext(), it)
             } else {
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                dialogBuilder.setMessage(it)
+                    .setCancelable(false)
+                    .setPositiveButton(
+                        "Повторить"
+                    ) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                val alert = dialogBuilder.create()
+                alert.show()
                 if (it == "token_invalid") {
                     sharedPreferences.edit().clear().apply()
                     requireContext().startActivity(

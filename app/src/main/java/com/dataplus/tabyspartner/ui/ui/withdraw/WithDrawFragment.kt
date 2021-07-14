@@ -18,7 +18,6 @@ import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.text.isDigitsOnly
 import androidx.databinding.DataBindingUtil
@@ -30,7 +29,6 @@ import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.FragmentMainPageBinding
 import com.dataplus.tabyspartner.databinding.FragmentWithDrawBinding
 import com.dataplus.tabyspartner.modal.ModalBottomSheet
-import com.dataplus.tabyspartner.modal.UpdateBottomSheet
 import com.dataplus.tabyspartner.networking.CardOtp
 import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity2
@@ -69,10 +67,21 @@ class WithDrawFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity()).get(WithDrawViewModel::class.java)
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)!!
         viewModel.error.observe(viewLifecycleOwner, {
+            if (it == null)
+                return@observe
             if (it.startsWith("http")) {
                 (activity as? MainActivity)?.showBottomSheet(requireContext(), it)
             } else {
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                dialogBuilder.setMessage(it)
+                    .setCancelable(false)
+                    .setPositiveButton(
+                        "Повторить"
+                    ) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                val alert = dialogBuilder.create()
+                alert.show()
                 if (it == "token_invalid") {
                     sharedPreferences.edit().clear().apply()
                     requireContext().startActivity(
@@ -99,6 +108,12 @@ class WithDrawFragment : Fragment() {
                     0
                 ) == 0
             ) View.GONE else View.VISIBLE
+        binding.refreshLayout.setOnRefreshListener {
+            (activity as MainActivity).handleFrame(WithDrawFragment())
+        }
+        binding.refresh.setOnClickListener {
+            (activity as MainActivity).handleFrame(WithDrawFragment())
+        }
         return binding.root
     }
 
@@ -166,11 +181,16 @@ class WithDrawFragment : Fragment() {
                     map["amount"] = with_draw_amount.text.toString()
                     viewModel.addCard(map)
                 } else {
-                    Toast.makeText(
-                        context,
-                        "Для добавления карты, сперва укажите сумму вывода",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                    dialogBuilder.setMessage("Для добавления карты, сперва укажите сумму вывода")
+                        .setCancelable(false)
+                        .setPositiveButton(
+                            "Повторить"
+                        ) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                    val alert = dialogBuilder.create()
+                    alert.show()
                 }
             } else {
                 binding.chooseCardBtn.text = item.lastFour
@@ -235,22 +255,7 @@ class WithDrawFragment : Fragment() {
                 ).toInt()
             }
 
-            if (!binding.chooseCardBtn.text.toString().isDigitsOnly() && !SharedHelper.getKey(
-                    context,
-                    "KASSA",
-                    false
-                )
-            ) {
-                val dialogBuilder = AlertDialog.Builder(this.requireContext())
-                dialogBuilder.setMessage("Пожалуйста, выберите вашу карту")
-                    .setCancelable(false)
-                    .setPositiveButton("Повторить") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                val alert = dialogBuilder.create()
-                alert.setTitle("Вы не выбрали карту перевода!")
-                alert.show()
-            } else if (binding.withDrawAmount.text.toString() == "") {
+            if (binding.withDrawAmount.text.toString() == "") {
                 val dialogBuilder = AlertDialog.Builder(this.requireContext())
                 dialogBuilder.setMessage("Минимальная сумма перевода 200 \u20b8")
                     .setCancelable(false)
@@ -325,6 +330,17 @@ class WithDrawFragment : Fragment() {
                     val alert = dialogBuilder.create()
                     alert.setTitle("Вывод средств невозможен")
                     alert.show()
+                } else if (choose_card_btn.text == "Выберите карту" && choose_card_btn.visibility == View.VISIBLE) {
+                    val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                    dialogBuilder.setMessage("Сначала выберите карту")
+                        .setCancelable(false)
+                        .setPositiveButton(
+                            "Повторить"
+                        ) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                    val alert = dialogBuilder.create()
+                    alert.show()
                 } else {
                     if (SharedHelper.getKey(context, "CARD_COUNT", 0) == 0 && SharedHelper.getKey(
                             context,
@@ -376,7 +392,7 @@ class WithDrawFragment : Fragment() {
 
             override fun onLoadResource(view: WebView, url: String) {
                 Log.e("TAG", "onLoadResource: " + view.url)
-                if (view.url == "https://www.google.com/") {
+                if (view.url == "https://my.partners-go.kz/api/kassa/callback/android.php?status=ok" || view.url == "https://my.partners-go.kz/api/kassa/callback/android.php") {
                     mWebView.visibility = View.GONE
                     mWebView.destroy()
                 }

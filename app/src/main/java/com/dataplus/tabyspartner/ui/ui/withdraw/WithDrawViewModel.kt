@@ -43,15 +43,7 @@ class WithDrawViewModel : ViewModel() {
 
     fun String?.parseSum(): String {
         this ?: return "0"
-        return try {
-            if (this.toFloat() > 0f) {
-                this
-            } else {
-                "0"
-            }
-        } catch (e: Exception) {
-            "0"
-        }
+        return this
     }
 
     fun getDriversProperties(phone: String) {

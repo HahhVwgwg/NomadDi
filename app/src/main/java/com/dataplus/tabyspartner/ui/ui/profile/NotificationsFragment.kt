@@ -31,7 +31,7 @@ class NotificationsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.responseNews.observe(viewLifecycleOwner, {
+        viewModel.responseNewsPartners.observe(viewLifecycleOwner, {
             when (it) {
                 is ResultResponse.Loading -> {}
                 is ResultResponse.Success -> {
@@ -47,6 +47,7 @@ class NotificationsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.getNews()
+        viewModel.getNewsPartners()
         (activity as? MainActivity)?.setToolbarTitle(getString(R.string.notifications_title), true)
     }
 }

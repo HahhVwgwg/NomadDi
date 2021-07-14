@@ -33,15 +33,14 @@ object APIClient {
         }
     private val httpClient: OkHttpClient
         get() = try {
-            val interceptor = HttpLoggingInterceptor()
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+//            val interceptor = HttpLoggingInterceptor()
+//            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
             OkHttpClient()
                 .newBuilder()
                 .connectTimeout(10, TimeUnit.MINUTES)
                 .readTimeout(10, TimeUnit.MINUTES)
                 .writeTimeout(10, TimeUnit.MINUTES)
                 .retryOnConnectionFailure(true)
-                .addInterceptor(interceptor)
                 .addNetworkInterceptor(AddHeaderInterceptor())
                 .build()
         } catch (e: Exception) {

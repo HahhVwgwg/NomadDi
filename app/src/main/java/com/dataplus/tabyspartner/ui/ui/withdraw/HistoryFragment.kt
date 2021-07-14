@@ -1,5 +1,6 @@
 package com.dataplus.tabyspartner.ui.ui.withdraw
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -48,7 +49,16 @@ class HistoryFragment : Fragment() {
         sharedPreferences = inflater.context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         viewModel = ViewModelProvider(requireActivity()).get(WithDrawViewModel::class.java)
         viewModel.error.observe(viewLifecycleOwner, {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            val dialogBuilder = AlertDialog.Builder(this.requireContext())
+                dialogBuilder.setMessage(it)
+                    .setCancelable(false)
+                    .setPositiveButton(
+                        "Повторить"
+                    ) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                val alert = dialogBuilder.create()
+                alert.show()
             if (it == "token_invalid"){
                 sharedPreferences.edit().clear().apply()
                 requireContext().startActivity(

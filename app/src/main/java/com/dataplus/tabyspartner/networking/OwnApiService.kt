@@ -58,9 +58,9 @@ interface OwnApiService {
 
 object OwnApi {
     private val client = OkHttpClient.Builder().apply {
-        addInterceptor(HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        })
+//        addInterceptor(HttpLoggingInterceptor().apply {
+//            level = HttpLoggingInterceptor.Level.BODY
+//        })
     }.build()
 
     private val retrofit = Retrofit.Builder()

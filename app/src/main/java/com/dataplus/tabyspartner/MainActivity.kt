@@ -174,7 +174,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleFrame(fragment: Fragment): Boolean {
+    public fun handleFrame(fragment: Fragment): Boolean {
         val fragmentTransaction = this.supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.navHostFragment, fragment).commit()
         return true
