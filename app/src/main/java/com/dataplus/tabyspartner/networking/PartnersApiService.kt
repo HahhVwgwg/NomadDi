@@ -293,9 +293,17 @@ class ProfileOtp {
     @Expose
     val forceUpdate: Boolean = false
 
+    @SerializedName("pending")
+    @Expose
+    val pending: Boolean = false
+
     @SerializedName("url")
     @Expose
     val url: String? = null
+
+    @SerializedName("transaction_url")
+    @Expose
+    val transactionUrl: String? = null
 
     override fun toString(): String {
         return "ProfileOtp(id=$id, firstName=$firstName, lastName=$lastName, mobile=$mobile, serviceCountry=$serviceCountry, serviceNumber=$serviceNumber, serviceCar=$serviceCar, serviceColor=$serviceColor, serviceYear=$serviceYear, serviceModel=$serviceModel, status=$status, currentStatus=$currentStatus, workingStatus=$workingStatus, fleet=$fleet, walletBalance=$walletBalance, paymentType=$paymentType, cardCount=$cardCount)"

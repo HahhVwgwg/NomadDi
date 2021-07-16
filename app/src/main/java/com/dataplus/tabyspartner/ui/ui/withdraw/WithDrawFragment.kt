@@ -19,7 +19,6 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
-import androidx.core.text.isDigitsOnly
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -43,6 +42,7 @@ class WithDrawFragment : Fragment() {
     }
 
     private var cardId: Int = -1
+    private var transactionUrl: String? = null
     private lateinit var binding: FragmentWithDrawBinding
     private lateinit var viewModel: WithDrawViewModel
     private lateinit var bindingMainPageBinding: FragmentMainPageBinding
@@ -108,11 +108,23 @@ class WithDrawFragment : Fragment() {
                     0
                 ) == 0
             ) View.GONE else View.VISIBLE
+
+        viewModel.profile.observe(viewLifecycleOwner, {
+            println("WWS")
+            if (it.pending) {
+                println("WWS")
+                binding.pendingTransaction.visibility = View.VISIBLE
+                transactionUrl = it.transactionUrl
+            }
+        })
         binding.refreshLayout.setOnRefreshListener {
             (activity as MainActivity).handleFrame(WithDrawFragment())
         }
         binding.refresh.setOnClickListener {
             (activity as MainActivity).handleFrame(WithDrawFragment())
+        }
+        binding.pendingTransaction.setOnClickListener {
+            transactionUrl?.let { it1 -> initializeWebView(it1) }
         }
         return binding.root
     }
@@ -163,11 +175,6 @@ class WithDrawFragment : Fragment() {
                 }
             }
         })
-//        viewModel.error.observe(viewLifecycleOwner, Observer {
-//            it ?: return@Observer
-//            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-//            viewModel.consumeError()
-//        })
         binding.myBalanceHistory.setOnClickListener {
             handleFrame(HistoryFragment.getInstance(viewModel.moneySource.value ?: 0))
         }
@@ -411,21 +418,10 @@ class WithDrawFragment : Fragment() {
             sharedPreferences.edit().putLong("USER_WITHDRAW_TIME", System.currentTimeMillis())
                 .apply()
             count(10000) {}
-//            sharedPreferences.getString("USER_PHONE_NUMBER", "")?.let { userPhoneNumber ->
-////                viewModel.withDrawCashViewModelFun(
-////                    amount = with_draw_amount.text.toString(),
-////                    cardNumber = choose_card_btn.text.toString(),
-////                    phone = userPhoneNumber.replace("+", "")
-////                )
-//                val hashMap2 = HashMap<String, Any>()
-//                hashMap2["card_id"] = "4"
-//                hashMap2["amount"] = with_draw_amount.text.toString()
-//                viewModel.withdraw(hashMap2)
-//            }
-            val hashMap2 = HashMap<String, Any>()
-            hashMap2["card_id"] = cardId
-            hashMap2["amount"] = with_draw_amount.text.toString()
-            viewModel.withdraw(hashMap2)
+            val map = HashMap<String, Any>()
+            map["card_id"] = cardId
+            map["amount"] = with_draw_amount.text.toString()
+            viewModel.withdraw(map)
             viewModel.responseWithDraw.observe(viewLifecycleOwner, {
                 if (it == true) {
                     viewModel.getProfile()

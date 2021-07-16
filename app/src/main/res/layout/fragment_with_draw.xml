@@ -143,14 +143,29 @@
                         app:layout_constraintVertical_bias="0.202" />
 
                     <TextView
+                        android:id="@+id/pending_transaction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        android:textColor="@color/red"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/withdraw_btn_withdrawPage"
+                        android:text="Завершить последнию\nтранзакцию" />
+
+                    <TextView
                         android:id="@+id/withdraw_delay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/grey_font"
+                        android:layout_marginTop="10dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/withdraw_btn_withdrawPage"
+                        app:layout_constraintTop_toBottomOf="@id/pending_transaction"
                         tools:text="Следующий вывод доступен через 40 сек." />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

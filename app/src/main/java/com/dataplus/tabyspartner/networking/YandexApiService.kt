@@ -1,6 +1,5 @@
 package com.dataplus.tabyspartner.networking
 
-import com.google.gson.JsonObject
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -18,7 +17,6 @@ interface YandexApiService {
 }
 
 
-
 object YandexApi {
     private val client = OkHttpClient.Builder().apply {
         addInterceptor(YandexApiInterceptor())
@@ -28,11 +26,11 @@ object YandexApi {
 
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
+        .client(client)
         .baseUrl(BASE_URL)
         .build()
 
-    val retrofitService : YandexApiService by lazy {
+    val retrofitService: YandexApiService by lazy {
         retrofit.create(YandexApiService::class.java)
     }
 

@@ -20,6 +20,7 @@ import com.dataplus.tabyspartner.databinding.ActivityAuthorizationBinding
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import java.lang.RuntimeException
 
 
 class Authorization : AppCompatActivity() {
@@ -72,31 +73,23 @@ class Authorization : AppCompatActivity() {
                     binding.loginFormFeedback.text = "Ваш номер заблокирован"
                     binding.loginFormFeedback.visibility = View.VISIBLE
                 } else {
-                    //binding.loginProgressBar.visibility = View.VISIBLE
-                    //binding.generateBtn.isEnabled = false
-                    //binding.loginFormFeedback.visibility = View.VISIBLE
                     viewModel.getUser(complete_phone_number,this)
                     binding.generateBtn.isEnabled = false
                     binding.loginProgressBar.isEnabled = true
                     binding.loginProgressBar.visibility = View.VISIBLE
                     viewModel.response.observe(binding.lifecycleOwner as Authorization, {
-                        //Log.d("Check",it.toString())
                         if (complete_phone_number == it.mobile) {
                             binding.loginFormFeedback.text = ""
-                            //Log.d("Check",it.toString())
                             Log.d("CheckPhoneNUmbers","+${complete_phone_number}"+" "+it.mobile)
                             sharedPreferences.edit()
                                 .putString("USER_PHONE_NUMBER", "+${complete_phone_number}")
                                 .apply()
-//                            viewModel.getMessageStatus(this, "+$complete_phone_number", it.otp)
-                            Log.d("CheckVerCode",it.toString())
                             val intent = Intent(this, MobizonActivity::class.java)
                             intent.putExtra("phoneNumber", complete_phone_number)
                             intent.putExtra("verCode", it.otp)
                             startActivity(intent)
                             finish()
                         } else {
-                            //Log.d("Check","+${complete_phone_number}"+" "+it.driver_profile.phones[0])
                             binding.generateBtn.isEnabled = true
                             binding.loginProgressBar.isEnabled = false
                             binding.loginFormFeedback.visibility = View.VISIBLE

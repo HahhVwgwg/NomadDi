@@ -20,6 +20,8 @@ import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.ActivityVerificationBinding
 import com.dataplus.tabyspartner.ui.ui.authorization.Authorization
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import java.lang.RuntimeException
 import java.util.*
 
 class VerificationActivity : AppCompatActivity() {

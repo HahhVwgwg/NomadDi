@@ -20,6 +20,10 @@ class WithDrawViewModel : ViewModel() {
     val balance: LiveData<Pair<String, String>>
         get() = _balance
 
+    private val _profile = MutableLiveData<ProfileOtp>()
+    val profile: LiveData<ProfileOtp>
+        get() = _profile
+
     private val _response = MutableLiveData<String>()
     val response: LiveData<String>
         get() = _response
@@ -76,29 +80,31 @@ class WithDrawViewModel : ViewModel() {
     }
 
     fun getProfile() {
-        APIClient.aPIClient?.getProfile(BuildConfig.DEVICE_TYPE, BuildConfig.VERSION_NAME)?.enqueue(object : Callback<ProfileOtp> {
-            override fun onResponse(call: Call<ProfileOtp>, response: Response<ProfileOtp>) {
-                if (response.body()?.error != null) {
-                    _error.value = response.body()!!.error
-                } else {
-                    val profileOtp: ProfileOtp = response.body()!!
-                    if (profileOtp.forceUpdate){
-                        _error.value = profileOtp.url
+        APIClient.aPIClient?.getProfile(BuildConfig.DEVICE_TYPE, BuildConfig.VERSION_NAME)
+            ?.enqueue(object : Callback<ProfileOtp> {
+                override fun onResponse(call: Call<ProfileOtp>, response: Response<ProfileOtp>) {
+                    if (response.body()?.error != null) {
+                        _error.value = response.body()!!.error
                     } else {
-                        _balance.postValue(
-                            Pair(
-                                profileOtp.walletBalance.toString().parseSum(),
-                                "0"
+                        val profileOtp: ProfileOtp = response.body()!!
+                        if (profileOtp.forceUpdate) {
+                            _error.value = profileOtp.url
+                        } else {
+                            _profile.postValue(profileOtp)
+                            _balance.postValue(
+                                Pair(
+                                    profileOtp.walletBalance.toString().parseSum(),
+                                    "0"
+                                )
                             )
-                        )
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<ProfileOtp>, t: Throwable) {
-                _error.postValue(t.message.toString())
-            }
-        })
+                override fun onFailure(call: Call<ProfileOtp>, t: Throwable) {
+                    _error.postValue(t.message.toString())
+                }
+            })
     }
 
     fun withDrawCashViewModelFun(amount: String, cardNumber: String, phone: String) {
@@ -201,34 +207,5 @@ class WithDrawViewModel : ViewModel() {
             }
         })
     }
-
-//    fun getHistory(phone: String, mode: Int) {
-//        val call = if (mode == 0) {
-//            OwnApi.retrofitService.getWithdrawHistory(phone)
-//        } else {
-//            OwnApi.retrofitService.getWithdrawHistoryRef(phone)
-//        }
-//        call.enqueue(object : Callback<ListResponse<OwnWithdrawResponse>> {
-//            override fun onResponse(
-//                call: Call<ListResponse<OwnWithdrawResponse>>,
-//                response: Response<ListResponse<OwnWithdrawResponse>>
-//            ) {
-//                val resp = response.body()
-//                if (mode == 0) {
-//                    responseHistory.postValue(ResultResponse.Success(resp?.list ?: listOf()))
-//                } else {
-//                    responseHistoryRef.postValue(ResultResponse.Success(resp?.list ?: listOf()))
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ListResponse<OwnWithdrawResponse>>, t: Throwable) {
-//                if (mode == 0) {
-//                    responseHistory.postValue(ResultResponse.Error(t.toString()))
-//                } else {
-//                    responseHistoryRef.postValue(ResultResponse.Error(t.toString()))
-//                }
-//            }
-//        })
-//    }
 
 }
