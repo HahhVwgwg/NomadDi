@@ -107,14 +107,29 @@ class MobizonActivity : AppCompatActivity() {
         map["device_type"] = "android"
         map["otp"] = otp
         map["mobile"] = phone
-        viewModel.loginByOtp(map, this)
+        viewModel.loginByOtp(map)
+        viewModel.responseOtp.observe(this, {
+            redirectToPinCodeActivity(it)
+        })
+        viewModel.error.observe(this, {
+            redirectToChooseParkActivity()
+        })
     }
 
-    fun redirectToPinCodeActivity() {
+    private fun redirectToPinCodeActivity(accessToken: String) {
+        SharedHelper.putKey(this, "access_token", accessToken)
         sharedPreferences.edit()
             .putBoolean("USERPHONE_REGISTERED", true)
             .putBoolean("USER_PIN_CODE_CREATED", false).apply()
         startActivity(Intent(this, VerificationActivity()::class.java))
+        finish()
+    }
+
+    private fun redirectToChooseParkActivity() {
+        val intent = Intent(this, ChooseParkActivity()::class.java)
+        intent.putExtra("phoneNumber", phone)
+        intent.putExtra("otp", otp)
+        startActivity(intent)
         finish()
     }
 

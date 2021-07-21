@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_gravity="center"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    android:layout_gravity="center">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainLayoutVer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <RelativeLayout
             android:id="@+id/logoRel"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="84dp"
             android:layout_height="84dp"
             android:layout_marginTop="60dp"
-            android:background="@drawable/bg_circle">
+            android:background="@drawable/bg_circle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/iv_lock"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_centerInParent="true"
+                android:contentDescription="@null"
                 app:srcCompat="@drawable/lock" />
 
             <ImageView
@@ -35,6 +34,7 @@
                 android:layout_height="32dp"
                 android:layout_centerInParent="true"
                 android:alpha="0"
+                android:contentDescription="@null"
                 android:scaleX="0"
                 android:scaleY="0"
                 app:srcCompat="@drawable/ic_check_bold_24dp"
@@ -42,18 +42,18 @@
         </RelativeLayout>
 
         <TextView
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/logoRel"
             android:id="@+id/tv_input_tip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Создайте код быстрого доступа из 4 цифр"
             android:layout_marginTop="16dp"
             android:letterSpacing="0.02"
+            android:text="@string/create_pin_code_with_four_letter"
             android:textColor="#000"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/logoRel" />
 
         <LinearLayout
             android:id="@+id/code_form"
@@ -67,77 +67,80 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_input_tip"
             app:layout_constraintVertical_bias="0.328">
+
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/textField3"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleEnabled="true"
-                android:layout_marginEnd="32dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="32dp"
-                android:hint="Текущий код"
+                android:layout_marginEnd="32dp"
+                android:hint="@string/current_pin_code"
                 android:visibility="gone"
-                >
+                app:passwordToggleEnabled="true">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/current_pin_code_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/text_input_bg"
-                    app:boxStrokeColor="@android:color/transparent"
                     android:ems="10"
-                    android:maxLength="4"
                     android:inputType="numberPassword"
+                    android:maxLength="4"
                     android:padding="16dp"
                     android:textSize="16sp"
-                    />
+                    app:boxStrokeColor="@android:color/transparent" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/textField"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleEnabled="true"
-                android:layout_marginEnd="32dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="32dp"
-                android:hint="Придумайте код">
+                android:layout_marginEnd="32dp"
+                android:hint="@string/create_pin_code"
+                app:passwordToggleEnabled="true">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/pin_code_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/text_input_bg"
-                    app:boxStrokeColor="@android:color/transparent"
                     android:ems="10"
-                    android:maxLength="4"
                     android:inputType="numberPassword"
+                    android:maxLength="4"
                     android:padding="16dp"
                     android:textSize="16sp"
-                    />
+                    app:boxStrokeColor="@android:color/transparent" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/textField2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleEnabled="true"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="32dp"
-                android:hint="Повторите код">
+                android:hint="@string/repeat_password"
+                app:passwordToggleEnabled="true">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/pin_code_verify_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/text_input_bg"
-                    app:boxStrokeColor="@android:color/transparent"
                     android:ems="10"
-                    android:maxLength="4"
                     android:inputType="numberPassword"
+                    android:maxLength="4"
                     android:padding="16dp"
                     android:textSize="16sp"
-                    />
+                    app:boxStrokeColor="@android:color/transparent" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <Button
                 android:id="@+id/verify_pin_code_btn"
                 android:layout_width="match_parent"
@@ -146,7 +149,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="32dp"
-                android:text="Подтвердить"
+                android:text="@string/confirm_auth"
                 android:textAllCaps="false"
                 android:textColor="@android:color/background_light"
                 android:textSize="16sp" />
@@ -157,7 +160,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Загрузка . . ."
+            android:text="@string/loading"
             android:textColor="@android:color/holo_red_light"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -169,7 +172,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Забыли пинкод?"
+            android:text="@string/forgot_pin_code"
             android:textColor="@color/black"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"

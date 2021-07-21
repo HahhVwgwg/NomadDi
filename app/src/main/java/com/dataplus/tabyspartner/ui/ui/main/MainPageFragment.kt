@@ -8,14 +8,11 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -104,35 +101,7 @@ class MainPageFragment : Fragment() {
         binding.refresh.setOnClickListener {
             (activity as MainActivity).handleFrame(MainPageFragment())
         }
-//        viewModel.getProviderCard(activity as MainActivity)
-//        val hashMap = HashMap<String, Any>()
-//        hashMap["card_id"] = "4400430190598950"
-//        hashMap["brand"] = "V"
-//        hashMap["card_name"] = "File"
-//
-//        viewModel.addCard(hashMap,activity as MainActivity)
-//        viewModel.getWalletTransaction(activity as MainActivity)
-//        viewModel.getTransferList(activity as MainActivity)
-//        val hashMap2 = HashMap<String, Any>()
-//        hashMap2["card_id"] = "4"
-//        hashMap2["amount"] = "1500"
-//        viewModel.withdraw(hashMap2, activity as MainActivity)
 
-
-
-//        viewModel.getYandexDriversProperties(userPhoneNumber!!)
-//        viewModel.response.observe(viewLifecycleOwner, Observer {
-//            //Log.d("responseDriver", it.toString())
-//            binding.profileNameLabel.text =
-//                it.driver_profile.first_name + "\n" + it.driver_profile.last_name
-//            binding.amountCashNameLabel.text = it.accounts[0].balance
-//            sharedPreferences.edit()
-//                .putString(
-//                    "USER_SHORT_NAME",
-//                    it.driver_profile.first_name + " " + it.driver_profile.last_name[0] + "."
-//                )
-//                .apply()
-//        })
         viewModel.error.observe(viewLifecycleOwner, {
             if (it.startsWith("http")) {
                 (activity as? MainActivity)?.showBottomSheet(requireContext(), it)

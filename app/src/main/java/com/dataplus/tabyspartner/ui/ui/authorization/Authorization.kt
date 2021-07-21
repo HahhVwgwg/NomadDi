@@ -33,7 +33,6 @@ class Authorization : AppCompatActivity() {
 
     lateinit var sharedPreferences: SharedPreferences
     var isRegisteredPhone = false
-    //var isRegisteredMobizonCode = false
     var phoneNumber = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +79,6 @@ class Authorization : AppCompatActivity() {
                     viewModel.response.observe(binding.lifecycleOwner as Authorization, {
                         if (complete_phone_number == it.mobile) {
                             binding.loginFormFeedback.text = ""
-                            Log.d("CheckPhoneNUmbers","+${complete_phone_number}"+" "+it.mobile)
                             sharedPreferences.edit()
                                 .putString("USER_PHONE_NUMBER", "+${complete_phone_number}")
                                 .apply()

@@ -69,5 +69,15 @@
     <string name="partners_menu">Партнерский счет</string>
     <string name="default_notification_channel_id">10003</string>
     <string name="refresh">Обновить</string>
+    <string name="confirm">Продолжить</string>
+    <string name="current_pin_code">Текущий код</string>
+    <string name="create_pin_code">Придумайте код</string>
+    <string name="repeat_password">Повторите код</string>
+    <string name="confirm_auth">Подтвердить</string>
+    <string name="loading">Загрузка . . .</string>
+    <string name="forgot_pin_code">Забыли пинкод?</string>
+    <string name="create_pin_code_with_four_letter">Создайте код быстрого доступа из 4 цифр</string>
+    <string name="choose_park">Выбор парка</string>
+    <string name="choose_park_element">Выберите парк</string>
 
 </resources>

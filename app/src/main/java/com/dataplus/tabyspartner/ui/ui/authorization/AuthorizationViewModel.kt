@@ -6,9 +6,9 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.dataplus.tabyspartner.model.ResultResponse
 import com.dataplus.tabyspartner.networking.*
 import com.dataplus.tabyspartner.ui.ui.otp.Otp
-import com.dataplus.tabyspartner.utils.SharedHelper
 import kotlinx.android.synthetic.main.activity_authorization.*
 import kotlinx.android.synthetic.main.activity_mobizon.*
 import retrofit2.Call
@@ -23,6 +23,8 @@ class AuthorizationViewModel : ViewModel() {
     private val _responseDriver = MutableLiveData<OtpResponse>()
     val response: LiveData<OtpResponse>
         get() = _responseDriver
+
+    val responseParkElement = MutableLiveData<ResultResponse<List<ParkElement>>>()
 
 
     private val _response = MutableLiveData<MobizonResponse>()
@@ -94,6 +96,33 @@ class AuthorizationViewModel : ViewModel() {
         })
     }
 
+    fun getParkElements(hashMap: HashMap<String, Any>) {
+        APIClient.aPIClient?.getParks(hashMap)?.enqueue(object : Callback<List<ParkElement>> {
+            override fun onResponse(
+                call: Call<List<ParkElement>>,
+                response: Response<List<ParkElement>>
+            ) {
+                if (response.isSuccessful) {
+                    val resp = response.body()
+                    println(resp?.toList())
+                    responseParkElement.postValue(
+                        ResultResponse.Success(
+                            resp?.toList() ?: listOf()
+                        )
+                    )
+                } else {
+                    ResultResponse.Error(
+                        ""
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<List<ParkElement>>, t: Throwable) {
+                println("MineMineFailure" + t.localizedMessage + t.message)
+            }
+        })
+    }
+
     fun getUser(phone: String, activity: Authorization) {
         val hashMap = HashMap<String, Any>()
         hashMap["mobile"] = phone
@@ -118,22 +147,19 @@ class AuthorizationViewModel : ViewModel() {
         })
     }
 
-    fun loginByOtp(hashMap: HashMap<String, Any>, activity: MobizonActivity) {
+    fun loginByOtp(hashMap: HashMap<String, Any>) {
         APIClient.aPIClient?.loginByOtp(hashMap)?.enqueue(object : Callback<TokenOtp> {
             override fun onResponse(call: Call<TokenOtp>, response: Response<TokenOtp>) {
                 if (response.isSuccessful) {
-                    println("device_tokenwws" + response.body().toString())
                     val tokenOtp = response.body()
-                    val accessToken = "Bearer " + tokenOtp?.accessToken
-                    SharedHelper.putKey(activity, "access_token", accessToken)
-                    activity.redirectToPinCodeActivity()
+                    _responseOtp.value = "Bearer " + tokenOtp?.accessToken
                 } else {
-                    Log.d("device_token", "Error")
+                    _error.postValue("")
                 }
             }
 
             override fun onFailure(call: Call<TokenOtp>, t: Throwable) {
-                println("MineMineFailure" + t.localizedMessage + t.message)
+                _error.postValue("")
             }
         })
     }

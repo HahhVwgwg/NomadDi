@@ -16,7 +16,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.adapter.CreditCardAdapter
 import com.dataplus.tabyspartner.databinding.FragmentModalBottomSheetBinding
@@ -26,8 +25,6 @@ import com.dataplus.tabyspartner.model.ResultResponse
 import com.dataplus.tabyspartner.networking.APIClient
 import com.dataplus.tabyspartner.networking.CardOtp
 import com.dataplus.tabyspartner.networking.MessageOtp
-import com.dataplus.tabyspartner.networking.WalletTransation
-import com.dataplus.tabyspartner.ui.ui.profile.adapter.IncomesAdapter
 import com.dataplus.tabyspartner.ui.ui.withdraw.CardFormActivity
 import com.dataplus.tabyspartner.utils.DatabaseHandler
 import com.dataplus.tabyspartner.utils.SharedHelper
@@ -44,6 +41,7 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
     private var creditCardListFromDB: MutableList<CreditCard> = mutableListOf()
     private lateinit var bindingWithDraw: FragmentWithDrawBinding
     private lateinit var model: SharedViewModel
+
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,7 +131,8 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
                                     ?.attach(this)
                                     ?.commit();
                             } else {
-                                Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         })
                     }
@@ -163,10 +162,17 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
 
         fun getProviderCard() {
             APIClient.aPIClient?.getProviderCard()?.enqueue(object : Callback<List<CardOtp>> {
-                override fun onResponse(call: Call<List<CardOtp>>, response: Response<List<CardOtp>>) {
+                override fun onResponse(
+                    call: Call<List<CardOtp>>,
+                    response: Response<List<CardOtp>>
+                ) {
                     if (response.isSuccessful) {
                         val resp = response.body()
-                        responseCardProvider.postValue(ResultResponse.Success(resp?.toList() ?: listOf()))
+                        responseCardProvider.postValue(
+                            ResultResponse.Success(
+                                resp?.toList() ?: listOf()
+                            )
+                        )
                     } else {
                         Log.d("device_token", "Error")
                     }
