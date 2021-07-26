@@ -40,7 +40,7 @@ object APIClient {
                 .connectTimeout(10, TimeUnit.MINUTES)
                 .readTimeout(10, TimeUnit.MINUTES)
                 .writeTimeout(10, TimeUnit.MINUTES)
-                .addInterceptor(interceptor)
+//                .addInterceptor(interceptor)
                 .retryOnConnectionFailure(true)
                 .addNetworkInterceptor(AddHeaderInterceptor())
                 .build()
