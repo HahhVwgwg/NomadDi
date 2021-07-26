@@ -47,6 +47,11 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
         super.onCreate(savedInstanceState)
     }
 
+    override fun onResume() {
+        super.onResume()
+        model.getProviderCard()
+    }
+
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,14 +73,16 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
         model = activity?.run {
             ViewModelProvider(this).get(SharedViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
-        model.getProviderCard()
         model.responseCardProvider.observe(requireActivity(), {
             when (it) {
                 is ResultResponse.Loading -> {
                 }
                 is ResultResponse.Success -> {
-                    if (it.data.isNotEmpty())
+                    if (it.data.isNotEmpty()) {
+                        binding.creditCardListModal.visibility = View.VISIBLE
                         initAdapter(it.data as MutableList<CardOtp>)
+                    } else
+                        binding.creditCardListModal.visibility = View.GONE
                 }
                 is ResultResponse.Error -> {
                     Toast.makeText(view?.context, it.message, Toast.LENGTH_SHORT).show()

@@ -196,7 +196,6 @@ class WithDrawViewModel : ViewModel() {
                 val res = response.body()
                 if (response.isSuccessful && res?.error.isNullOrEmpty()) {
                     _response.value = response.body()?.url
-                    println("wwwwws")
                 } else {
                     _error.postValue(res!!.error)
                 }

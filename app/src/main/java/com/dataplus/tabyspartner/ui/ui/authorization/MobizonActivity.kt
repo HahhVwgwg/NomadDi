@@ -107,6 +107,7 @@ class MobizonActivity : AppCompatActivity() {
         map["device_type"] = "android"
         map["otp"] = otp
         map["mobile"] = phone
+        map["tabys"] = true
         viewModel.loginByOtp(map)
         viewModel.responseOtp.observe(this, {
             redirectToPinCodeActivity(it)

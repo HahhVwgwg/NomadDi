@@ -33,6 +33,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:326017968386:android:0067aae058a9cdfbdbba1b",
+        "android_client_info": {
+          "package_name": "com.dataplus.tabyspartner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "326017968386-ev2hpncp4t40tgraul6c7ibja43q73fm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUWjOvOEGXqFCf18Q96mWHJNMCftQqwsM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "326017968386-ev2hpncp4t40tgraul6c7ibja43q73fm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

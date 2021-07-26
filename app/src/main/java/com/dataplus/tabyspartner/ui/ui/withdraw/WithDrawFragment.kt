@@ -110,9 +110,7 @@ class WithDrawFragment : Fragment() {
             ) View.GONE else View.VISIBLE
 
         viewModel.profile.observe(viewLifecycleOwner, {
-            println("WWS")
             if (it.pending) {
-                println("WWS")
                 binding.pendingTransaction.visibility = View.VISIBLE
                 transactionUrl = it.transactionUrl
             }
@@ -132,7 +130,7 @@ class WithDrawFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         count(
-            10000L - (System.currentTimeMillis() - sharedPreferences.getLong(
+            60000L - (System.currentTimeMillis() - sharedPreferences.getLong(
                 "USER_WITHDRAW_TIME",
                 0L
             ))
@@ -211,10 +209,10 @@ class WithDrawFragment : Fragment() {
             @SuppressLint("SetTextI18n")
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (binding.withDrawAmount.text.toString() == "" || binding.withDrawAmount.text.toString()
-                        .toInt() < 150
+                        .toInt() < 130
                 ) {
                     binding.amountFee.text =
-                        "Комиссия 150 ₸"
+                        "Комиссия 130 ₸"
                     binding.withdrawBtnWithdrawPage.text =
                         "Перевести 0 \u20b8"
                 } else if (binding.withDrawAmount.text.toString().length > 4) {
@@ -229,9 +227,9 @@ class WithDrawFragment : Fragment() {
                         } \u20b8"
                 } else {
                     binding.amountFee.text =
-                        "Комиссия 150 ₸"
+                        "Комиссия 130 ₸"
                     binding.withdrawBtnWithdrawPage.text =
-                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - 150} \u20b8"
+                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - 130} \u20b8"
                 }
             }
 
@@ -417,7 +415,7 @@ class WithDrawFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK) {
             sharedPreferences.edit().putLong("USER_WITHDRAW_TIME", System.currentTimeMillis())
                 .apply()
-            count(10000) {}
+            count(60000) {}
             val map = HashMap<String, Any>()
             map["card_id"] = cardId
             map["amount"] = with_draw_amount.text.toString()
@@ -446,7 +444,7 @@ class WithDrawFragment : Fragment() {
     private fun count(delay: Long, checkYandex: () -> Unit) {
         timer?.cancel()
         Log.d(TAG, "count $delay")
-        if (delay < 1000 || delay > 10000) {
+        if (delay < 1000 || delay > 60000) {
             checkYandex.invoke()
             return
         }

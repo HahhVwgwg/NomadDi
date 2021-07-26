@@ -126,6 +126,7 @@ class AuthorizationViewModel : ViewModel() {
     fun getUser(phone: String, activity: Authorization) {
         val hashMap = HashMap<String, Any>()
         hashMap["mobile"] = phone
+        hashMap["tabys"] = true
         APIClient.aPIClient?.getUser(hashMap)?.enqueue(object : Callback<OtpResponse> {
             override fun onResponse(call: Call<OtpResponse>, response: Response<OtpResponse>) {
                 if (response.isSuccessful) {
