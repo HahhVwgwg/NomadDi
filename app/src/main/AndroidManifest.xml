@@ -34,7 +34,7 @@
         <activity
             android:name="com.dataplus.tabyspartner.ui.ui.authorization.MobizonActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.dataplus.tabyspartner.ui.ui.authorization.ChooseParkActivity"
             android:screenOrientation="portrait" />

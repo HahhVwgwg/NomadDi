@@ -1,10 +1,7 @@
 package com.dataplus.tabyspartner.ui.ui.authorization
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -22,9 +19,12 @@ import com.dataplus.tabyspartner.R
 import com.dataplus.tabyspartner.databinding.ActivityMobizonBinding
 import com.dataplus.tabyspartner.ui.ui.pin.VerificationActivity
 import com.dataplus.tabyspartner.utils.SharedHelper
+import com.dataplus.tabyspartner.utils.SmsBroadcastReceiver
+import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import java.util.*
+import java.util.regex.Pattern
 
 
 class MobizonActivity : AppCompatActivity() {
@@ -40,6 +40,8 @@ class MobizonActivity : AppCompatActivity() {
     var isRegisteredPhone = false
     var isPinCodeCreated = false
     private lateinit var otp: String
+    private val REQ_USER_CONSENT = 200
+    var smsBroadcastReceiver: SmsBroadcastReceiver? = null
 
     //error code
     //make button send code again
@@ -56,8 +58,15 @@ class MobizonActivity : AppCompatActivity() {
         resetTimer()
         otp = intent.getStringExtra("verCode").toString()
         phone = intent.getStringExtra("phoneNumber").toString()
+        startSmartUserConsent()
 
     }
+
+    fun startSmartUserConsent() {
+        val client = SmsRetriever.getClient(applicationContext)
+        client.startSmsUserConsent(null)
+    }
+
 
     @SuppressLint("CommitPrefEdits")
     override fun onResume() {
@@ -95,6 +104,52 @@ class MobizonActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun registerBroadcastReceiver() {
+        smsBroadcastReceiver = SmsBroadcastReceiver()
+        smsBroadcastReceiver!!.smsBroadcastReceiverListener =
+            object : SmsBroadcastReceiver.SmsBroadcastReceiverListener {
+                override fun onSuccess(intent: Intent?) {
+                    startActivityForResult(
+                        intent, REQ_USER_CONSENT
+                    )
+                }
+
+                override fun onFailure() {}
+            }
+        val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+        registerReceiver(smsBroadcastReceiver, intentFilter)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQ_USER_CONSENT) {
+            if (resultCode == RESULT_OK && data != null) {
+                val message = data.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
+                getOtpFromMessage(message!!)
+            }
+        }
+    }
+
+    private fun getOtpFromMessage(message: String) {
+        val otpPattern = Pattern.compile("(|^)\\d{6}")
+        val matcher = otpPattern.matcher(message)
+        if (matcher.find()) {
+            binding.otpTextView.setText(matcher.group(0))
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        registerBroadcastReceiver()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(smsBroadcastReceiver)
+    }
+
+
 
     private fun registerByToken() {
         if (SharedHelper.getKey(this, "device_token").isEmpty()) {
@@ -179,13 +234,13 @@ class MobizonActivity : AppCompatActivity() {
                 // if the dialog is cancelable
                 .setCancelable(false)
                 // positive button text and action
-                .setPositiveButton(R.string.retry, DialogInterface.OnClickListener { dialog, id ->
+                .setPositiveButton(R.string.retry) { _, _ ->
                     recreate()
-                })
+                }
                 // negative button text and action
-                .setNegativeButton(R.string.otmenit, DialogInterface.OnClickListener { dialog, id ->
+                .setNegativeButton(R.string.otmenit) { _, _ ->
                     finish()
-                })
+                }
 
             // create dialog box
             val alert = dialogBuilder.create()

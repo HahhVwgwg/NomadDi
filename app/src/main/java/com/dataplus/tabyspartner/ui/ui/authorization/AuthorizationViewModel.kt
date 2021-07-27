@@ -10,12 +10,9 @@ import com.dataplus.tabyspartner.model.ResultResponse
 import com.dataplus.tabyspartner.networking.*
 import com.dataplus.tabyspartner.ui.ui.otp.Otp
 import kotlinx.android.synthetic.main.activity_authorization.*
-import kotlinx.android.synthetic.main.activity_mobizon.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
-import kotlin.collections.HashMap
 
 
 class AuthorizationViewModel : ViewModel() {

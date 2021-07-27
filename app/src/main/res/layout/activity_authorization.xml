@@ -17,115 +17,123 @@
         tools:context=".ui.ui.authorization.Authorization"
         >
 
-        <ImageView
-            android:id="@+id/login_image"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="64dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/base_logo_transparent_background" />
-
-        <TextView
-            android:id="@+id/login_title"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="Подтвердите свой номер"
-            android:textColor="@color/colorPrimary"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/login_image" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.6"
+            app:layout_constraintTop_toTopOf="parent" >
 
-        <TextView
-            android:id="@+id/login_desc"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
-            android:text="Пожалуйста, введите свой \n номер телефона для авторизации"
-            android:textAlignment="center"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/login_title" />
+            <ImageView
+                android:id="@+id/login_image"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/base_logo_transparent_background"
+                android:contentDescription="@null" />
 
-        <EditText
-            android:id="@+id/country_code_text"
-            android:layout_width="64dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            android:background="@drawable/text_input_bg"
-            android:ems="10"
-            android:maxLength="10"
-            android:enabled="false"
-            android:text="+7"
-            android:inputType="number"
-            android:padding="16dp"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/login_desc" />
+            <TextView
+                android:id="@+id/login_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Подтвердите свой номер"
+                android:textColor="@color/colorPrimary"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_image" />
 
-        <EditText
-            android:id="@+id/phone_number_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
-            android:background="@drawable/text_input_bg"
-            android:ems="10"
-            android:hint="Ваш номер телефона"
-            android:inputType="phone"
-            android:padding="16dp"
-            android:textSize="16sp"
-            android:maxLength="10"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/country_code_text"
-            app:layout_constraintTop_toBottomOf="@+id/login_desc" />
+            <TextView
+                android:id="@+id/login_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                android:text="Пожалуйста, введите свой \n номер телефона для авторизации"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_title" />
 
-        <Button
-            android:id="@+id/generate_btn"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
-            android:text="Получить код"
-            android:textAllCaps="false"
-            android:textColor="@android:color/background_light"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phone_number_text" />
+            <EditText
+                android:id="@+id/country_code_text"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/text_input_bg"
+                android:ems="10"
+                android:maxLength="10"
+                android:enabled="false"
+                android:text="+7"
+                android:inputType="number"
+                android:padding="16dp"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_desc" />
+
+            <EditText
+                android:id="@+id/phone_number_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/text_input_bg"
+                android:ems="10"
+                android:hint="Ваш номер телефона"
+                android:inputType="phone"
+                android:padding="16dp"
+                android:textSize="16sp"
+                android:maxLength="10"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/country_code_text"
+                app:layout_constraintTop_toBottomOf="@+id/login_desc" />
+
+            <Button
+                android:id="@+id/generate_btn"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                android:text="Получить код"
+                android:textAllCaps="false"
+                android:textColor="@android:color/background_light"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/phone_number_text" />
 
 
-        <ProgressBar
-            android:id="@+id/login_progress_bar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginEnd="16dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/generate_btn"
-            app:layout_constraintEnd_toEndOf="@+id/generate_btn"
-            app:layout_constraintTop_toTopOf="@+id/generate_btn" />
+            <ProgressBar
+                android:id="@+id/login_progress_bar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/generate_btn"
+                app:layout_constraintEnd_toEndOf="@+id/generate_btn"
+                app:layout_constraintTop_toTopOf="@+id/generate_btn" />
 
-        <TextView
-            android:id="@+id/login_form_feedback"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="Загрузка . . ."
-            android:textColor="@android:color/holo_red_light"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/generate_btn" />
+            <TextView
+                android:id="@+id/login_form_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Загрузка . . ."
+                android:textColor="@android:color/holo_red_light"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/generate_btn" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

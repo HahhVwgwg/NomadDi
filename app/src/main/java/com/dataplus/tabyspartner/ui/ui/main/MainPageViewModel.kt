@@ -1,6 +1,5 @@
 package com.dataplus.tabyspartner.ui.ui.main
 
-import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,8 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.dataplus.tabyspartner.BuildConfig
 import com.dataplus.tabyspartner.MainActivity
 import com.dataplus.tabyspartner.networking.*
-import com.dataplus.tabyspartner.ui.ui.authorization.MobizonActivity
-import com.dataplus.tabyspartner.utils.SharedHelper
 import com.denzcoskun.imageslider.models.SlideModel
 import retrofit2.Call
 import retrofit2.Callback
