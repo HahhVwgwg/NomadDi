@@ -10,11 +10,11 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.dataplus.tabyspartner"
+        applicationId "com.dataplus.nomad"
         minSdkVersion 22
         targetSdkVersion 30
-        versionCode 33
-        versionName "1.2.0"
+        versionCode 1
+        versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true

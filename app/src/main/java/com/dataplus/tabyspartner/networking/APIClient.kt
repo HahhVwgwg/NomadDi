@@ -14,7 +14,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.util.concurrent.TimeUnit
-private const val BASE_PARTNERS_URL = "https://my.tabys.pro/"
+private const val BASE_PARTNERS_URL = "https://my.nomad-di.kz/"
 object APIClient {
     private var retrofit: Retrofit? = null
     val aPIClient: PartnersApiService?

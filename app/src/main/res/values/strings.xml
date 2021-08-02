@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tabys Go</string>
+    <string name="app_name">Nomad Di</string>
     <string name="app_name_md"><font fgcolor='#ffd030'>Табыс</font> Партнер</string>
     <string name="main_menu_item_title">Главная</string>
     <string name="withdraw_menu_item_title">Вывод средств</string>
@@ -12,7 +12,7 @@
     <string name="balance_card_view_balance_title">Мой баланс</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="phone_number">+77074440011</string>
+    <string name="phone_number">+77003053030</string>
     <string name="change_password_btn_text">Изменить пароль</string>
     <string name="change_pin_code_btn_text">Изменить код быстрого доступа</string>
     <string name="invite_friend_btn_text">Пригласить друзей в приложение</string>
