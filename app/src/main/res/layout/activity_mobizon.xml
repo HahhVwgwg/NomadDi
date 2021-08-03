@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-    <androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/mainLayoutMobizon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,20 +12,18 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.6"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:layout_gravity="center">
+
             <ImageView
                 android:id="@+id/otp_image"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
+                android:contentDescription="@null"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/base_logo_transparent_background"
-                android:contentDescription="@null" />
+                app:srcCompat="@drawable/base_logo_transparent_background" />
+
             <TextView
                 android:id="@+id/otp_title"
                 android:layout_width="wrap_content"
@@ -74,20 +71,21 @@
                 android:id="@+id/staticLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginHorizontal="32dp"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="15dp"
                 android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/otp_text_view">
+
                 <TextView
                     android:id="@+id/send_code_again"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
                     android:background="@drawable/card_chooser_btn_bbg"
-                    android:text="Отправить повторно"/>
+                    android:padding="5dp"
+                    android:text="Отправить повторно" />
             </LinearLayout>
 
             <Button
@@ -130,5 +128,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>
