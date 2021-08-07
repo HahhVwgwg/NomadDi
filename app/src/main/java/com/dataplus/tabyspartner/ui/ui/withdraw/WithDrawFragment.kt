@@ -52,6 +52,7 @@ class WithDrawFragment : Fragment() {
 
     private var timer: CountDownTimer? = null
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -114,6 +115,16 @@ class WithDrawFragment : Fragment() {
                 binding.pendingTransaction.visibility = View.VISIBLE
                 transactionUrl = it.transactionUrl
             }
+        })
+        viewModel.amountFee.observe(viewLifecycleOwner, {
+            if (it.amountFee == - 1)
+                return@observe
+            binding.loginProgressBar.visibility = View.GONE
+            binding.amountFee.visibility = View.VISIBLE
+            binding.amountFee.text =
+                "Комиссия ${it.amountFee} ₸"
+            binding.withdrawBtnWithdrawPage.text =
+                "Перевести ${it.amountSent} \u20b8"
         })
         binding.refreshLayout.setOnRefreshListener {
             (activity as MainActivity).handleFrame(WithDrawFragment())
@@ -180,7 +191,6 @@ class WithDrawFragment : Fragment() {
         (activity as? MainActivity)?.setToolbarTitle("Вывод средств", false)
         model.selected.observe(viewLifecycleOwner, { item ->
             if (item.lastFour == null) {
-                println("WithDrawAmount" + "----" + with_draw_amount.text.toString())
                 if (with_draw_amount.text.toString().isNotEmpty()) {
                     val map = HashMap<String, Any>()
                     map["amount"] = with_draw_amount.text.toString()
@@ -206,34 +216,16 @@ class WithDrawFragment : Fragment() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
+
             @SuppressLint("SetTextI18n")
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (binding.withDrawAmount.text.toString() == "" || binding.withDrawAmount.text.toString()
-                        .toInt() < 130
-                ) {
-                    binding.amountFee.text =
-                        "Комиссия 130 ₸"
-                    binding.withdrawBtnWithdrawPage.text =
-                        "Перевести 0 \u20b8"
-                } else if (binding.withDrawAmount.text.toString().length > 4) {
-                    val calculateFee =
-                        (binding.withDrawAmount.text.toString().toDouble() * (0.013)).toInt()
-                            .toString()
-                    binding.amountFee.text =
-                        "Комиссия $calculateFee ₸"
-                    binding.withdrawBtnWithdrawPage.text =
-                        "Перевести ${
-                            binding.withDrawAmount.text.toString().toInt() - calculateFee.toInt()
-                        } \u20b8"
-                } else {
-                    binding.amountFee.text =
-                        "Комиссия 130 ₸"
-                    binding.withdrawBtnWithdrawPage.text =
-                        "Перевести ${binding.withDrawAmount.text.toString().toInt() - 130} \u20b8"
-                }
+                binding.amountFee.visibility = View.GONE
+                binding.amountFee.text = ""
+                binding.withdrawBtnWithdrawPage.text = getText(R.string.calculate_commission)
             }
 
             override fun afterTextChanged(p0: Editable?) {
+
             }
         })
 
@@ -357,11 +349,16 @@ class WithDrawFragment : Fragment() {
                         map["amount"] = with_draw_amount.text.toString()
                         viewModel.addCard(map)
                     } else {
-                        startActivityForResult(
-                            Intent(requireContext(), VerificationActivity2::class.java),
-                            1
-                        )
-                        binding.withdrawBtnWithdrawPage.isEnabled = false
+                        if (binding.amountFee.visibility == View.GONE) {
+                            binding.loginProgressBar.visibility = View.VISIBLE
+                            viewModel.getCommission(binding.withDrawAmount.text.toString().toInt())
+                        } else {
+                            startActivityForResult(
+                                Intent(requireContext(), VerificationActivity2::class.java),
+                                1
+                            )
+                            binding.withdrawBtnWithdrawPage.isEnabled = false
+                        }
                     }
                 }
             }
@@ -475,6 +472,11 @@ class WithDrawFragment : Fragment() {
 
         }
         timer?.start()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.clearViewModel()
     }
 
     private fun handleFrame(fragment: Fragment) {

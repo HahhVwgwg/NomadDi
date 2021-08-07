@@ -32,6 +32,10 @@ class WithDrawViewModel : ViewModel() {
     val moneySource: LiveData<Int>
         get() = _moneySource
 
+    private val _amountFee = MutableLiveData<Commission>()
+    val amountFee: LiveData<Commission>
+        get() = _amountFee
+
     private val _responseWithDraw = MutableLiveData<Boolean>()
     val responseWithDraw: LiveData<Boolean>
         get() = _responseWithDraw
@@ -143,7 +147,7 @@ class WithDrawViewModel : ViewModel() {
                 if (response.isSuccessful && res?.error.isNullOrEmpty()) {
                     _responseWithDraw.postValue(true)
                 } else {
-                    _error.postValue(res!!.error)
+                    _error.postValue(res?.error)
                 }
             }
 
@@ -159,6 +163,10 @@ class WithDrawViewModel : ViewModel() {
 
     fun consumeError() {
         _error.postValue(null)
+    }
+
+    fun clearViewModel() {
+        _amountFee.postValue(Commission(-1 , -1, -1, -1, -1, ""))
     }
 
     fun consumeResult() {
@@ -180,7 +188,7 @@ class WithDrawViewModel : ViewModel() {
                         )
                     )
                 } else {
-                    _error.postValue(res!!.error)
+                    _error.postValue(res?.error)
                 }
             }
 
@@ -197,7 +205,7 @@ class WithDrawViewModel : ViewModel() {
                 if (response.isSuccessful && res?.error.isNullOrEmpty()) {
                     _response.value = response.body()?.url
                 } else {
-                    _error.postValue(res!!.error)
+                    _error.postValue(res?.error)
                 }
             }
 
@@ -207,4 +215,21 @@ class WithDrawViewModel : ViewModel() {
         })
     }
 
+
+    fun getCommission(amount: Int) {
+        APIClient.aPIClient?.commission(hashMapOf( "amount" to amount))?.enqueue(object : Callback<Commission> {
+            override fun onResponse(call: Call<Commission>, response: Response<Commission>) {
+                val res = response.body()
+                if (response.isSuccessful && res?.error.isNullOrEmpty()) {
+                    _amountFee.postValue(res)
+                } else {
+                    _error.postValue(res?.error)
+                }
+            }
+
+            override fun onFailure(call: Call<Commission>, t: Throwable) {
+                _error.postValue(t.message.toString())
+            }
+        })
+    }
 }

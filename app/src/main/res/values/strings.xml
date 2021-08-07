@@ -79,5 +79,6 @@
     <string name="create_pin_code_with_four_letter">Создайте код быстрого доступа из 4 цифр</string>
     <string name="choose_park">Выбор парка</string>
     <string name="choose_park_element">Выберите парк</string>
+    <string name="calculate_commission">Рассчитать комиссию</string>
 
 </resources>

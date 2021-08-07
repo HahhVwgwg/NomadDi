@@ -52,6 +52,10 @@ interface PartnersApiService {
     @FormUrlEncoded
     @POST("/api/provider/requestamount")
     fun withdraw(@FieldMap params: HashMap<String, Any>): Call<MessageOtp>
+
+    @FormUrlEncoded
+    @POST("/api/provider/commission")
+    fun commission(@FieldMap params: HashMap<String, Any>): Call<Commission>
 }
 
 class NotificationElement(
@@ -530,3 +534,24 @@ data class ParkElement (
     @SerializedName("park_name")
     val parkName: String
 )
+
+data class Commission (
+    @SerializedName("amount_sent")
+    val amountSent: Int,
+
+    @SerializedName("amount_fee_driver")
+    val amountFee: Int,
+
+    @SerializedName("amount_total")
+    val amountTotal: Int,
+
+    @SerializedName("amount_park")
+    val amountPark: Int,
+
+    @SerializedName("free_transaction")
+    val freeTransaction: Int,
+
+    @SerializedName("error")
+    val error: String
+)
+
