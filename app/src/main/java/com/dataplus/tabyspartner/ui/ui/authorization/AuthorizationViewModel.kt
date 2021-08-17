@@ -17,6 +17,14 @@ import retrofit2.Response
 
 class AuthorizationViewModel : ViewModel() {
 
+    companion object {
+        private var instance: AuthorizationViewModel? = null
+        fun getInstance() =
+            instance ?: synchronized(AuthorizationViewModel::class.java) {
+                instance ?: AuthorizationViewModel().also { instance = it }
+            }
+    }
+
     private val _responseDriver = MutableLiveData<OtpResponse>()
     val response: LiveData<OtpResponse>
         get() = _responseDriver
@@ -124,6 +132,7 @@ class AuthorizationViewModel : ViewModel() {
     fun getUser(phone: String, activity: Authorization) {
         val hashMap = HashMap<String, Any>()
         hashMap["mobile"] = phone
+        hashMap["nomad"] = true
         APIClient.aPIClient?.getUser(hashMap)?.enqueue(object : Callback<OtpResponse> {
             override fun onResponse(call: Call<OtpResponse>, response: Response<OtpResponse>) {
                 if (response.isSuccessful) {

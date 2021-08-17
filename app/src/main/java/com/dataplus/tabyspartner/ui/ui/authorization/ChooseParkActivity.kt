@@ -32,7 +32,7 @@ class ChooseParkActivity : AppCompatActivity() {
     private var otp: String? = null
 
     private val viewModel: AuthorizationViewModel by lazy {
-        ViewModelProvider(this).get(AuthorizationViewModel::class.java)
+        ViewModelProvider(this, ViewModelFactory.getInstance()).get(AuthorizationViewModel::class.java)
     }
 
     lateinit var sharedPreferences: SharedPreferences
@@ -46,6 +46,13 @@ class ChooseParkActivity : AppCompatActivity() {
         binding.parkElements.layoutManager = LinearLayoutManager(
             this
         )
+        if (callingActivity?.className == "com.dataplus.tabyspartner.ui.ui.authorization.MobizonActivity") {
+            phone = intent.getStringExtra("phoneNumber").toString()
+            otp = intent.getStringExtra("otp").toString()
+        } else {
+            return
+        }
+
         phone = intent.getStringExtra("phoneNumber").toString()
         otp = intent.getStringExtra("otp").toString()
         parkElementRequest()
@@ -96,6 +103,7 @@ class ChooseParkActivity : AppCompatActivity() {
         map["otp"] = otp!!
         map["mobile"] = phone!!
         map["fleet_id"] = parkPositionFleet
+        map["nomad"] = true
         viewModel.loginByOtp(map)
     }
 

@@ -13,12 +13,12 @@ android {
         applicationId "com.dataplus.nomad"
         minSdkVersion 22
         targetSdkVersion 30
-        versionCode 2
-        versionName "1.2.1"
+        versionCode 4
+        versionName "1.2.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
-        setProperty("archivesBaseName", "tabyspartner-v.$versionName($versionCode)")
+        setProperty("archivesBaseName", "nomad-di.$versionName($versionCode)")
 
         buildConfigField "String", "DEVICE_TYPE", '"android"'
     }

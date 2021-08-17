@@ -23,7 +23,7 @@ class Authorization : AppCompatActivity() {
     private lateinit var binding: ActivityAuthorizationBinding
 
     private val viewModel: AuthorizationViewModel by lazy {
-        ViewModelProvider(this).get(AuthorizationViewModel::class.java)
+        ViewModelProvider(this, ViewModelFactory.getInstance()).get(AuthorizationViewModel::class.java)
     }
 
     lateinit var sharedPreferences: SharedPreferences
@@ -49,7 +49,7 @@ class Authorization : AppCompatActivity() {
         }else {
             binding.generateBtn.setOnClickListener {
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.mainLayoutAuthorization.getWindowToken(), 0)
+                imm.hideSoftInputFromWindow(binding.mainLayoutAuthorization.windowToken, 0)
                 val phone_number =  binding.phoneNumberText.text.toString()
                 val complete_phone_number =
                         binding.countryCodeText.text.subSequence(
@@ -81,7 +81,7 @@ class Authorization : AppCompatActivity() {
                             val intent = Intent(this, MobizonActivity::class.java)
                             intent.putExtra("phoneNumber", complete_phone_number)
                             intent.putExtra("verCode", it.otp)
-                            startActivity(intent)
+                            startActivityForResult(intent, 300)
                             finish()
                         } else {
                             binding.generateBtn.isEnabled = true

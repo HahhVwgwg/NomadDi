@@ -34,7 +34,7 @@ class MobizonActivity : AppCompatActivity() {
     private var timer: CountDownTimer? = null
     private lateinit var binding: ActivityMobizonBinding
     private val viewModel: AuthorizationViewModel by lazy {
-        ViewModelProvider(this).get(AuthorizationViewModel::class.java)
+        ViewModelProvider(this, ViewModelFactory.getInstance()).get(AuthorizationViewModel::class.java)
     }
     private lateinit var sharedPreferences: SharedPreferences
     var isRegisteredPhone = false
@@ -56,8 +56,14 @@ class MobizonActivity : AppCompatActivity() {
         checkConnectivity()
         binding.root
         resetTimer()
-        otp = intent.getStringExtra("verCode").toString()
-        phone = intent.getStringExtra("phoneNumber").toString()
+        println("wow" + callingActivity?.className)
+        if (callingActivity?.className == "com.dataplus.tabyspartner.ui.ui.authorization.Authorization") {
+            otp = intent.getStringExtra("verCode").toString()
+            phone = intent.getStringExtra("phoneNumber").toString()
+        } else {
+            return
+        }
+
         startSmartUserConsent()
 
     }
@@ -150,7 +156,6 @@ class MobizonActivity : AppCompatActivity() {
     }
 
 
-
     private fun registerByToken() {
         if (SharedHelper.getKey(this, "device_token").isEmpty()) {
             getToken()
@@ -185,7 +190,7 @@ class MobizonActivity : AppCompatActivity() {
         val intent = Intent(this, ChooseParkActivity()::class.java)
         intent.putExtra("phoneNumber", phone)
         intent.putExtra("otp", otp)
-        startActivity(intent)
+        startActivityForResult(intent, 300)
         finish()
     }
 
